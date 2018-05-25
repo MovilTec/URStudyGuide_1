@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">U R an ITexpert?</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">vista principal Redes</string>
+    <string name="title_activity_client_support">client_support</string>
+</resources>
