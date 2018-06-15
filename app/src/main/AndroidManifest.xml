@@ -47,6 +47,21 @@
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
             android:value=".MainActivity" />
+
+        <activity android:name=".StartActivity" />
+        <activity
+            android:name=".RegisterActivity"
+            android:parentActivityName=".StartActivity" />
+        <activity
+            android:name=".LoginActivity"
+            android:parentActivityName=".StartActivity" />
+        <activity
+            android:name=".MCSA_70_740_Activity"
+            android:parentActivityName=".MainActivity"/>
+        <activity
+            android:name=".MCSA_70_740_Questions"
+            android:parentActivityName=".MCSA_70_740_Activity"
+            />
     </application>
 
 </manifest>
