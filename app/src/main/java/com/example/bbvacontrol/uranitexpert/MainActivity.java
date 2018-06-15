@@ -80,12 +80,18 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    //Accioens al elegir cualquier botón del menú
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
         if(item.getItemId() == R.id.main_LogOut_button){
             FirebaseAuth.getInstance().signOut();
             sendToStart();
+        }
+
+        if(item.getItemId() == R.id.main_AccountSettings_button){
+            Intent settingsIntent = new Intent(this, AccountSettings.class);
+            startActivity(settingsIntent);
         }
 
         return true;

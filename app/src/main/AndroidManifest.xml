@@ -57,11 +57,12 @@
             android:parentActivityName=".StartActivity" />
         <activity
             android:name=".MCSA_70_740_Activity"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".MCSA_70_740_Questions"
-            android:parentActivityName=".MCSA_70_740_Activity"
-            />
+            android:parentActivityName=".MCSA_70_740_Activity" />
+        <activity android:name=".AccountSettings"
+            android:parentActivityName=".MainActivity"></activity>
     </application>
 
 </manifest>

@@ -3,6 +3,7 @@ package com.example.bbvacontrol.uranitexpert;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -23,15 +24,15 @@ import static android.content.ContentValues.TAG;
 
 public class RegisterActivity extends AppCompatActivity {
 
+    private TextInputLayout nickName;
     private EditText email;
     private EditText password;
     private Button createAccount;
-
     private ProgressDialog mRegProgress;
-
     private Toolbar mToolbar;
-
     private FirebaseAuth mAuth;
+
+    Users users = new Users();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +41,11 @@ public class RegisterActivity extends AppCompatActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.register_toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("Create Account");
+        getSupportActionBar().setTitle("Create an Account");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Campos de Registro de Usuario
+        nickName = findViewById(R.id.reg_userNickName_textInputLayout);
         email = (EditText) findViewById(R.id.reg_email);
         password = (EditText) findViewById(R.id.reg_password);
         createAccount = (Button) findViewById(R.id.createAccountButton);
@@ -54,22 +56,26 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                String nickName_account = nickName.getEditText().getText().toString();
                 String email_account = email.getText().toString();
                 String password_account = password.getText().toString();
-                if(!TextUtils.isEmpty(email_account) || !TextUtils.isEmpty(password_account)) {
+                if(!TextUtils.isEmpty(email_account) || !TextUtils.isEmpty(password_account) || TextUtils.isEmpty(nickName.getEditText().getText())) {
                     mRegProgress.setTitle("Registering new User");
                     mRegProgress.setMessage("Please wait while it is creating your account");
                     mRegProgress.setCanceledOnTouchOutside(false);
                     mRegProgress.show();
 
-                    register_user(email_account, password_account);
+                    register_user(email_account, password_account, nickName_account);
+                }else{
+                    Toast.makeText(RegisterActivity.this, "Registration failed. Please fill all the fields on the registration",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
     }
 
-    public void register_user(String email, String password){
+    public void register_user(String email, String password, final String nickName){
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -78,6 +84,8 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+
+                            users.registerNewUser(nickName);
 
                             mRegProgress.dismiss();
                             // Sign in success, update UI with the signed-in user's information

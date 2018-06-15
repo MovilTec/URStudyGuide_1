@@ -9,9 +9,6 @@
     <include
         android:id="@+id/register_toolbar"
         layout="@layout/app_bar_layout"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -32,7 +29,7 @@
         app:layout_constraintHorizontal_bias="0.865"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/reg_password"
-        app:layout_constraintVertical_bias="0.204" />
+        app:layout_constraintVertical_bias="0.273" />
 
     <EditText
         android:id="@+id/reg_password"
@@ -48,8 +45,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.461" />
+        app:layout_constraintTop_toBottomOf="@+id/reg_email"
+        app:layout_constraintVertical_bias="0.025" />
 
     <EditText
         android:id="@+id/reg_email"
@@ -65,8 +62,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.325" />
+        app:layout_constraintTop_toBottomOf="@+id/reg_userNickName_textInputLayout"
+        app:layout_constraintVertical_bias="0.15" />
 
     <TextView
         android:id="@+id/textView3"
@@ -79,10 +76,31 @@
         android:text="Create a New Account"
         android:textColor="@android:color/black"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/reg_email"
+        app:layout_constraintBottom_toTopOf="@+id/reg_userNickName_textInputLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.078"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/register_toolbar"
-        app:layout_constraintVertical_bias="0.244" />
+        app:layout_constraintTop_toBottomOf="@+id/register_toolbar" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/reg_userNickName_textInputLayout"
+        android:layout_width="363dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="188dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/register_toolbar"
+        app:layout_constraintVertical_bias="0.006">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/reg_UserNickname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Create a User Name" />
+    </android.support.design.widget.TextInputLayout>
 </android.support.constraint.ConstraintLayout>
