@@ -1,5 +1,7 @@
 package com.example.bbvacontrol.uranitexpert;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -17,8 +19,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.content.ContentValues.TAG;
 
@@ -109,6 +114,12 @@ public class Users {
         return UsersStatus;
     }
 
+    public String getUserID(){
+        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String current_userID = mCurrentUser.getUid();
+        return current_userID;
+    }
+
     public void setUserNewStatus(String newStatus){
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         String current_user = mCurrentUser.getUid();
@@ -117,7 +128,22 @@ public class Users {
 
     }
 
-    public void getCurrentUserInfo(final TextView user_nickName_TextView, final TextView user_status_TextView){
+    public void setUserNewImage(String newImage, final ProgressDialog mProgressDialog, final Context context){
+        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String current_user = mCurrentUser.getUid();
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_user);
+        mDatabase.child("image").setValue(newImage).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    mProgressDialog.dismiss();
+                    Toast.makeText(context, "Sucess.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    public void getCurrentUserInfo(final TextView user_nickName_TextView, final TextView user_status_TextView, final CircleImageView user_avatar_image){
 
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -135,6 +161,8 @@ public class Users {
 
                 user_nickName_TextView.setText(user_nickName);
                 user_status_TextView.setText(user_status);
+
+                Picasso.get().load(user_image).into(user_avatar_image);
 
             }
 
