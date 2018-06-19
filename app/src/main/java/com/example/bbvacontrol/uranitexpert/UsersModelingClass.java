@@ -5,15 +5,17 @@ public class UsersModelingClass {
     public String name;
     public String status;
     public String image;
+    public String thumb_image;
 
     public UsersModelingClass(){
 
     }
 
-    public UsersModelingClass(String name, String status, String image) {
+    public UsersModelingClass(String name, String status, String image, String thumb_image) {
         this.name = name;
         this.status = status;
         this.image = image;
+        this.thumb_image = thumb_image;
     }
 
     public String getName() {
@@ -36,7 +38,15 @@ public class UsersModelingClass {
         return image;
     }
 
+    public String getThumb_image() {
+        return thumb_image;
+    }
+
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public void setThumb_image(String thumb_image) {
+        this.thumb_image = thumb_image;
     }
 }

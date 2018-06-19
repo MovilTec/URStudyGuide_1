@@ -1,5 +1,6 @@
 package com.example.bbvacontrol.uranitexpert;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,9 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.squareup.picasso.Picasso;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UsersActivity extends AppCompatActivity {
 
@@ -59,6 +63,21 @@ public class UsersActivity extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull UsersViewHolder holder, int position, @NonNull UsersModelingClass model) {
                 holder.setName(model.name);
                 holder.getStatus(model.status);
+                holder.getUserImage(model.thumb_image);
+
+                final String user_id = getRef(position).getKey();
+
+                holder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent profileIntent = new Intent(UsersActivity.this, ProfileActivity.class);
+                        profileIntent.putExtra("user_id", user_id);
+                        startActivity(profileIntent);
+
+                    }
+                });
+
             }
 
             @NonNull
@@ -92,6 +111,14 @@ public class UsersActivity extends AppCompatActivity {
         public void getStatus(String status){
             TextView userStatusView = mView.findViewById(R.id.users_userStatus);
             userStatusView.setText(status);
+        }
+
+        //Aquí es donde se cambia la imagen
+        public void getUserImage(String Thumb_image){
+            CircleImageView usersImageView = mView.findViewById(R.id.users_circleImageView);
+            if(!Thumb_image.equals("default")) {
+                Picasso.get().load(Thumb_image).into(usersImageView);
+            }
         }
 
     }

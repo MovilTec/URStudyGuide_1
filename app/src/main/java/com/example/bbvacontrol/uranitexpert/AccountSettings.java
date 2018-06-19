@@ -2,6 +2,7 @@ package com.example.bbvacontrol.uranitexpert;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
@@ -27,7 +28,12 @@ import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+
 import de.hdodenhof.circleimageview.CircleImageView;
+import id.zelory.compressor.Compressor;
 
 public class AccountSettings extends AppCompatActivity {
 
@@ -41,6 +47,8 @@ public class AccountSettings extends AppCompatActivity {
     private ProgressDialog mProgressDialog;
     //Almacenamiento Firebase
     private StorageReference mImageStorage;
+    //Almacenamiento del mapa de bytes para las imagenes comprimidas
+    private  byte[] thumb_byte;
 
     Users users = new Users();
 
@@ -128,6 +136,7 @@ public class AccountSettings extends AppCompatActivity {
 
             CropImage.activity(imageUrl)
                     .setAspectRatio(1, 1)
+                    .setMinCropWindowSize(500, 500)
                     .start(AccountSettings.this);
         }
 
@@ -136,22 +145,57 @@ public class AccountSettings extends AppCompatActivity {
             final CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if(resultCode == RESULT_OK){
                 Uri resultUri = result.getUri();
+                //Getting the image file from Uri
+                File thumbImage_file = new File(resultUri.getPath());
+                //Setting the bitmap to crompress the image
+                try {
+                    Bitmap thumb_bitmap = new Compressor(this)
+                            .setMaxHeight(200)
+                            .setMaxWidth(200)
+                            .setQuality(75)
+                            .compressToBitmap(thumbImage_file);
 
-                StorageReference filepath = mImageStorage.child(users.getUserID()).child("profile_images").child("profile_image.jpg");
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    thumb_bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    thumb_byte = baos.toByteArray();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                final StorageReference filepath = mImageStorage.child(users.getUserID()).child("profile_images").child("profile_image.jpg");
+                final StorageReference thumb_filepath = mImageStorage.child(users.getUserID()).child("profile_images").child("profile_thumbnail_image.jpg");
 
                 filepath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                         if(task.isSuccessful()){
-                            //String downloadURL = task.getResult().getDownloadUrl().toString();
-                            mImageStorage.child(users.getUserID()).child("profile_images").child("profile_image.jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+
+                            //Subiendo mapa de bytes de la imagen comprimida al Almacenamiento en el Servidor
+                            UploadTask uploadThumbImageTask = thumb_filepath.putBytes(thumb_byte);
+                            uploadThumbImageTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                 @Override
-                                public void onSuccess(Uri uri) {
-                                    String downloadUri = uri.toString();
-                                    users.setUserNewImage(downloadUri, mProgressDialog, AccountSettings.this);
-//                                    mProgressDialog.dismiss();
+                                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> thumb_task) {
+
+                                //String thumb_downloadbleURL = thumb_task.getResult().getDownloadUrl().toString();
+
+                                    if(thumb_task.isSuccessful()){
+                                        //Cambiando el valor de nombre de imagen de usuario dentro de la base de Datos
+                                        filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                            @Override
+                                            public void onSuccess(Uri uri) {
+                                                String downloadUri = uri.toString();
+                                                users.setUserNewImage(downloadUri, mProgressDialog, AccountSettings.this, thumb_filepath);
+                                            }
+                                        });
+
+                                    }else{
+                                        Exception error = thumb_task.getException();
+                                       Toast.makeText(AccountSettings.this, (CharSequence) error, Toast.LENGTH_LONG).show();
+                                    }
                                 }
                             });
+
                         } else {
                             Exception error = result.getError();
                             Toast.makeText(AccountSettings.this, (CharSequence) error, Toast.LENGTH_SHORT).show();

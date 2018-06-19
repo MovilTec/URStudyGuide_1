@@ -2,14 +2,17 @@ package com.example.bbvacontrol.uranitexpert;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,6 +22,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -78,24 +83,51 @@ public class Users {
 
     }
 
-    public void setUserInfo(){
 
-        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-        String current_user = mCurrentUser.getUid();
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_user);
+    public void getUserImage(String user_ID, final CircleImageView user_image){
 
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(user_ID);
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String userImage = dataSnapshot.child("thumb_image").getValue().toString();
+                if(!userImage.equals("default")) {
+                    Picasso.get().load(userImage).into(user_image);
+                }
+            }
 
-                String user_nickName = dataSnapshot.child("name").getValue().toString();
-                String user_image = dataSnapshot.child("image").getValue().toString();
-                String user_status = dataSnapshot.child("status").getValue().toString();
-                String user_thumb_image = dataSnapshot.child("thumb_image").getValue().toString();
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                UserName = user_nickName;
-                UsersStatus = user_status;
+            }
+        });
+    }
 
+    public void getUserName(String user_ID, final TextView userNameTextView){
+
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(user_ID);
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String UserName = dataSnapshot.child("name").getValue().toString();
+                userNameTextView.setText(UserName);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void setBarUserTitle(String user_ID, final Toolbar mToolbar){
+
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(user_ID);
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String UserName = dataSnapshot.child("name").getValue().toString();
+                mToolbar.setTitle(UserName);
             }
 
             @Override
@@ -106,12 +138,20 @@ public class Users {
 
     }
 
-    public String getUserName(){
-        return UserName;
-    }
+    public void getUsersStatus(String user_ID, final TextView userStatusTextView){
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(user_ID);
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String UserStatus = dataSnapshot.child("status").getValue().toString();
+                userStatusTextView.setText(UserStatus);
+            }
 
-    public String getUsersStatus(){
-        return UsersStatus;
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public String getUserID(){
@@ -128,17 +168,38 @@ public class Users {
 
     }
 
-    public void setUserNewImage(String newImage, final ProgressDialog mProgressDialog, final Context context){
-        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-        String current_user = mCurrentUser.getUid();
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_user);
+    public void setUserNewImage(String newImage, final ProgressDialog mProgressDialog, final Context context, final StorageReference thumbNailImage_reference){
+
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(getUserID());
         mDatabase.child("image").setValue(newImage).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
-                    mProgressDialog.dismiss();
+                    //mProgressDialog.dismiss();
+                    setNewUser_thumbnailImageURL(mProgressDialog, context, thumbNailImage_reference);
                     Toast.makeText(context, "Sucess.", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+    }
+
+    public void setNewUser_thumbnailImageURL(final ProgressDialog mProgressDialog, final Context context, StorageReference thumb_storage_reference){
+
+        thumb_storage_reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(getUserID());
+                String downladURL = uri.toString();
+                mDatabase.child("thumb_image").setValue(downladURL).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            mProgressDialog.dismiss();
+                            Toast.makeText(context, "Sucess.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
             }
         });
     }
@@ -162,8 +223,9 @@ public class Users {
                 user_nickName_TextView.setText(user_nickName);
                 user_status_TextView.setText(user_status);
 
-                Picasso.get().load(user_image).into(user_avatar_image);
-
+                if(!user_image.equals("default")) {
+                    Picasso.get().load(user_image).into(user_avatar_image);
+                }
             }
 
             @Override
