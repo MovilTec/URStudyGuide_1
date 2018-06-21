@@ -87,8 +87,8 @@ public class AccountSettings extends AppCompatActivity {
                         if(!TextUtils.isEmpty(mNewStatus.getText())){
                             //Change the Status on FireBase!!
                             String newStatus = mNewStatus.getText().toString();
-        users.setUserNewStatus(newStatus);
-        dialog.dismiss();
+                            users.setUserNewStatus(newStatus);
+                            dialog.dismiss();
                         }else{
                             Toast.makeText(AccountSettings.this, "New status haven't been entered!", Toast.LENGTH_SHORT);
                         }

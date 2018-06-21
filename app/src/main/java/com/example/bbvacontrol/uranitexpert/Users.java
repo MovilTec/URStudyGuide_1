@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Button;
@@ -67,6 +68,28 @@ public class Users {
                 String userImage = dataSnapshot.child("thumb_image").getValue().toString();
                 if(!userImage.equals("default")) {
                     Picasso.get().load(userImage).into(user_image);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void getProfileUserImageLarge(String userID, final ImageView user_Image){
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(userID);
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String userImage = dataSnapshot.child("image").getValue().toString();
+                if(!userImage.equals("default")) {
+                    try {
+                        Picasso.get().load(userImage).into(user_Image);
+                    }catch(Exception e){
+                        System.out.println("*********Image loading error!! " + e.getMessage());
+                    }
                 }
             }
 
@@ -266,18 +289,25 @@ public class Users {
         }
     }
 
-    public void getFriendRequestStatus(final String requestedFriend_ID, final Button friendReqButton){
+    public void getFriendRequestStatus(final String requestedFriend_ID, final Button friendReqButton, final Context context){
         final ProfileActivity userProfile = new ProfileActivity();
         mFriendRequestedDatabase.child(getUserID());
         mFriendRequestedDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.hasChild(requestedFriend_ID)) {
-                    String current_Status = dataSnapshot.child(getUserID()).child(requestedFriend_ID).child("request_status").getValue().toString();
-                    int status = Integer.parseInt(current_Status);
-                    userProfile.changeRequestState(status);
-                    if(status == 1){
-                        friendReqButton.setText("cancel request");
+                    try{
+                        String current_Status = dataSnapshot.child(getUserID()).child(requestedFriend_ID).child("request_status").getValue().toString();
+                        int status = Integer.parseInt(current_Status);
+                        userProfile.changeRequestState(status);
+                        if(status == 1){
+                            friendReqButton.setText("cancel request");
+                        }
+                    }catch(NullPointerException nullException){
+                        userProfile.changeRequestState(0);
+                    }catch(Exception e){
+                        Toast.makeText(context, e.getMessage(),Toast.LENGTH_LONG ).show();
+                        System.out.println("***** ERROR when retriving Friend Request Status: " + e.getMessage());
                     }
                 }else{
                     userProfile.changeRequestState(0);

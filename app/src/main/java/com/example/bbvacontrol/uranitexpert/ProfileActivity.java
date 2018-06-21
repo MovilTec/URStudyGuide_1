@@ -1,11 +1,15 @@
 package com.example.bbvacontrol.uranitexpert;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,13 +24,20 @@ public class ProfileActivity extends AppCompatActivity {
     private ProgressDialog mProgressDialog;
     private static int current_request_state = 0;
     private DatabaseReference mFriendRequestedDatabase;
+    private AlertDialog dialog;
+    private Display display;
 
     Users users = new Users();
+
+    Point size = new Point();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        display = getWindowManager().getDefaultDisplay();
+
 
         final String user_id = getIntent().getStringExtra("user_id");
 
@@ -45,7 +56,7 @@ public class ProfileActivity extends AppCompatActivity {
         if(user_id.equals(users.getUserID())){
             friendRequestButton.setVisibility(View.INVISIBLE);
         }else{
-            users.getFriendRequestStatus(user_id, friendRequestButton);
+            users.getFriendRequestStatus(user_id, friendRequestButton, ProfileActivity.this);
         }
 
         users.getUserImage(user_id, userImage);
@@ -55,6 +66,25 @@ public class ProfileActivity extends AppCompatActivity {
         userImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final AlertDialog.Builder mBuilder = new AlertDialog.Builder(ProfileActivity.this);
+                final View mView = getLayoutInflater().inflate(R.layout.user_image_layout, null);
+                final ImageView profileUserImage = mView.findViewById(R.id.profileUserImageView);
+                display.getSize(size);
+                int width = size.x;
+                int height = size.y;
+
+                int Width = width - (width/6);
+                int Height = height - (height/2);
+
+                profileUserImage.getLayoutParams().height = Height;
+                profileUserImage.getLayoutParams().width = Width;
+
+                users.getProfileUserImageLarge(user_id, profileUserImage);
+
+                mBuilder.setView(mView);
+                dialog = mBuilder.create();
+                dialog.show();
+                dialog.getWindow().setLayout(Width, Height);
 
             }
         });
