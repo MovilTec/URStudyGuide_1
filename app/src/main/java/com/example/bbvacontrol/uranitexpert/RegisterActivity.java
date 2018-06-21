@@ -100,10 +100,12 @@ public class RegisterActivity extends AppCompatActivity {
                         } else {
 
                             mRegProgress.hide();
+                            Exception error = task.getException();
+                            String passwordError = error.toString();
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(RegisterActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterActivity.this, passwordError,
+                                    Toast.LENGTH_LONG).show();
                             //updateUI(null);
                         }
 

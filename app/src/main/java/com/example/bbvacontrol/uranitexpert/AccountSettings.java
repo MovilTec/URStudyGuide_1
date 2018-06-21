@@ -70,25 +70,25 @@ public class AccountSettings extends AppCompatActivity {
 
         users.getCurrentUserInfo(UserNickName_TextView, UserStatus_TextView, UserAvatar);
 
-                            Button changeImageButton = findViewById(R.id.accountSettings_changeImage_button);
-                            Button changeStatusButton = findViewById(R.id.accountSettings_changeStatus_button);
+        Button changeImageButton = findViewById(R.id.accountSettings_changeImage_button);
+        Button changeStatusButton = findViewById(R.id.accountSettings_changeStatus_button);
 
-                            changeStatusButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    final AlertDialog.Builder mBuilder =  new AlertDialog.Builder(AccountSettings.this);
-                                    final View mView = getLayoutInflater().inflate(R.layout.dialog_change_status, null);
-                                    final TextInputEditText mNewStatus = mView.findViewById(R.id.ChangeStatus_newStatus_TextInputLayout);
-                                    Button mChangeStatusButton = mView.findViewById(R.id.ChangeStatus_changeStatus_button);
+        changeStatusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AlertDialog.Builder mBuilder =  new AlertDialog.Builder(AccountSettings.this);
+                final View mView = getLayoutInflater().inflate(R.layout.dialog_change_status, null);
+                final TextInputEditText mNewStatus = mView.findViewById(R.id.ChangeStatus_newStatus_TextInputLayout);
+                Button mChangeStatusButton = mView.findViewById(R.id.ChangeStatus_changeStatus_button);
 
-                                    mChangeStatusButton.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            if(!TextUtils.isEmpty(mNewStatus.getText())){
-                                                //Change the Status on FireBase!!
-                                                String newStatus = mNewStatus.getText().toString();
-                            users.setUserNewStatus(newStatus);
-                            dialog.dismiss();
+                mChangeStatusButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(!TextUtils.isEmpty(mNewStatus.getText())){
+                            //Change the Status on FireBase!!
+                            String newStatus = mNewStatus.getText().toString();
+        users.setUserNewStatus(newStatus);
+        dialog.dismiss();
                         }else{
                             Toast.makeText(AccountSettings.this, "New status haven't been entered!", Toast.LENGTH_SHORT);
                         }
@@ -109,11 +109,6 @@ public class AccountSettings extends AppCompatActivity {
                 galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
 
                 startActivityForResult(Intent.createChooser(galleryIntent, "SELECT IMAGE"), GALLERY_PICK);
-
-//                CropImage.activity()
-//                        .setGuidelines(CropImageView.Guidelines.ON)
-//                        .start(AccountSettings.this);
-
             }
         });
 

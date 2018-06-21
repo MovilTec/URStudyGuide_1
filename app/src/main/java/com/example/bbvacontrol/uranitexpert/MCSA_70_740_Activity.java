@@ -29,24 +29,30 @@ public class MCSA_70_740_Activity extends AppCompatActivity {
     }
 
     public void openUnit1(View view) {
+        String title = "Unit 1";
         Intent intent = new Intent(this, MCSA_70_740_Questions.class);
+        intent.putExtra("title", title);
         startActivity(intent);
     }
 
     public void openUnit2(View view) {
+        String title = "Unit 2";
         Intent intent = new Intent(this, MCSA_70_740_Questions.class);
+        intent.putExtra("title", title);
         startActivity(intent);
     }
 
     public void openUnit3(View view) {
-//        MCSAquestions.updateTextView("MCSA 70-740 Unit 3 Quiz");
-//        MCSAquestions.setTitle("MCSA 70-740 Unit3");
+        String title = "Unit 3";
         Intent intent = new Intent(this, MCSA_70_740_Questions.class);
+        intent.putExtra("title", title);
         startActivity(intent);
     }
 
     public void openUnit4(View view) {
+        String title = "Unit 4";
         Intent intent = new Intent(this, MCSA_70_740_Questions.class);
+        intent.putExtra("title", title);
         startActivity(intent);
     }
 }

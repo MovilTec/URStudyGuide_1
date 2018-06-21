@@ -15,11 +15,6 @@ public class MCSA_70_740_Questions extends AppCompatActivity{
 
     private Toolbar mToolbar;
 
-//    Context context;
-//    public MCSA_70_740_Questions(Context context){
-//        this.context = context;
-//    }
-
     String Toppic = "MCSA-70-740_Unit3";
     MCSAActionButton buttonAction = new MCSAActionButton();
     Questions questions = new Questions();
@@ -32,7 +27,7 @@ public class MCSA_70_740_Questions extends AppCompatActivity{
 
         mToolbar  = findViewById(R.id.MCSA_70_740_questions_toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle(Title);
+        getSupportActionBar().setTitle(getIntent().getStringExtra("title"));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         final Button startButton = findViewById(R.id.MCSA_startButton);

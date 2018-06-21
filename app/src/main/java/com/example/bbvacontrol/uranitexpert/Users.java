@@ -2,6 +2,7 @@ package com.example.bbvacontrol.uranitexpert;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,7 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.widget.Button;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -36,36 +37,10 @@ public class Users {
 
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
-    private  FirebaseUser mCurrentUser;
-
+    private FirebaseUser mCurrentUser;
+    private DatabaseReference mFriendRequestedDatabase = FirebaseDatabase.getInstance().getReference().child("Friends_requests");
     private String UserName;
     private String UsersStatus;
-
-//    public void register_user(String email, String password){
-//
-//        mAuth = FirebaseAuth.getInstance();
-//
-//        mAuth.createUserWithEmailAndPassword(email, password)
-//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        if (task.isSuccessful()) {
-//                            // Sign in success, update UI with the signed-in user's information
-//                            Log.d(TAG, "createUserWithEmail:success");
-//                            FirebaseUser user = mAuth.getCurrentUser();
-//                            updateUI(user);
-//                        } else {
-//                            // If sign in fails, display a message to the user.
-//                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-//                            Toast.makeText(EmailPasswordActivity.this, "Authentication failed.",
-//                                    Toast.LENGTH_SHORT).show();
-//                            updateUI(null);
-//                        }
-//
-//                        // ...
-//                    }
-//                });
-//    }
 
     public void registerNewUser(String user_name){
         FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
@@ -82,7 +57,6 @@ public class Users {
         mDatabase.setValue(userMap);
 
     }
-
 
     public void getUserImage(String user_ID, final CircleImageView user_image){
 
@@ -235,6 +209,85 @@ public class Users {
         });
 
 
+    }
+
+    //Metodo para manejar todas las solicitudes de amistad dependiendo del estado
+    public void sendFriendRequest(int friend_request_state, final Context context, final DatabaseReference FriendRequestedDatabase, final ProgressDialog mProgressDialog, final String requestedUserID, final Button FriendReqButton){
+        //case 0: not friends
+        //case 1: friend request sent
+        //case 2: already friends
+        //case 3: friend request declined
+//        FriendReqButton.setEnabled(false);
+        final ProfileActivity userProfile = new ProfileActivity();
+        switch(friend_request_state){
+            case 0:
+                //Current Logged user
+                FriendRequestedDatabase.child(getUserID()).child(requestedUserID).child("request_status").setValue(1).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            mProgressDialog.dismiss();
+                            FriendRequestedDatabase.child(requestedUserID).child(getUserID()).child("request_status").setValue("recived").addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(context, "Request has been sent Succesfully!", Toast.LENGTH_SHORT).show();
+                                    FriendReqButton.setText("Cancel Request");
+                                    userProfile.changeRequestState(1);
+                                    FriendReqButton.setEnabled(true);
+                                }
+                            });
+                        }else{
+                            mProgressDialog.dismiss();
+                             Exception error = task.getException();
+                             String friendReqError = error.toString();
+                             Toast.makeText(context, friendReqError, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+                break;
+            case 1:
+                FriendRequestedDatabase.child(getUserID()).child(requestedUserID).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                        mFriendRequestedDatabase.child(requestedUserID).child(getUserID()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(context, "Request succesfully canceled!", Toast.LENGTH_SHORT).show();
+                                FriendReqButton.setText("Send Request");
+                                userProfile.changeRequestState(0);
+                                FriendReqButton.setEnabled(true);
+                            }
+                        });
+
+                    }
+                });
+                break;
+        }
+    }
+
+    public void getFriendRequestStatus(final String requestedFriend_ID, final Button friendReqButton){
+        final ProfileActivity userProfile = new ProfileActivity();
+        mFriendRequestedDatabase.child(getUserID());
+        mFriendRequestedDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChild(requestedFriend_ID)) {
+                    String current_Status = dataSnapshot.child(getUserID()).child(requestedFriend_ID).child("request_status").getValue().toString();
+                    int status = Integer.parseInt(current_Status);
+                    userProfile.changeRequestState(status);
+                    if(status == 1){
+                        friendReqButton.setText("cancel request");
+                    }
+                }else{
+                    userProfile.changeRequestState(0);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }
