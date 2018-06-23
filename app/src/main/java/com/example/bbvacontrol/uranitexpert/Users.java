@@ -3,6 +3,7 @@ package com.example.bbvacontrol.uranitexpert;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -302,6 +303,7 @@ public class Users {
                         userProfile.changeRequestState(status);
                         if(status == 1){
                             friendReqButton.setText("cancel request");
+                            friendReqButton.setBackgroundColor(Color.RED);
                         }
                     }catch(NullPointerException nullException){
                         userProfile.changeRequestState(0);

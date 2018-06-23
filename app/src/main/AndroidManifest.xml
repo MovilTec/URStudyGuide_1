@@ -73,8 +73,10 @@
         <activity
             android:name=".UsersActivity"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".ProfileActivity"
-            android:parentActivityName=".UsersActivity"></activity>
+        <activity
+            android:name=".ProfileActivity"
+            android:parentActivityName=".UsersActivity" />
+        <activity android:name=".Main2Activity"></activity>
     </application>
 
 </manifest>

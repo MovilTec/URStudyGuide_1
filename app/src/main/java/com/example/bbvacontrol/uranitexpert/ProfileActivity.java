@@ -73,7 +73,7 @@ public class ProfileActivity extends AppCompatActivity {
                 int width = size.x;
                 int height = size.y;
 
-                int Width = width - (width/6);
+                int Width = width - (width/9);
                 int Height = height - (height/2);
 
                 profileUserImage.getLayoutParams().height = Height;
