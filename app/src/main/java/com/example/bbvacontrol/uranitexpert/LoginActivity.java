@@ -24,10 +24,12 @@ public class LoginActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
     private Button mButton;
+    private Button ForgotPasswordButton;
     private EditText email;
     private EditText password;
     private FirebaseAuth mAuth;
     private ProgressDialog mLoginProgress;
+    private ProgressDialog mRessetPassProgress;
 
     public LoginActivity() {
     }
@@ -47,8 +49,10 @@ public class LoginActivity extends AppCompatActivity {
         email = findViewById(R.id.Login_email_editText);
         password = findViewById(R.id.Login_password_editText);
         mButton = findViewById(R.id.Login_button);
+        ForgotPasswordButton = findViewById(R.id.login_ResetPassword_button);
 
         mLoginProgress = new ProgressDialog(this);
+        mRessetPassProgress = new ProgressDialog(this);
 
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +67,26 @@ public class LoginActivity extends AppCompatActivity {
                     mLoginProgress.show();
 
                     singInUser(email_account, password_account);
+                }
+            }
+        });
+
+        ForgotPasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email_account = email.getText().toString();
+                if(!TextUtils.isEmpty(email_account)){
+
+                    mRessetPassProgress.setTitle("Reset Password");
+                    mRessetPassProgress.setMessage("Please wait while sending reset email password");
+                    mRessetPassProgress.setCanceledOnTouchOutside(false);
+                    mRessetPassProgress.show();
+
+                    forgotPass(email_account);
+
+                }else{
+                    mRessetPassProgress.hide();
+                    Toast.makeText(LoginActivity.this, "Please enter the forgotten password email address", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -89,6 +113,26 @@ public class LoginActivity extends AppCompatActivity {
 
                         }
 
+                    }
+                });
+    }
+
+    private void forgotPass(String email){
+        mAuth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            mRessetPassProgress.dismiss();
+                            Toast.makeText(LoginActivity.this, "Reset Email sent SUCESSFULLY!!. Please check your email",
+                                    Toast.LENGTH_SHORT).show();
+                        }else{
+                            Exception ResetPassError = task.getException();
+                            mRessetPassProgress.hide();
+                            Toast.makeText(LoginActivity.this, ResetPassError.toString(),
+                                    Toast.LENGTH_SHORT).show();
+                            System.out.println("******** ERROR while trying to send reset password email code: " + ResetPassError.toString());
+                        }
                     }
                 });
     }

@@ -41,7 +41,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         final String user_id = getIntent().getStringExtra("user_id");
 
-        mFriendRequestedDatabase = FirebaseDatabase.getInstance().getReference().child("Friends_requests");
+        mFriendRequestedDatabase = FirebaseDatabase.getInstance().getReference().child("Users_requests");
 
         mToolbar = findViewById(R.id.profile_tool_bar);
         setSupportActionBar(mToolbar);

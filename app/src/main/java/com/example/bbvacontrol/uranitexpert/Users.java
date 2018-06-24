@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
+import android.support.v4.graphics.ColorUtils;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.ImageView;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 import android.widget.Button;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -29,6 +32,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.sql.SQLOutput;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -40,9 +44,9 @@ public class Users {
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     private FirebaseUser mCurrentUser;
-    private DatabaseReference mFriendRequestedDatabase = FirebaseDatabase.getInstance().getReference().child("Friends_requests");
-    private String UserName;
-    private String UsersStatus;
+    private DatabaseReference mFriendRequestedDatabase;// = FirebaseDatabase.getInstance().getReference().child("Users_requests");
+    private DatabaseReference QuestionerRequestedUser;
+    private static HashMap<String, String> RequesterInfo = new HashMap<>();
 
     public void registerNewUser(String user_name){
         FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
@@ -58,6 +62,12 @@ public class Users {
 
         mDatabase.setValue(userMap);
 
+    }
+
+    private void setUserHashMap(){
+        HashMap_userName(getUserID());
+        HashMap_userStatus(getUserID());
+        HashMap_userThumbImageURL(getUserID());
     }
 
     public void getUserImage(String user_ID, final CircleImageView user_image){
@@ -158,6 +168,46 @@ public class Users {
         return current_userID;
     }
 
+    public void HashMap_userStatus(String user_ID){
+
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(user_ID);
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    RequesterInfo.put("status", dataSnapshot.child("status").getValue().toString());
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
+    public void HashMap_userName(String user_ID){
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(user_ID);
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                RequesterInfo.put("name", dataSnapshot.child("name").getValue().toString());
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
+    public void HashMap_userThumbImageURL(String user_ID){
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(user_ID);
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                RequesterInfo.put("thumb_image", dataSnapshot.child("thumb_image").getValue().toString());
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
     public void setUserNewStatus(String newStatus){
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         String current_user = mCurrentUser.getUid();
@@ -236,51 +286,69 @@ public class Users {
     }
 
     //Metodo para manejar todas las solicitudes de amistad dependiendo del estado
-    public void sendFriendRequest(int friend_request_state, final Context context, final DatabaseReference FriendRequestedDatabase, final ProgressDialog mProgressDialog, final String requestedUserID, final Button FriendReqButton){
+    public void sendFriendRequest(int friend_request_state, final Context context, final DatabaseReference QuestionerRequesterDatabase, final ProgressDialog mProgressDialog, final String requestedUserID, final Button FriendReqButton){
         //case 0: not friends
         //case 1: friend request sent
         //case 2: already friends
         //case 3: friend request declined
-//        FriendReqButton.setEnabled(false);
         final ProfileActivity userProfile = new ProfileActivity();
         switch(friend_request_state){
             case 0:
-                //Current Logged user
-                FriendRequestedDatabase.child(getUserID()).child(requestedUserID).child("request_status").setValue(1).addOnCompleteListener(new OnCompleteListener<Void>() {
+                //Solicitando información del usuariosolicitante y cargandola dentro del Arreglo de información
+                setUserHashMap();
+                //Configurando nodo del usuario solicitador (Preguntador)
+                QuestionerRequesterDatabase.child(getUserID()).child(requestedUserID).child("request_status").setValue(1).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
                             mProgressDialog.dismiss();
-                            FriendRequestedDatabase.child(requestedUserID).child(getUserID()).child("request_status").setValue("recived").addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Toast.makeText(context, "Request has been sent Succesfully!", Toast.LENGTH_SHORT).show();
-                                    FriendReqButton.setText("Cancel Request");
-                                    userProfile.changeRequestState(1);
-                                    FriendReqButton.setEnabled(true);
-                                }
-                            });
+                            //Enviando los datos a la Base de Datos
+                            QuestionerRequestedUser = FirebaseDatabase.getInstance().getReference().child("Requested_Users").child(requestedUserID).child(getUserID());
+                            QuestionerRequestedUser.setValue(RequesterInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                  @Override
+                                  public void onComplete(@NonNull Task<Void> task) {
+                                      if(task.isSuccessful()){
+                                        Toast.makeText(context, "Request has been sent Succesfully!", Toast.LENGTH_SHORT).show();
+                                        FriendReqButton.setText("Cancel Request");
+                                        FriendReqButton.setBackgroundColor(Color.RED);
+                                        userProfile.changeRequestState(1);
+                                        FriendReqButton.setEnabled(true);
+                                      }else{
+                                          //Error al capturar los datos del usuario solicitante
+                                          Exception RequestedUserError = task.getException();
+                                          System.out.println("************** ERROR when capture Requester info ***** Error: " + RequestedUserError);
+                                          Toast.makeText(context, RequestedUserError.toString(), Toast.LENGTH_LONG).show();
+                                      }
+                                  }
+                              });
                         }else{
                             mProgressDialog.dismiss();
                              Exception error = task.getException();
                              String friendReqError = error.toString();
                              Toast.makeText(context, friendReqError, Toast.LENGTH_LONG).show();
+                            System.out.println("*********** Questioner Request ERROR *** " + friendReqError);
                         }
                     }
                 });
                 break;
             case 1:
-                FriendRequestedDatabase.child(getUserID()).child(requestedUserID).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                QuestionerRequesterDatabase.child(getUserID()).child(requestedUserID).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-
+                        QuestionerRequestedUser = FirebaseDatabase.getInstance().getReference().child("Requested_Users").child(requestedUserID).child(getUserID());
                         mFriendRequestedDatabase.child(requestedUserID).child(getUserID()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Toast.makeText(context, "Request succesfully canceled!", Toast.LENGTH_SHORT).show();
-                                FriendReqButton.setText("Send Request");
-                                userProfile.changeRequestState(0);
-                                FriendReqButton.setEnabled(true);
+                                QuestionerRequestedUser.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(context, "Request succesfully canceled!", Toast.LENGTH_SHORT).show();
+                                        FriendReqButton.setText("Send Request");
+                                        FriendReqButton.setBackgroundColor(Color.BLUE);
+                                        userProfile.changeRequestState(0);
+                                        FriendReqButton.setEnabled(true);
+                                    }
+                                });
                             }
                         });
 
@@ -292,18 +360,37 @@ public class Users {
 
     public void getFriendRequestStatus(final String requestedFriend_ID, final Button friendReqButton, final Context context){
         final ProfileActivity userProfile = new ProfileActivity();
-        mFriendRequestedDatabase.child(getUserID());
+        mFriendRequestedDatabase = FirebaseDatabase.getInstance().getReference().child("Users_requests").child(getUserID());
         mFriendRequestedDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if(dataSnapshot.hasChild(requestedFriend_ID)) {
+//                    String children = dataSnapshot.child(requestedFriend_ID).child("request_status").getValue().toString();
+//                    Toast.makeText(context, children, Toast.LENGTH_LONG).show();
+//                    System.out.println("********** Prueba de hijos" + children);
+//                }
                 if(dataSnapshot.hasChild(requestedFriend_ID)) {
                     try{
-                        String current_Status = dataSnapshot.child(getUserID()).child(requestedFriend_ID).child("request_status").getValue().toString();
+                        String current_Status = dataSnapshot.child(requestedFriend_ID).child("request_status").getValue().toString();
                         int status = Integer.parseInt(current_Status);
+                        Toast.makeText(context, "Estado actual de la solicitud = " + current_Status, Toast.LENGTH_LONG).show();
                         userProfile.changeRequestState(status);
-                        if(status == 1){
-                            friendReqButton.setText("cancel request");
-                            friendReqButton.setBackgroundColor(Color.RED);
+                        switch(status){
+                            case 0:
+                                friendReqButton.setText("send request");
+                                friendReqButton.setBackgroundColor(Color.BLUE);
+                                break;
+                            case 1:
+                                friendReqButton.setText("cancel request");
+                                friendReqButton.setBackgroundColor(Color.RED);
+                                break;
+                            case 2:
+                                friendReqButton.setText("Eliminate User");
+                                friendReqButton.setBackgroundColor(Color.RED);
+                                break;
+                            default:
+                                Toast.makeText(context, "Un error ha ocurrido al intentar acceder al estado actual de la solicitud", Toast.LENGTH_LONG).show();
+                                System.out.println("*******Un error ha ocurrido al intentar acceder al estado actual de la solicitud ERROR: ");
                         }
                     }catch(NullPointerException nullException){
                         userProfile.changeRequestState(0);
@@ -312,6 +399,7 @@ public class Users {
                         System.out.println("***** ERROR when retriving Friend Request Status: " + e.getMessage());
                     }
                 }else{
+                    System.out.println("********Friend Request Status Unable to get DatabaseReference");
                     userProfile.changeRequestState(0);
                 }
             }

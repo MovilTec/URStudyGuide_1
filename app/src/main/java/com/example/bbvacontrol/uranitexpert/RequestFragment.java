@@ -56,7 +56,7 @@ public class RequestFragment extends Fragment {
         mRequestsList.setLayoutManager(linearLayoutManager);
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_request, container, false);
+        return mMainView;
     }
 
     @Override
@@ -69,17 +69,17 @@ public class RequestFragment extends Fragment {
     private void startListening() {
 
         Users users = new Users();
-        Query query = FirebaseDatabase.getInstance().getReference().child("Users").limitToLast(50);
+        Query query = FirebaseDatabase.getInstance().getReference().child("Requested_Users").child(users.getUserID()).limitToLast(50);
 
         FirebaseRecyclerOptions<RequestsModelingClass> options = new FirebaseRecyclerOptions.Builder<RequestsModelingClass>()
                 .setQuery(query, RequestsModelingClass.class)
                 .build();
 
-        FirebaseRecyclerAdapter firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<RequestsModelingClass, RequestFragment.RequestsViewHolder>(options) {
+        FirebaseRecyclerAdapter firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<RequestsModelingClass, RequestsViewHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull RequestFragment.RequestsViewHolder holder, int position, @NonNull RequestsModelingClass model) {
+            protected void onBindViewHolder(@NonNull RequestsViewHolder holder, int position, @NonNull RequestsModelingClass model) {
                 holder.setName(model.name);
-//                holder.getUserImage(model.thumb_image);
+                holder.getUserImage(model.thumb_image);
 
 //                final String user_id = getRef(position).getKey();
 
@@ -98,7 +98,7 @@ public class RequestFragment extends Fragment {
 
             @NonNull
             @Override
-            public RequestFragment.RequestsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            public RequestsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_friend_requests, parent, false);
 
                 return new RequestFragment.RequestsViewHolder(view);
@@ -127,7 +127,7 @@ public class RequestFragment extends Fragment {
 
                 //Aquí es donde se cambia la imagen
                 public void getUserImage(String Thumb_image){
-                    CircleImageView usersImageView = mView.findViewById(R.id.users_circleImageView);
+                    CircleImageView usersImageView = mView.findViewById(R.id.userRequest_CircleImageView);
                     if(!Thumb_image.equals("default")) {
                         Picasso.get().load(Thumb_image).into(usersImageView);
                     }
