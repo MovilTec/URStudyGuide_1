@@ -72,11 +72,12 @@ public class RequestFragment extends Fragment {
     private void startListening() {
 
         final Users users = new Users();
-        Query query = FirebaseDatabase.getInstance().getReference().child("Requested_Users").child(users.getUserID()).limitToLast(50);
-        Query daraRef = FirebaseDatabase.getInstance().getReference().child("Users").limitToLast(50);
+        Query query = FirebaseDatabase.getInstance().getReference().child("Requested_Users").child(users.getUserID());
+        DatabaseReference dataRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
         FirebaseRecyclerOptions<RequestsModelingClass> options = new FirebaseRecyclerOptions.Builder<RequestsModelingClass>()
-                .setQuery(query, RequestsModelingClass.class)
+                .setIndexedQuery(query, dataRef, RequestsModelingClass.class)
+//                .setQuery(query, RequestsModelingClass.class)
                 .build();
 
         FirebaseRecyclerAdapter firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<RequestsModelingClass, RequestsViewHolder>(options) {

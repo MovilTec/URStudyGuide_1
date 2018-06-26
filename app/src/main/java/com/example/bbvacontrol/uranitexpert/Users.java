@@ -314,7 +314,7 @@ public class Users {
         switch(friend_request_state){
             case 0:
                 //Solicitando información del usuariosolicitante y cargandola dentro del Arreglo de información
-                setUserHashMap();
+//                setUserHashMap();
                 //Configurando nodo del usuario solicitador (Preguntador)
                 QuestionerRequesterDatabase.child(getUserID()).child(requestedUserID).child("request_status").setValue(1).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -323,7 +323,7 @@ public class Users {
                             mProgressDialog.dismiss();
                             //Enviando los datos a la Base de Datos
                             QuestionerRequestedUser = FirebaseDatabase.getInstance().getReference().child("Requested_Users").child(requestedUserID).child(getUserID());
-                            QuestionerRequestedUser.setValue(RequesterInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            QuestionerRequestedUser.setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
                                   @Override
                                   public void onComplete(@NonNull Task<Void> task) {
                                       if(task.isSuccessful()){

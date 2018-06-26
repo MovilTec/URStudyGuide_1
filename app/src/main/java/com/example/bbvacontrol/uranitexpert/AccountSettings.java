@@ -1,6 +1,7 @@
 package com.example.bbvacontrol.uranitexpert;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -41,7 +43,7 @@ public class AccountSettings extends AppCompatActivity {
     private TextView UserNickName_TextView;
     private TextView UserStatus_TextView;
     private CircleImageView UserAvatar;
-
+    private FirebaseAuth usuario;
     private static final int GALLERY_PICK = 1;
     private AlertDialog dialog;
     private ProgressDialog mProgressDialog;
@@ -72,6 +74,7 @@ public class AccountSettings extends AppCompatActivity {
 
         Button changeImageButton = findViewById(R.id.accountSettings_changeImage_button);
         Button changeStatusButton = findViewById(R.id.accountSettings_changeStatus_button);
+        Button changePasswordButton = findViewById(R.id.accountSettings_changePassword_button);
 
         changeStatusButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,16 +87,18 @@ public class AccountSettings extends AppCompatActivity {
                 mChangeStatusButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(!TextUtils.isEmpty(mNewStatus.getText())){
+                        if(!TextUtils.isEmpty(mNewStatus.getText().toString())){
                             //Change the Status on FireBase!!
                             String newStatus = mNewStatus.getText().toString();
                             users.setUserNewStatus(newStatus);
                             dialog.dismiss();
                         }else{
+                            dialog.dismiss();
                             Toast.makeText(AccountSettings.this, "New status haven't been entered!", Toast.LENGTH_SHORT);
                         }
                     }
                 });
+
                 mBuilder.setView(mView);
                 dialog = mBuilder.create();
                 dialog.show();
@@ -109,6 +114,58 @@ public class AccountSettings extends AppCompatActivity {
                 galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
 
                 startActivityForResult(Intent.createChooser(galleryIntent, "SELECT IMAGE"), GALLERY_PICK);
+            }
+        });
+
+        changePasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AlertDialog.Builder mBuilder =  new AlertDialog.Builder(AccountSettings.this);
+                final View mView = getLayoutInflater().inflate(R.layout.pasword_chance_dialog, null);
+                final EditText mNewPassword = mView.findViewById(R.id.passwordChange_editText);
+                final EditText mPasswordConfirm = mView.findViewById(R.id.passwordChange_editText2);
+                Button mChangePasswordButton = mView.findViewById(R.id.passwordChange_button);
+
+                mChangePasswordButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mProgressDialog = new ProgressDialog(AccountSettings.this);
+                        mProgressDialog.setTitle("Updating the new password");
+                        mProgressDialog.setMessage("Please wait while we update the new password");
+                        mProgressDialog.setCanceledOnTouchOutside(false);
+                        mProgressDialog.show();
+                        if(!TextUtils.isEmpty(mNewPassword.getText()) && !TextUtils.isEmpty(mPasswordConfirm.getText())){
+                            if(mNewPassword.getText().equals(mPasswordConfirm.getText())){
+                                String newPassword = mNewPassword.getText().toString();
+                                usuario.getCurrentUser().updatePassword(newPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if(task.isSuccessful()){
+                                            Toast.makeText(AccountSettings.this, "Password Changed SUCESSFULLY", Toast.LENGTH_SHORT).show();
+                                            mProgressDialog.dismiss();
+                                            dialog.dismiss();
+                                        }else{
+                                            Exception PasswordChangeERROR = task.getException();
+                                            Toast.makeText(AccountSettings.this, "An error has happened during Password Change. ERROR CODE: " + PasswordChangeERROR, Toast.LENGTH_SHORT).show();
+                                            mProgressDialog.hide();
+                                        }
+                                    }
+                                });
+
+                            }else{
+                                Toast.makeText(AccountSettings.this, "The passwords do not match", Toast.LENGTH_SHORT);
+                                mProgressDialog.hide();
+                            }
+                        }else{
+                            Toast.makeText(AccountSettings.this, "New password haven't been entered or confirm!", Toast.LENGTH_SHORT);
+                            mProgressDialog.hide();
+                        }
+                    }
+                });
+                mBuilder.setView(mView);
+                dialog = mBuilder.create();
+                dialog.show();
+
             }
         });
 
