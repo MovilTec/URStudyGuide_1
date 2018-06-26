@@ -1,6 +1,7 @@
 package com.example.bbvacontrol.uranitexpert;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,9 +11,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -68,8 +71,9 @@ public class RequestFragment extends Fragment {
 
     private void startListening() {
 
-        Users users = new Users();
+        final Users users = new Users();
         Query query = FirebaseDatabase.getInstance().getReference().child("Requested_Users").child(users.getUserID()).limitToLast(50);
+        Query daraRef = FirebaseDatabase.getInstance().getReference().child("Users").limitToLast(50);
 
         FirebaseRecyclerOptions<RequestsModelingClass> options = new FirebaseRecyclerOptions.Builder<RequestsModelingClass>()
                 .setQuery(query, RequestsModelingClass.class)
@@ -81,18 +85,27 @@ public class RequestFragment extends Fragment {
                 holder.setName(model.name);
                 holder.getUserImage(model.thumb_image);
 
-//                final String user_id = getRef(position).getKey();
+                Button ConfirmRequestButton = holder.mView.findViewById(R.id.userRequest_confirmButton);
+                Button DeclineRequestButton = holder.mView.findViewById(R.id.userRequest_declineButton);
+                //Obteniendo el ID del usuario solicitador
+                final String user_id = getRef(position).getKey();
 
-//                holder.mView.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//
-//                        Intent profileIntent = new Intent(RequestFragment.this, ProfileActivity.class);
-//                        profileIntent.putExtra("user_id", user_id);
-//                        startActivity(profileIntent);
-//
-//                    }
-//                });
+                ConfirmRequestButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Toast.makeText(getActivity(), "Se ha ACEPTADO la solicitud de amistad", Toast.LENGTH_LONG).show();
+
+                    }
+                });
+
+                DeclineRequestButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        users.eliminateUserRequest(users.getUserID(), user_id, getActivity());
+                        Toast.makeText(getActivity(), "Se ha DECLINADO la solicitud de amistad", Toast.LENGTH_LONG).show();
+                    }
+                });
 
             }
 

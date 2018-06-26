@@ -111,6 +111,25 @@ public class Users {
         });
     }
 
+//    public String getName(String user){
+//        String name;
+//        DatabaseReference mUserReference;
+//        mUserReference = FirebaseDatabase.getInstance().getReference().child("Users").child(user).child("name");
+//        mUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//               String rname = dataSnapshot.getValue().toString();
+//               name = rname;
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        };
+//        return "";
+//    }
+
     public void getUserName(String user_ID, final TextView userNameTextView){
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(user_ID);
@@ -410,4 +429,73 @@ public class Users {
         });
     }
 
+    public void eliminateUserRequest(String requestedUser, String requesterUser, final Context context){
+        final DatabaseReference user_Request;
+        final DatabaseReference requsterUserInfo_Reference;
+        user_Request = FirebaseDatabase.getInstance().getReference().child("Users_requests").child(requesterUser).child(requestedUser);
+        requsterUserInfo_Reference = FirebaseDatabase.getInstance().getReference().child("Requested_Users").child(requestedUser).child(requesterUser);
+        user_Request.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    requsterUserInfo_Reference.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                Toast.makeText(context, "Se ha DECLINADO la solicitud con exito", Toast.LENGTH_SHORT).show();
+                            }else{
+                                Exception declineExceptionError = task.getException();
+                                Toast.makeText(context, "Se ha producido un error al momento de procesar la declinación de la solicitud, ERROR CODE: " + declineExceptionError, Toast.LENGTH_SHORT).show();
+                                System.out.println("**********Se ha producido un error al momento de procesar la declinación de la solicitud, ERROR CODE: " + declineExceptionError);
+                            }
+                        }
+                    });
+                    Toast.makeText(context, "Se ha DECLINADO la solicitud con exito", Toast.LENGTH_SHORT).show();
+                }else{
+                    Exception declineException = task.getException();
+                    Toast.makeText(context, "Se ha producido un error al momento de procesar la declinación de la solicitud, ERROR CODE: " + declineException, Toast.LENGTH_SHORT).show();
+                    System.out.println("**********Se ha producido un error al momento de procesar la declinación de la solicitud, ERROR CODE: " + declineException);
+                }
+            }
+        });
+
+    }
+
+    public void acceptUserRequest(final String requesterUserID, final Context context){
+        final DatabaseReference requesterUserInfo_Reference;
+        final DatabaseReference requestStatus_Reference;
+        final DatabaseReference usersRelationships_Reference;
+
+        requesterUserInfo_Reference = FirebaseDatabase.getInstance().getReference().child("Requested_Users").child(getUserID()).child(requesterUserID);
+        requestStatus_Reference = FirebaseDatabase.getInstance().getReference().child("Users_requests").child(requesterUserID).child(getUserID()).child("request_status");
+        usersRelationships_Reference = FirebaseDatabase.getInstance().getReference().child("Users_Relationships");
+
+        //Removiendo el usuario solocitante de la
+        requesterUserInfo_Reference.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    //Cambiando el estado de la solicitud de "amistad"
+                    requestStatus_Reference.setValue(2).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                System.out.println("Se ha cambiado el estado de la solicitud de manera EXITOSA");
+                                usersRelationships_Reference.child(getUserID()).child(requesterUserID);
+
+                            }else{
+                                Exception ChangeStatusError = task.getException();
+                                System.out.println("Se ha producido un error durante el cambio de estado en la solicitud. ERROR CODE: " + ChangeStatusError);
+                            }
+                        }
+                    });
+                }else{
+                    Exception AcceptUserRequestERROR = task.getException();
+                    System.out.println("" + AcceptUserRequestERROR);
+                    Toast.makeText(context, "Se ha producido un error al aceptar la solcitud de amistad. Procesos de borrado del Muro petitorio. ERROR code: " + AcceptUserRequestERROR, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+    }
 }
