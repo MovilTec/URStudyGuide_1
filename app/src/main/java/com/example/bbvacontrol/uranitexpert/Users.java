@@ -64,12 +64,6 @@ public class Users {
 
     }
 
-    private void setUserHashMap(){
-        HashMap_userName(getUserID());
-        HashMap_userStatus(getUserID());
-        HashMap_userThumbImageURL(getUserID());
-    }
-
     public void getUserImage(String user_ID, final CircleImageView user_image){
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(user_ID);
@@ -187,46 +181,6 @@ public class Users {
         return current_userID;
     }
 
-    public void HashMap_userStatus(String user_ID){
-
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(user_ID);
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    RequesterInfo.put("status", dataSnapshot.child("status").getValue().toString());
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-    }
-
-    public void HashMap_userName(String user_ID){
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(user_ID);
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                RequesterInfo.put("name", dataSnapshot.child("name").getValue().toString());
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-    }
-
-    public void HashMap_userThumbImageURL(String user_ID){
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(user_ID);
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                RequesterInfo.put("thumb_image", dataSnapshot.child("thumb_image").getValue().toString());
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-    }
-
     public void setUserNewStatus(String newStatus){
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         String current_user = mCurrentUser.getUid();
@@ -309,7 +263,7 @@ public class Users {
         //case 0: not friends
         //case 1: friend request sent
         //case 2: already friends
-        //case 3: friend request declined
+        //case 3: friend request recived
         final ProfileActivity userProfile = new ProfileActivity();
         switch(friend_request_state){
             case 0:
@@ -320,32 +274,44 @@ public class Users {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
-                            mProgressDialog.dismiss();
-                            //Enviando los datos a la Base de Datos
-                            QuestionerRequestedUser = FirebaseDatabase.getInstance().getReference().child("Requested_Users").child(requestedUserID).child(getUserID());
-                            QuestionerRequestedUser.setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                  @Override
-                                  public void onComplete(@NonNull Task<Void> task) {
-                                      if(task.isSuccessful()){
-                                        Toast.makeText(context, "Request has been sent Succesfully!", Toast.LENGTH_SHORT).show();
-                                        FriendReqButton.setText("Cancel Request");
-                                        FriendReqButton.setBackgroundColor(Color.RED);
-                                        userProfile.changeRequestState(1);
-                                        FriendReqButton.setEnabled(true);
-                                      }else{
-                                          //Error al capturar los datos del usuario solicitante
-                                          Exception RequestedUserError = task.getException();
-                                          System.out.println("************** ERROR when capture Requester info ***** Error: " + RequestedUserError);
-                                          Toast.makeText(context, RequestedUserError.toString(), Toast.LENGTH_LONG).show();
-                                      }
-                                  }
-                              });
+                            //Configurando el estatus de la solicitd de amistad al usuario solocitado (SOLICITUD ENVIADA)
+                            QuestionerRequesterDatabase.child(requestedUserID).child(getUserID()).setValue(3).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        //Enviando los datos a la Base de Datos
+                                        QuestionerRequestedUser = FirebaseDatabase.getInstance().getReference().child("Requested_Users").child(requestedUserID).child(getUserID());
+                                        QuestionerRequestedUser.setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if(task.isSuccessful()){
+                                                    mProgressDialog.dismiss();
+                                                    Toast.makeText(context, "Request has been sent Succesfully!", Toast.LENGTH_SHORT).show();
+                                                    FriendReqButton.setText("Cancel Request");
+                                                    FriendReqButton.setBackgroundColor(Color.RED);
+                                                    userProfile.changeRequestState(1);
+                                                    FriendReqButton.setEnabled(true);
+                                                }else{
+                                                    //Error al capturar los datos del usuario solicitante
+                                                    Exception RequestedUserError = task.getException();
+                                                    System.out.println("************** ERROR when capture Requester info ***** Error: " + RequestedUserError);
+                                                    Toast.makeText(context, RequestedUserError.toString(), Toast.LENGTH_LONG).show();
+                                                }
+                                            }
+                                        });
+                                    }else{
+                                        mProgressDialog.hide();
+                                        Exception error = task.getException();
+                                        Toast.makeText(context, "Error durante el envio de la solicitud " + error, Toast.LENGTH_LONG).show();
+                                        System.out.println("*********** Questioner Request ERROR: *** " + error);
+                                    }
+                                }
+                            });
                         }else{
                             mProgressDialog.dismiss();
                              Exception error = task.getException();
-                             String friendReqError = error.toString();
-                             Toast.makeText(context, friendReqError, Toast.LENGTH_LONG).show();
-                            System.out.println("*********** Questioner Request ERROR *** " + friendReqError);
+                             Toast.makeText(context, "Error durante el envio de la solicitud " + error, Toast.LENGTH_LONG).show();
+                            System.out.println("*********** Questioner Request ERROR: *** " + error);
                         }
                     }
                 });
@@ -370,10 +336,13 @@ public class Users {
                                 });
                             }
                         });
-
                     }
                 });
                 break;
+            case 2:
+                Toast.makeText(context,"Has intentado borrar a un amigo!", Toast.LENGTH_LONG).show();
+            case 3:
+                Toast.makeText(context,"Has intentado DECLINAR una solicitud de amistad!", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -383,11 +352,6 @@ public class Users {
         mFriendRequestedDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if(dataSnapshot.hasChild(requestedFriend_ID)) {
-//                    String children = dataSnapshot.child(requestedFriend_ID).child("request_status").getValue().toString();
-//                    Toast.makeText(context, children, Toast.LENGTH_LONG).show();
-//                    System.out.println("********** Prueba de hijos" + children);
-//                }
                 if(dataSnapshot.hasChild(requestedFriend_ID)) {
                     try{
                         String current_Status = dataSnapshot.child(requestedFriend_ID).child("request_status").getValue().toString();
@@ -407,6 +371,9 @@ public class Users {
                                 friendReqButton.setText("Eliminate User");
                                 friendReqButton.setBackgroundColor(Color.RED);
                                 break;
+                            case 3:
+                                friendReqButton.setText("Decline Request");
+                                friendReqButton.setBackgroundColor(Color.RED);
                             default:
                                 Toast.makeText(context, "Un error ha ocurrido al intentar acceder al estado actual de la solicitud", Toast.LENGTH_LONG).show();
                                 System.out.println("*******Un error ha ocurrido al intentar acceder al estado actual de la solicitud ERROR: ");
@@ -465,24 +432,52 @@ public class Users {
         final DatabaseReference requesterUserInfo_Reference;
         final DatabaseReference requestStatus_Reference;
         final DatabaseReference usersRelationships_Reference;
+        final DatabaseReference requestStatus_accept_Reference;
 
         requesterUserInfo_Reference = FirebaseDatabase.getInstance().getReference().child("Requested_Users").child(getUserID()).child(requesterUserID);
         requestStatus_Reference = FirebaseDatabase.getInstance().getReference().child("Users_requests").child(requesterUserID).child(getUserID()).child("request_status");
+        requestStatus_accept_Reference = FirebaseDatabase.getInstance().getReference().child("Users_requests").child(getUserID()).child(requesterUserID).child("request_status");
         usersRelationships_Reference = FirebaseDatabase.getInstance().getReference().child("Users_Relationships");
 
-        //Removiendo el usuario solocitante de la
+        //Removiendo el usuario solocitante de la Tabla de Usuarios Solicitantes
         requesterUserInfo_Reference.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
-                    //Cambiando el estado de la solicitud de "amistad"
+                    //Cambiando el estado de la solicitud de "amistad" a Amigos
                     requestStatus_Reference.setValue(2).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
-                                System.out.println("Se ha cambiado el estado de la solicitud de manera EXITOSA");
-                                usersRelationships_Reference.child(getUserID()).child(requesterUserID);
-
+                                //Cambiando el estado de la solicitud de "amistad" a Amigos
+                                requestStatus_accept_Reference.setValue(2).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        System.out.println("Se ha cambiado el estado de la solicitud de manera EXITOSA");
+                                        usersRelationships_Reference.child(getUserID()).child(requesterUserID).setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if(task.isSuccessful()){
+                                                    Toast.makeText(context, "The Relationship between you and the requested user was stablish SUCCESSFULLY!", Toast.LENGTH_SHORT).show();
+                                                }else{
+                                                    Exception UserRelationshipERROR = task.getException();
+                                                    System.out.println("*****************************¨*Han errro has ocurred during the cration of the REQUESTER user node creation. ERROR CODE: " + UserRelationshipERROR);
+                                                }
+                                            }
+                                        });
+                                    }
+                                });
+                                usersRelationships_Reference.child(requesterUserID).child(getUserID()).setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if(task.isSuccessful()){
+                                            Toast.makeText(context, "The Relationship between the requested user and you was stablish SUCCESSFULLY!", Toast.LENGTH_SHORT).show();
+                                        }else{
+                                            Exception UserRelationshipERROR = task.getException();
+                                            System.out.println("*****************************¨*Han errro has ocurred during the cration of the REQUESTED user node creation. ERROR CODE: " + UserRelationshipERROR);
+                                        }
+                                    }
+                                });
                             }else{
                                 Exception ChangeStatusError = task.getException();
                                 System.out.println("Se ha producido un error durante el cambio de estado en la solicitud. ERROR CODE: " + ChangeStatusError);

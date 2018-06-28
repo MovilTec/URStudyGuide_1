@@ -94,9 +94,8 @@ public class RequestFragment extends Fragment {
                 ConfirmRequestButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        users.acceptUserRequest(user_id, getActivity());
                         Toast.makeText(getActivity(), "Se ha ACEPTADO la solicitud de amistad", Toast.LENGTH_LONG).show();
-
                     }
                 });
 
@@ -148,13 +147,8 @@ public class RequestFragment extends Fragment {
                 }
 
             }
-//            @Override
-//            public RequestFragment.RequestsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.users_own_view, parent, false);
-//
-//                return new RequestFragment.RequestsViewHolder(view);
-//            }
-        };
+
+        }
 
 
 
