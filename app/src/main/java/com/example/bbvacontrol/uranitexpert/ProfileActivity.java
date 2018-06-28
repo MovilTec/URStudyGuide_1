@@ -52,11 +52,12 @@ public class ProfileActivity extends AppCompatActivity {
         TextView userStatus = findViewById(R.id.profile_userStatus_textView);
         CircleImageView userImage = findViewById(R.id.profile_userImage_CircleImageView);
         final Button friendRequestButton = findViewById(R.id.profile_Requestbutton);
+        final Button sendMessageButton = findViewById(R.id.profile_SendMessagebutton);
 
         if(user_id.equals(users.getUserID())){
             friendRequestButton.setVisibility(View.INVISIBLE);
         }else{
-            users.getFriendRequestStatus(user_id, friendRequestButton, ProfileActivity.this);
+            users.getFriendRequestStatus(user_id, friendRequestButton, sendMessageButton, ProfileActivity.this);
         }
 
         users.getUserImage(user_id, userImage);
@@ -73,7 +74,7 @@ public class ProfileActivity extends AppCompatActivity {
                 int width = size.x;
                 int height = size.y;
 
-                int Width = width - (width/9);
+                int Width = width - (width/12);
                 int Height = height - (height/2);
 
                 profileUserImage.getLayoutParams().height = Height;

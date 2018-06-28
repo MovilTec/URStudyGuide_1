@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.graphics.ColorUtils;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,7 +47,7 @@ public class Users {
     private FirebaseUser mCurrentUser;
     private DatabaseReference mFriendRequestedDatabase;// = FirebaseDatabase.getInstance().getReference().child("Users_requests");
     private DatabaseReference QuestionerRequestedUser;
-    private static HashMap<String, String> RequesterInfo = new HashMap<>();
+    private DatabaseReference Users_RelationShips_Reference = FirebaseDatabase.getInstance().getReference().child("Users_Relationships");
 
     public void registerNewUser(String user_name){
         FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
@@ -329,7 +330,7 @@ public class Users {
                                     public void onSuccess(Void aVoid) {
                                         Toast.makeText(context, "Request succesfully canceled!", Toast.LENGTH_SHORT).show();
                                         FriendReqButton.setText("Send Request");
-                                        FriendReqButton.setBackgroundColor(Color.BLUE);
+                                        FriendReqButton.setBackgroundColor(Color.parseColor("#ff33b5e5"));
                                         userProfile.changeRequestState(0);
                                         FriendReqButton.setEnabled(true);
                                     }
@@ -341,12 +342,61 @@ public class Users {
                 break;
             case 2:
                 Toast.makeText(context,"Has intentado borrar a un amigo!", Toast.LENGTH_LONG).show();
+                QuestionerRequesterDatabase.child(getUserID()).child(requestedUserID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            QuestionerRequesterDatabase.child(requestedUserID).child(getUserID()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        //Removiendo la referencia del usuario de la tabla de "Amigos" usuario raíz - usuaro referencia
+                                        Users_RelationShips_Reference.child(getUserID()).child(requestedUserID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if(task.isSuccessful()){
+                                                    //Removiendo la referencia del usuario de la tabla de "Amigos" usuaro referencia - usuario raíz
+                                                    Users_RelationShips_Reference.child(requestedUserID).child(getUserID()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            if(task.isSuccessful()){
+                                                                Toast.makeText(context, "User succesfully REMOVED from Relationships!", Toast.LENGTH_SHORT).show();
+                                                                FriendReqButton.setText("Send Request");
+                                                                FriendReqButton.setBackgroundColor(Color.parseColor("#ff33b5e5"));
+                                                                userProfile.changeRequestState(0);
+                                                                FriendReqButton.setEnabled(true);
+                                                            }else{
+                                                                Exception EliminateFriendERROR = task.getException();
+                                                                System.out.println("********** Han error has ocurred while eliminating friend request status (4° STEP). ERROR CODE: "+ EliminateFriendERROR);
+                                                            }
+                                                        }
+                                                    });
+                                                }else{
+                                                    Exception EliminateFriendERROR = task.getException();
+                                                    System.out.println("********** Han error has ocurred while eliminating friend request status (3° STEP). ERROR CODE: "+ EliminateFriendERROR);
+                                                }
+                                            }
+                                        });
+                                    }else{
+                                        Exception EliminateFriendERROR = task.getException();
+                                        System.out.println("********** Han error has ocurred while eliminating friend request status (2° STEP). ERROR CODE: "+ EliminateFriendERROR);
+                                    }
+                                }
+                            });
+                        }else{
+                            Exception EliminateFriendERROR = task.getException();
+                            System.out.println("********** Han error has ocurred while eliminating friend request status (1° STEP). ERROR CODE: "+ EliminateFriendERROR);
+                        }
+                    }
+                });
+                break;
             case 3:
                 Toast.makeText(context,"Has intentado DECLINAR una solicitud de amistad!", Toast.LENGTH_LONG).show();
+                break;
         }
     }
 
-    public void getFriendRequestStatus(final String requestedFriend_ID, final Button friendReqButton, final Context context){
+    public void getFriendRequestStatus(final String requestedFriend_ID, final Button friendReqButton, final Button messageButton, final Context context){
         final ProfileActivity userProfile = new ProfileActivity();
         mFriendRequestedDatabase = FirebaseDatabase.getInstance().getReference().child("Users_requests").child(getUserID());
         mFriendRequestedDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -361,7 +411,7 @@ public class Users {
                         switch(status){
                             case 0:
                                 friendReqButton.setText("send request");
-                                friendReqButton.setBackgroundColor(Color.BLUE);
+                                friendReqButton.setBackgroundColor(Color.parseColor("#ff33b5e5"));
                                 break;
                             case 1:
                                 friendReqButton.setText("cancel request");
@@ -370,6 +420,7 @@ public class Users {
                             case 2:
                                 friendReqButton.setText("Eliminate User");
                                 friendReqButton.setBackgroundColor(Color.RED);
+                                messageButton.setVisibility(View.VISIBLE);
                                 break;
                             case 3:
                                 friendReqButton.setText("Decline Request");
@@ -449,7 +500,7 @@ public class Users {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
-                                //Cambiando el estado de la solicitud de "amistad" a Amigos
+                                //Cambiando el estado de la solicitud de "amistad" a Amigos del usuario solicitado
                                 requestStatus_accept_Reference.setValue(2).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
@@ -458,24 +509,23 @@ public class Users {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if(task.isSuccessful()){
-                                                    Toast.makeText(context, "The Relationship between you and the requested user was stablish SUCCESSFULLY!", Toast.LENGTH_SHORT).show();
+                                                    usersRelationships_Reference.child(requesterUserID).child(getUserID()).setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            if(task.isSuccessful()){
+                                                                Toast.makeText(context, "The Relationship between the requested user and you was stablish SUCCESSFULLY!", Toast.LENGTH_SHORT).show();
+                                                            }else{
+                                                                Exception UserRelationshipERROR = task.getException();
+                                                                System.out.println("*****************************¨*Han errro has ocurred during the cration of the REQUESTED user node creation. ERROR CODE: " + UserRelationshipERROR);
+                                                            }
+                                                        }
+                                                    });
                                                 }else{
                                                     Exception UserRelationshipERROR = task.getException();
                                                     System.out.println("*****************************¨*Han errro has ocurred during the cration of the REQUESTER user node creation. ERROR CODE: " + UserRelationshipERROR);
                                                 }
                                             }
                                         });
-                                    }
-                                });
-                                usersRelationships_Reference.child(requesterUserID).child(getUserID()).setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if(task.isSuccessful()){
-                                            Toast.makeText(context, "The Relationship between the requested user and you was stablish SUCCESSFULLY!", Toast.LENGTH_SHORT).show();
-                                        }else{
-                                            Exception UserRelationshipERROR = task.getException();
-                                            System.out.println("*****************************¨*Han errro has ocurred during the cration of the REQUESTED user node creation. ERROR CODE: " + UserRelationshipERROR);
-                                        }
                                     }
                                 });
                             }else{
