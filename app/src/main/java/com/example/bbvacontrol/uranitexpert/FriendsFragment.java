@@ -19,6 +19,8 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -128,10 +130,21 @@ public class FriendsFragment extends Fragment {
         }
 
         //Aquí es donde se cambia la imagen
-        public void setThumb_image(String Thumb_image){
-            CircleImageView userThumb_image = mView.findViewById(R.id.friendContainer_CircleImageView);
+        public void setThumb_image(final String Thumb_image){
+            final CircleImageView userThumb_image = mView.findViewById(R.id.friendContainer_CircleImageView);
             if(!Thumb_image.equals("default")) {
-                Picasso.get().load(Thumb_image).into(userThumb_image);
+                Picasso.get().load(Thumb_image).
+                    networkPolicy(NetworkPolicy.OFFLINE)
+                    .into(userThumb_image, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            Picasso.get().load(Thumb_image).into(userThumb_image);
+                        }
+                    });
             }
         }
 

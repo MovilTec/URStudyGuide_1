@@ -19,6 +19,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import static android.content.ContentValues.TAG;
 
@@ -31,6 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
     private ProgressDialog mRegProgress;
     private Toolbar mToolbar;
     private FirebaseAuth mAuth;
+    private DatabaseReference deviceToken_Reference;
 
     Users users = new Users();
 
@@ -38,6 +42,8 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        deviceToken_Reference = FirebaseDatabase.getInstance().getReference().child("Users").child(users.getUserID()).child("device_token");
 
         mToolbar = (Toolbar) findViewById(R.id.register_toolbar);
         setSupportActionBar(mToolbar);
@@ -88,14 +94,28 @@ public class RegisterActivity extends AppCompatActivity {
                             users.registerNewUser(nickName);
 
                             mRegProgress.dismiss();
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            //updateUI(user);
+                            //Capturando el TokenID del dipositivo desde el cual se registro la cuenta
+                            String deviceToken = FirebaseInstanceId.getInstance().getToken();
 
-                            Intent mainIntent = new Intent(RegisterActivity.this, MainActivity.class);
-                            startActivity(mainIntent);
-                            finish();
+                            deviceToken_Reference.setValue(deviceToken).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        // Sign in success, update UI with the signed-in user's information
+                                        Log.d(TAG, "createUserWithEmail:success");
+                                        FirebaseUser user = mAuth.getCurrentUser();
+                                        //updateUI(user);
+                                        Intent mainIntent = new Intent(RegisterActivity.this, MainActivity.class);
+                                        startActivity(mainIntent);
+                                        finish();
+                                    }else{
+                                        mRegProgress.hide();
+                                        Exception e = task.getException();
+                                        System.out.println("Error when register user's device Token in the database. ERROR CODE: " + e);
+                                        Toast.makeText(RegisterActivity.this, "Error when register user's device Token in the database. ERROR CODE: " + e, Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
 
                         } else {
 

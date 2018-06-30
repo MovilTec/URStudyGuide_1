@@ -31,6 +31,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.sql.SQLOutput;
@@ -45,8 +47,7 @@ public class Users {
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     private FirebaseUser mCurrentUser;
-    private DatabaseReference mFriendRequestedDatabase;// = FirebaseDatabase.getInstance().getReference().child("Users_requests");
-    private DatabaseReference QuestionerRequestedUser;
+    private DatabaseReference mFriendRequestedDatabase, QuestionerRequestedUser, notifications_Reference;
     private DatabaseReference Users_RelationShips_Reference = FirebaseDatabase.getInstance().getReference().child("Users_Relationships");
 
     public void registerNewUser(String user_name){
@@ -54,6 +55,7 @@ public class Users {
         String userID = current_user.getUid();
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(userID);
+        notifications_Reference = FirebaseDatabase.getInstance().getReference().child("User_notifications");
 
         HashMap<String, String> userMap = new HashMap();
         userMap.put("name", user_name);
@@ -232,13 +234,15 @@ public class Users {
 
         String current_user = mCurrentUser.getUid();
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_user);
+        //Habilitando las funciones Fuera de Linea
+        mDatabase.keepSynced(true);
 
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 String user_nickName = dataSnapshot.child("name").getValue().toString();
-                String user_image = dataSnapshot.child("image").getValue().toString();
+                final String user_image = dataSnapshot.child("image").getValue().toString();
                 String user_status = dataSnapshot.child("status").getValue().toString();
                 String user_thumb_image = dataSnapshot.child("thumb_image").getValue().toString();
 
@@ -246,7 +250,19 @@ public class Users {
                 user_status_TextView.setText(user_status);
 
                 if(!user_image.equals("default")) {
-                    Picasso.get().load(user_image).into(user_avatar_image);
+                    Picasso.get().load(user_image)
+                            .networkPolicy(NetworkPolicy.OFFLINE)
+                            .into(user_avatar_image, new Callback() {
+                                @Override
+                                public void onSuccess() {
+
+                                }
+
+                                @Override
+                                public void onError(Exception e) {
+                                 Picasso.get().load(user_image).into(user_avatar_image);
+                                }
+                            });
                 }
             }
 
@@ -276,7 +292,7 @@ public class Users {
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
                             //Configurando el estatus de la solicitd de amistad al usuario solocitado (SOLICITUD ENVIADA)
-                            QuestionerRequesterDatabase.child(requestedUserID).child(getUserID()).setValue(3).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            QuestionerRequesterDatabase.child(requestedUserID).child(getUserID()).child("request_status").setValue(3).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful()){
@@ -286,12 +302,28 @@ public class Users {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if(task.isSuccessful()){
-                                                    mProgressDialog.dismiss();
-                                                    Toast.makeText(context, "Request has been sent Succesfully!", Toast.LENGTH_SHORT).show();
-                                                    FriendReqButton.setText("Cancel Request");
-                                                    FriendReqButton.setBackgroundColor(Color.RED);
-                                                    userProfile.changeRequestState(1);
-                                                    FriendReqButton.setEnabled(true);
+
+                                                    HashMap<String, String> notificationData = new HashMap();
+                                                    notificationData.put("from", getUserID());
+                                                    notificationData.put("type", "request");
+
+                                                    notifications_Reference.child(requestedUserID).push().setValue(notificationData).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            if(task.isSuccessful()){
+                                                                mProgressDialog.dismiss();
+                                                                Toast.makeText(context, "Request has been sent Succesfully!", Toast.LENGTH_SHORT).show();
+                                                                FriendReqButton.setText("Cancel Request");
+                                                                FriendReqButton.setBackgroundColor(Color.RED);
+                                                                userProfile.changeRequestState(1);
+                                                                FriendReqButton.setEnabled(true);
+                                                            }else{
+                                                                Exception RequestedUserError = task.getException();
+                                                                System.out.println("************** ERROR when capture Requester info HashMap Step***** Error: " + RequestedUserError);
+                                                                Toast.makeText(context, "Error in HashMap Notification Step " + RequestedUserError.toString(), Toast.LENGTH_LONG).show();
+                                                            }
+                                                        }
+                                                    });
                                                 }else{
                                                     //Error al capturar los datos del usuario solicitante
                                                     Exception RequestedUserError = task.getException();
@@ -391,7 +423,8 @@ public class Users {
                 });
                 break;
             case 3:
-                Toast.makeText(context,"Has intentado DECLINAR una solicitud de amistad!", Toast.LENGTH_LONG).show();
+                eliminateUserRequest(getUserID(),requestedUserID, context);
+//                Toast.makeText(context,"Has intentado DECLINAR una solicitud de amistad!", Toast.LENGTH_LONG).show();
                 break;
         }
     }
@@ -406,7 +439,7 @@ public class Users {
                     try{
                         String current_Status = dataSnapshot.child(requestedFriend_ID).child("request_status").getValue().toString();
                         int status = Integer.parseInt(current_Status);
-                        Toast.makeText(context, "Estado actual de la solicitud = " + current_Status, Toast.LENGTH_LONG).show();
+//                        Toast.makeText(context, "Estado actual de la solicitud = " + current_Status, Toast.LENGTH_LONG).show();
                         userProfile.changeRequestState(status);
                         switch(status){
                             case 0:
@@ -425,8 +458,9 @@ public class Users {
                             case 3:
                                 friendReqButton.setText("Decline Request");
                                 friendReqButton.setBackgroundColor(Color.RED);
+                                break;
                             default:
-                                Toast.makeText(context, "Un error ha ocurrido al intentar acceder al estado actual de la solicitud", Toast.LENGTH_LONG).show();
+                                Toast.makeText(context, "Un error ha ocurrido al intentar acceder al estado actual de la solicitud. Se ha accedido al estado por defecto", Toast.LENGTH_LONG).show();
                                 System.out.println("*******Un error ha ocurrido al intentar acceder al estado actual de la solicitud ERROR: ");
                         }
                     }catch(NullPointerException nullException){

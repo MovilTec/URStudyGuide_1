@@ -7,29 +7,28 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class LoginActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
-    private Button mButton;
-    private Button ForgotPasswordButton;
-    private EditText email;
-    private EditText password;
+    private Button mButton, ForgotPasswordButton;
+    private EditText email, password;
     private FirebaseAuth mAuth;
-    private ProgressDialog mLoginProgress;
-    private ProgressDialog mRessetPassProgress;
+    private ProgressDialog mLoginProgress, mRessetPassProgress;
+    private DatabaseReference deviceToken_Reference;
+
+    Users users = new Users();
 
     public LoginActivity() {
     }
@@ -38,6 +37,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        deviceToken_Reference = FirebaseDatabase.getInstance().getReference().child("Users").child(users.getUserID()).child("device_token");
 
         mToolbar = (Toolbar) findViewById(R.id.login_toolbar);
         setSupportActionBar(mToolbar);
@@ -93,28 +94,41 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void singInUser(String email, String password){
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                mLoginProgress.dismiss();
+                                //Capturando el TokenID del dipositivo desde el cual se registro la cuenta
+                                String deviceToken = FirebaseInstanceId.getInstance().getToken();
 
-                            mLoginProgress.dismiss();
+                                deviceToken_Reference.setValue(deviceToken).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if(task.isSuccessful()){
+                                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                            startActivity(intent);
+                                            finish();
+                                        }else{
+                                            Exception e = task.getException();
+                                            mLoginProgress.hide();
+                                            Toast.makeText(LoginActivity.this, "Cannot Sing In due to the following conditions: " + e.getMessage(),
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                            } else {
+                                Exception e = task.getException();
+                                // If sign in fails, display a message to the user.
+                                mLoginProgress.hide();
+                                Toast.makeText(LoginActivity.this, "Cannot Sing In due to the following conditions: " + e.getMessage(),
+                                        Toast.LENGTH_SHORT).show();
 
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
-
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            mLoginProgress.hide();
-                            Toast.makeText(LoginActivity.this, "Cannot Sing In. Please check user and password and try again. Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            }
 
                         }
-
-                    }
-                });
+                    });
     }
 
     private void forgotPass(String email){
