@@ -43,8 +43,6 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        deviceToken_Reference = FirebaseDatabase.getInstance().getReference().child("Users").child(users.getUserID()).child("device_token");
-
         mToolbar = (Toolbar) findViewById(R.id.register_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Create an Account");
@@ -96,7 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
                             mRegProgress.dismiss();
                             //Capturando el TokenID del dipositivo desde el cual se registro la cuenta
                             String deviceToken = FirebaseInstanceId.getInstance().getToken();
-
+                            deviceToken_Reference = FirebaseDatabase.getInstance().getReference().child("Users").child(users.getUserID()).child("device_token");
                             deviceToken_Reference.setValue(deviceToken).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {

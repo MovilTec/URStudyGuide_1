@@ -38,9 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        deviceToken_Reference = FirebaseDatabase.getInstance().getReference().child("Users").child(users.getUserID()).child("device_token");
-
-        mToolbar = (Toolbar) findViewById(R.id.login_toolbar);
+        mToolbar = findViewById(R.id.login_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Login");
@@ -102,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
                                 mLoginProgress.dismiss();
                                 //Capturando el TokenID del dipositivo desde el cual se registro la cuenta
                                 String deviceToken = FirebaseInstanceId.getInstance().getToken();
-
+                                deviceToken_Reference = FirebaseDatabase.getInstance().getReference().child("Users").child(users.getUserID()).child("device_token");
                                 deviceToken_Reference.setValue(deviceToken).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
