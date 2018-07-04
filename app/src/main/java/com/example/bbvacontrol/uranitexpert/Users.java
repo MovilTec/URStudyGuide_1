@@ -55,7 +55,7 @@ public class Users {
         String userID = current_user.getUid();
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(userID);
-        notifications_Reference = FirebaseDatabase.getInstance().getReference().child("User_notifications");
+
 
         HashMap<String, String> userMap = new HashMap();
         userMap.put("name", user_name);
@@ -285,6 +285,7 @@ public class Users {
         switch(friend_request_state){
             case 0:
                 //Solicitando información del usuariosolicitante y cargandola dentro del Arreglo de información
+                notifications_Reference = FirebaseDatabase.getInstance().getReference().child("Users_notifications");
 //                setUserHashMap();
                 //Configurando nodo del usuario solicitador (Preguntador)
                 QuestionerRequesterDatabase.child(getUserID()).child(requestedUserID).child("request_status").setValue(1).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -306,7 +307,6 @@ public class Users {
                                                     HashMap<String, String> notificationData = new HashMap();
                                                     notificationData.put("from", getUserID());
                                                     notificationData.put("type", "request");
-
                                                     notifications_Reference.child(requestedUserID).push().setValue(notificationData).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                         @Override
                                                         public void onComplete(@NonNull Task<Void> task) {
@@ -318,9 +318,9 @@ public class Users {
                                                                 userProfile.changeRequestState(1);
                                                                 FriendReqButton.setEnabled(true);
                                                             }else{
-                                                                Exception RequestedUserError = task.getException();
-                                                                System.out.println("************** ERROR when capture Requester info HashMap Step***** Error: " + RequestedUserError);
-                                                                Toast.makeText(context, "Error in HashMap Notification Step " + RequestedUserError.toString(), Toast.LENGTH_LONG).show();
+                                                                Exception e = task.getException();
+                                                                System.out.println("************** ERROR when capture Requester info HashMap Step***** Error: " + e);
+                                                                Toast.makeText(context, "Error in HashMap Notification Step " + e.toString(), Toast.LENGTH_LONG).show();
                                                             }
                                                         }
                                                     });
