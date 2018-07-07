@@ -1,5 +1,7 @@
 package com.example.bbvacontrol.uranitexpert;
 
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -12,11 +14,28 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
+        String notificationTitle = remoteMessage.getNotification().getTitle();
+        String notificationBody = remoteMessage.getNotification().getBody();
+
+        String click_action = remoteMessage.getNotification().getClickAction();
+
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                 //.setSmallIcon(R.drawable.notification_icon)
-                .setContentTitle("New Friend Request")
-                .setContentText("You have received a new Friend Request")
+                .setContentTitle(notificationTitle)
+                .setContentText(notificationBody)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        Intent resultIntent = new Intent(click_action);
+
+        PendingIntent resultPendingIntent =
+                PendingIntent.getActivity(
+                        this,
+                        0,
+                        resultIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+
+        mBuilder.setContentIntent(resultPendingIntent);
 
         int notificationId = (int) System.currentTimeMillis();
 

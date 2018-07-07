@@ -93,7 +93,13 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ProfileActivity"
-            android:parentActivityName=".UsersActivity" />
+            android:parentActivityName=".UsersActivity" >
+            <intent-filter>
+                <action android:name="com.example.bbvacontrol.urstudyguide_TARGET_NOTIFICATION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <activity android:name=".Main2Activity"></activity>
     </application>
 
