@@ -1,6 +1,7 @@
 package com.example.bbvacontrol.uranitexpert;
 
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +48,7 @@ public class FriendsFragment extends Fragment {
         mMainView = inflater.inflate(R.layout.fragment_friends, container, false);
 
         mRequestsReference = FirebaseDatabase.getInstance().getReference().child("Friends_requests");
+        mRequestsReference.keepSynced(true);
         mRequestsList = mMainView.findViewById(R.id.friends_ReyclerView);
 
         LinearLayoutManager linearLayoutManager =  new LinearLayoutManager(getContext());
@@ -89,6 +92,13 @@ public class FriendsFragment extends Fragment {
                 holder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
+                        CharSequence options[] = new CharSequence[]{"Open Profile", "Send message"};
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+
+
                         Intent profileIntent = new Intent(getActivity(), ProfileActivity.class);
                         profileIntent.putExtra("user_id", user_id);
                         startActivity(profileIntent);
@@ -127,6 +137,15 @@ public class FriendsFragment extends Fragment {
         public void setStatus(String name){
             TextView userStatusView = mView.findViewById(R.id.friendContainer_userStatus_textView);
             userStatusView.setText(name);
+        }
+
+        public void setUserImage(boolean online_status){
+            //ImageView userOnlineView = mView.findViewById(R.id.);
+            if(!online_status){
+
+            }else{
+
+            }
         }
 
         //Aquí es donde se cambia la imagen

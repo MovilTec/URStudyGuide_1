@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
     private DatabaseReference deviceToken_Reference;
+    private DatabaseReference mUserDatabase;
 
     Users users = new Users();
 
@@ -37,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(users.getUserID());
 
         mAuth =  FirebaseAuth.getInstance();
 
@@ -84,6 +87,12 @@ public class MainActivity extends AppCompatActivity {
         if(currentUser == null){
             sendToStart();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mUserDatabase.child("online").setValue(true);
     }
 
     private void sendToStart(){
