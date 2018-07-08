@@ -86,13 +86,15 @@ public class MainActivity extends AppCompatActivity {
         //updateUI(currentUser);
         if(currentUser == null){
             sendToStart();
+        }else{
+            mUserDatabase.child("online").setValue(true);
         }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mUserDatabase.child("online").setValue(true);
+        mUserDatabase.child("online").setValue(false);
     }
 
     private void sendToStart(){

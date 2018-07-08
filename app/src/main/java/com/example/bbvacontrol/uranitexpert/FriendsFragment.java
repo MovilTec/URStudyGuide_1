@@ -2,6 +2,7 @@ package com.example.bbvacontrol.uranitexpert;
 
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -96,7 +97,13 @@ public class FriendsFragment extends Fragment {
                         CharSequence options[] = new CharSequence[]{"Open Profile", "Send message"};
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setTitle("Select Options");
+                        builder.setItems(options, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
+                            }
+                        });
 
 
                         Intent profileIntent = new Intent(getActivity(), ProfileActivity.class);

@@ -3,6 +3,7 @@ package com.example.bbvacontrol.uranitexpert;
 import android.app.Application;
 import android.support.annotation.NonNull;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -14,13 +15,15 @@ import com.squareup.picasso.Picasso;
 public class URStudyGuide extends Application {
 
     private DatabaseReference mUserDatabase;
+    private FirebaseAuth mAuth;
 
-    Users users =  new Users();
+    //Users users =  new Users();
 
     @Override
     public void onCreate() {
         super.onCreate();
 
+        mAuth = FirebaseAuth.getInstance();
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
 //        Picasso
@@ -32,7 +35,7 @@ public class URStudyGuide extends Application {
         built.setLoggingEnabled(true);
         Picasso.setSingletonInstance(built);
 
-        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(users.getUserID());
+        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getUid());
 
         mUserDatabase.addValueEventListener(new ValueEventListener() {
             @Override
