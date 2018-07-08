@@ -19,13 +19,17 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         String click_action = remoteMessage.getNotification().getClickAction();
 
+        String from_user_id = remoteMessage.getData().get("from_user_id");
+
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                 //.setSmallIcon(R.drawable.notification_icon)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(notificationTitle)
                 .setContentText(notificationBody)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         Intent resultIntent = new Intent(click_action);
+        resultIntent.putExtra("user_id", from_user_id);
 
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(
