@@ -238,6 +238,7 @@ public class MessageActivity extends AppCompatActivity {
             messageMap.put("seen", false);
             messageMap.put("type", "text");
             messageMap.put("time", ServerValue.TIMESTAMP);
+            messageMap.put("from", users.getUserID());
 
             Map messageUserMap = new HashMap();
             messageUserMap.put(current_user_ref + "/" + push_id, messageMap);
