@@ -36,22 +36,23 @@ public class URStudyGuide extends Application {
         built.setLoggingEnabled(true);
         Picasso.setSingletonInstance(built);
 
-        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getUid());
+        if(mAuth.getCurrentUser() !=null){
+            mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getUid());
 
-        mUserDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot != null){
-                    mUserDatabase.child("online").onDisconnect().setValue(ServerValue.TIMESTAMP);
-                    //mUserDatabase.child("online").setValue(true);
+            mUserDatabase.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(dataSnapshot != null){
+                        mUserDatabase.child("online").onDisconnect().setValue(ServerValue.TIMESTAMP);
+                        //mUserDatabase.child("online").setValue(true);
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
-
+                }
+            });
+        }
     }
 }

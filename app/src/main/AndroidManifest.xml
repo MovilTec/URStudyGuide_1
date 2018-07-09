@@ -95,7 +95,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".MessageActivity"
-            ></activity>
+            android:parentActivityName=".MainActivity"  ></activity>
     </application>
 
 </manifest>

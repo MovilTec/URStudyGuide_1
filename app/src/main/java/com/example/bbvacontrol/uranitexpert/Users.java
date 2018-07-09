@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.graphics.ColorUtils;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -37,6 +38,7 @@ import com.squareup.picasso.Picasso;
 
 import java.sql.SQLOutput;
 import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -48,6 +50,7 @@ public class Users {
     private DatabaseReference mDatabase;
     private FirebaseUser mCurrentUser;
     private DatabaseReference mFriendRequestedDatabase, QuestionerRequestedUser, notifications_Reference;
+    private final DatabaseReference mRoofRef = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference Users_RelationShips_Reference = FirebaseDatabase.getInstance().getReference().child("Users_Relationships");
 
     public void registerNewUser(String user_name){
@@ -424,7 +427,10 @@ public class Users {
                 break;
             case 3:
                 eliminateUserRequest(getUserID(),requestedUserID, context);
-//                Toast.makeText(context,"Has intentado DECLINAR una solicitud de amistad!", Toast.LENGTH_LONG).show();
+                FriendReqButton.setText("Send Request");
+                FriendReqButton.setBackgroundColor(Color.parseColor("#ff33b5e5"));
+                userProfile.changeRequestState(0);
+                FriendReqButton.setEnabled(true);
                 break;
         }
     }
@@ -432,6 +438,7 @@ public class Users {
     public void getFriendRequestStatus(final String requestedFriend_ID, final Button friendReqButton, final Button messageButton, final Context context){
         final ProfileActivity userProfile = new ProfileActivity();
         mFriendRequestedDatabase = FirebaseDatabase.getInstance().getReference().child("Users_requests").child(getUserID());
+        mFriendRequestedDatabase.keepSynced(true);
         mFriendRequestedDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -439,7 +446,7 @@ public class Users {
                     try{
                         String current_Status = dataSnapshot.child(requestedFriend_ID).child("request_status").getValue().toString();
                         int status = Integer.parseInt(current_Status);
-//                        Toast.makeText(context, "Estado actual de la solicitud = " + current_Status, Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Estado actual de la solicitud = " + current_Status, Toast.LENGTH_LONG).show();
                         userProfile.changeRequestState(status);
                         switch(status){
                             case 0:
@@ -482,35 +489,21 @@ public class Users {
     }
 
     public void eliminateUserRequest(String requestedUser, String requesterUser, final Context context){
-        final DatabaseReference user_Request;
-        final DatabaseReference requsterUserInfo_Reference;
-        user_Request = FirebaseDatabase.getInstance().getReference().child("Users_requests").child(requesterUser).child(requestedUser);
-        requsterUserInfo_Reference = FirebaseDatabase.getInstance().getReference().child("Requested_Users").child(requestedUser).child(requesterUser);
-        user_Request.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+
+        Map requestMap = new HashMap();
+        requestMap.put("Users_requests/" + requestedUser + "/" + requesterUser, null);
+        requestMap.put("Users_requests/" + requesterUser + "/" + requestedUser, null);
+        requestMap.put("Requested_Users/" + requestedUser + "/" + requesterUser, null);
+        mRoofRef.updateChildren(requestMap, new DatabaseReference.CompletionListener() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    requsterUserInfo_Reference.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful()){
-                                Toast.makeText(context, "Se ha DECLINADO la solicitud con exito", Toast.LENGTH_SHORT).show();
-                            }else{
-                                Exception declineExceptionError = task.getException();
-                                Toast.makeText(context, "Se ha producido un error al momento de procesar la declinación de la solicitud, ERROR CODE: " + declineExceptionError, Toast.LENGTH_SHORT).show();
-                                System.out.println("**********Se ha producido un error al momento de procesar la declinación de la solicitud, ERROR CODE: " + declineExceptionError);
-                            }
-                        }
-                    });
-                    Toast.makeText(context, "Se ha DECLINADO la solicitud con exito", Toast.LENGTH_SHORT).show();
-                }else{
-                    Exception declineException = task.getException();
-                    Toast.makeText(context, "Se ha producido un error al momento de procesar la declinación de la solicitud, ERROR CODE: " + declineException, Toast.LENGTH_SHORT).show();
-                    System.out.println("**********Se ha producido un error al momento de procesar la declinación de la solicitud, ERROR CODE: " + declineException);
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                if(databaseError != null){
+                    Exception e = databaseError.toException();
+                    Toast.makeText(context, "Se ha producido un error al momento de procesar la declinación de la solicitud, ERROR CODE: " + e, Toast.LENGTH_SHORT).show();
+                    System.out.println("**********Se ha producido un error al momento de procesar la declinación de la solicitud, ERROR CODE: " + e);
                 }
             }
         });
-
     }
 
     public void acceptUserRequest(final String requesterUserID, final Context context){

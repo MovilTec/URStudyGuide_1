@@ -39,11 +39,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(users.getUserID());
-
         mAuth =  FirebaseAuth.getInstance();
-
+        if(mAuth.getCurrentUser() != null) {
+            mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(users.getUserID());
+        }
         mToolbar = findViewById(R.id.main_page_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("URStudyGuide");
