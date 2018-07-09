@@ -56,6 +56,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         if(from_user.equals(currentUser)){
             holder.messageText.setBackgroundColor(Color.parseColor("#BDBDBD"));
             holder.messageText.setTextColor(R.color.colorPrimary);
+//            holder.messageText.setHo
         }else{
 
         }
@@ -65,7 +66,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mMessagesList.size();
     }
 
 
