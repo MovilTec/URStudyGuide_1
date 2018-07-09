@@ -83,6 +83,10 @@ public class FriendsFragment extends Fragment {
         FirebaseRecyclerAdapter firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<FriendsModelingClass, FriendsFragment.FriendsViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull FriendsFragment.FriendsViewHolder holder, int position, @NonNull FriendsModelingClass model) {
+                final String userName = model.name;
+                final String userThumb_image = model.thumb_image;
+                final String userImage = model.image;
+
                 holder.setName(model.name);
                 holder.setStatus(model.status);
                 holder.setThumb_image(model.thumb_image);
@@ -94,21 +98,37 @@ public class FriendsFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
 
-                        CharSequence options[] = new CharSequence[]{"Open Profile", "Send message"};
+                        CharSequence options[] = new CharSequence[]{"Open Profile", "Send message", "Check Questionnaires"};
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                         builder.setTitle("Select Options");
                         builder.setItems(options, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                switch(which){
+                                    case 0:
+                                        Intent profileIntent = new Intent(getActivity(), ProfileActivity.class);
+                                        profileIntent.putExtra("user_id", user_id);
+                                        startActivity(profileIntent);
+                                        break;
+                                    case 1:
+                                        Intent chatIntent = new Intent(getActivity(), MessageActivity.class);
+                                        chatIntent.putExtra("user_id", user_id);
+                                        chatIntent.putExtra("user_name", userName);
+                                        chatIntent.putExtra("user_thumb_image", userThumb_image);
+                                        chatIntent.putExtra("user_image", userImage);
+                                        startActivity(chatIntent);
+                                        break;
+                                    case 2:
+                                        break;
+                                }
 
                             }
                         });
-
-
-                        Intent profileIntent = new Intent(getActivity(), ProfileActivity.class);
-                        profileIntent.putExtra("user_id", user_id);
-                        startActivity(profileIntent);
+                        builder.show();
+//                        Intent profileIntent = new Intent(getActivity(), ProfileActivity.class);
+//                        profileIntent.putExtra("user_id", user_id);
+//                        startActivity(profileIntent);
                     }
                 });
             }
