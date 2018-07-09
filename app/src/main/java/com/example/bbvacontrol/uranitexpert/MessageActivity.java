@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -15,8 +16,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,7 +30,9 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -42,7 +47,10 @@ public class MessageActivity extends AppCompatActivity {
     private CircleImageView mUserImage;
     private ImageButton sendButton, addButton;
     private EditText messageText;
-    private DatabaseReference mRootRef, mUserDatabase;
+    private DatabaseReference mRootRef, mUserDatabase, mMessagesDatabase;
+    private final List<Messages> messagesList = new ArrayList<>();
+    private LinearLayoutManager linearLayoutManager;
+    private MessageAdapter messageAdapter;
 
     Users users = new Users();
 
@@ -81,6 +89,20 @@ public class MessageActivity extends AppCompatActivity {
         sendButton = findViewById(R.id.message_sendImageButton);
         addButton = findViewById(R.id.message_addImageButton);
         messageText = findViewById(R.id.message_editText);
+
+//        ---- Setting the Message Recycler View ---
+        messageAdapter = new MessageAdapter(messagesList);
+
+        mRecyclerView = findViewById(R.id.message_RecyclerView);
+        linearLayoutManager = new LinearLayoutManager(this);
+
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+
+        mRecyclerView.setAdapter(messageAdapter);
+//        ---------------------------------------------
+//          Loading the messages
+        loadMessages();
 
         mTitle.setText(mChatUser_name);
 
@@ -164,6 +186,40 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void loadMessages() {
+
+        mRootRef.child("Messages").child(users.getUserID()).child(mChatUser).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                Messages message  = dataSnapshot.getValue(Messages.class);
+
+                messagesList.add(message);
+                messageAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void sendMessage() {

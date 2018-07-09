@@ -11,6 +11,7 @@
         layout="@layout/app_bar_layout" />
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/message_RecyclerView"
         android:layout_width="368dp"
         android:layout_height="451dp"
         android:layout_marginBottom="8dp"
