@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Button;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Timer extends Application{
 
     private static final long START_TIME_IN_MILLIS = 5000;
@@ -76,6 +79,22 @@ public class Timer extends Application{
         } else {
             return diff / DAY_MILLIS + " days ago";
         }
+    }
+
+    public String getDataTimeStamp(long timeStamp){
+
+        Date time = new Date(timeStamp);
+        SimpleDateFormat pre = new SimpleDateFormat("EEE HH:mm aa");
+
+        return pre.format(time);
+    }
+
+    public String getDateTimeStamp(long timeStamp){
+
+        Date time = new Date(timeStamp);
+        SimpleDateFormat pre = new SimpleDateFormat("EEE dd MM HH:mm aa YYYY");
+
+        return pre.format(time);
     }
 
 }

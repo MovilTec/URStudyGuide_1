@@ -3,6 +3,7 @@ package com.example.bbvacontrol.uranitexpert;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +11,14 @@ import android.widget.TextView;
 import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
+public class MessageAdapter extends RecyclerView.Adapter {
 
     private List<Messages> mMessagesList;
+    private static final int VIEW_TYPE_MESSAGE_SENT  = 1;
+    private static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
 
     Users users = new Users();
+    Timer timer = new Timer();
 
     public MessageAdapter(List<Messages> mMessagesList){
         this.mMessagesList = mMessagesList;
@@ -22,52 +26,82 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
 
     @Override
-    public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.message_single_layout, parent, false);
-
-        return new MessageViewHolder(v);//null;
-    }
-
-    public class MessageViewHolder extends RecyclerView.ViewHolder {
-
-        public TextView messageText;
-        public CircleImageView profileImage;
-
-        public MessageViewHolder(View view) {
-            super(view);
-
-            messageText = view.findViewById(R.id.single_message_textView);
-            profileImage = view.findViewById(R.id.message_single_CircleImageView);
-
+        if(viewType == VIEW_TYPE_MESSAGE_SENT) {
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.message_single_layout_sender, parent, false);
+            return new SentMessageViewHolder(v);
+        }else if (viewType == VIEW_TYPE_MESSAGE_RECEIVED) {
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.message_single_layout, parent, false);
+            return new RecivedMessageViewHolder(v);
         }
-
+        return null;
     }
 
-    @SuppressLint("ResourceAsColor")
     @Override
-    public void onBindViewHolder(MessageViewHolder holder, int position) {
-
-        String currentUser = users.getUserID();
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Messages c = mMessagesList.get(position);
-        String from_user = c.getFrom();
-        //Configurando los cambios en el diseño del mensaje
-        if(from_user.equals(currentUser)){
-            holder.messageText.setBackgroundColor(Color.parseColor("#BDBDBD"));
-            holder.messageText.setTextColor(R.color.colorPrimary);
-//            holder.messageText.setHo
-        }else{
-
+        switch (holder.getItemViewType()){
+            case VIEW_TYPE_MESSAGE_SENT:
+                ((SentMessageViewHolder) holder).bind(c);
+                break;
+            case VIEW_TYPE_MESSAGE_RECEIVED:
+                ((RecivedMessageViewHolder)holder).bind(c);
         }
-        holder.messageText.setText(c.getMessage());
     }
 
+
+    @Override
+    public int getItemViewType(int position) {
+        Messages message = mMessagesList.get(position);
+        if(message.getFrom().equals(users.getUserID())){
+            return VIEW_TYPE_MESSAGE_SENT;
+        } else {
+            return VIEW_TYPE_MESSAGE_RECEIVED;
+        }
+        //return super.getItemViewType(position);
+    }
 
     @Override
     public int getItemCount() {
         return mMessagesList.size();
     }
 
+    public class RecivedMessageViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView messageText, hourText;
+        public CircleImageView profileImage;
+
+        public RecivedMessageViewHolder(View view) {
+            super(view);
+
+            messageText = view.findViewById(R.id.single_message_textView);
+            hourText = view.findViewById(R.id.message_single_hour_textView);
+            //profileImage = view.findViewById(R.id.message_single_CircleImageView);
+        }
+        void bind(Messages message){
+            messageText.setText(message.getMessage());
+            String time = timer.getDataTimeStamp(message.getTime());
+            hourText.setText(time);
+        }
+
+    }
+
+    public class SentMessageViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView messageText;
+
+        public SentMessageViewHolder(View view){
+            super(view);
+
+            messageText = view.findViewById(R.id.single_message_sender_textView);
+        }
+        void bind(Messages message){
+            messageText.setText(message.getMessage());
+        }
+
+    }
 
 }

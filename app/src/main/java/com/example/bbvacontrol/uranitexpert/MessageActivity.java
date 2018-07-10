@@ -3,6 +3,7 @@ package com.example.bbvacontrol.uranitexpert;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Callback;
@@ -43,6 +45,7 @@ public class MessageActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private ActionBar mActionBar;
     private RecyclerView mRecyclerView;
+    private SwipeRefreshLayout mRefreshLayout;
     private TextView mTitle, mLastSeen;
     private CircleImageView mUserImage;
     private ImageButton sendButton, addButton;
@@ -51,6 +54,8 @@ public class MessageActivity extends AppCompatActivity {
     private final List<Messages> messagesList = new ArrayList<>();
     private LinearLayoutManager linearLayoutManager;
     private MessageAdapter messageAdapter;
+    private static final int TOTAL_ITEMS_TO_LOAD = 10;
+    private int mCurrentPage = 1;
 
     Users users = new Users();
 
@@ -94,6 +99,7 @@ public class MessageActivity extends AppCompatActivity {
         messageAdapter = new MessageAdapter(messagesList);
 
         mRecyclerView = findViewById(R.id.message_RecyclerView);
+        mRefreshLayout = findViewById(R.id.message_swipeRefreshLayout);
         linearLayoutManager = new LinearLayoutManager(this);
 
         mRecyclerView.setHasFixedSize(true);
@@ -185,12 +191,23 @@ public class MessageActivity extends AppCompatActivity {
 
             }
         });
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mCurrentPage++;
+                messagesList.clear();
+                loadMessages();
+            }
+        });
 
     }
 
     private void loadMessages() {
 
-        mRootRef.child("Messages").child(users.getUserID()).child(mChatUser).addChildEventListener(new ChildEventListener() {
+        DatabaseReference messageRef = mRootRef.child("Messages").child(users.getUserID()).child(mChatUser);
+        Query messageQuery = messageRef.limitToLast(mCurrentPage * TOTAL_ITEMS_TO_LOAD);
+
+        messageQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
@@ -198,6 +215,9 @@ public class MessageActivity extends AppCompatActivity {
 
                 messagesList.add(message);
                 messageAdapter.notifyDataSetChanged();
+
+                mRecyclerView.scrollToPosition(messagesList.size() - 1);
+                mRefreshLayout.setRefreshing(false);
             }
 
             @Override
