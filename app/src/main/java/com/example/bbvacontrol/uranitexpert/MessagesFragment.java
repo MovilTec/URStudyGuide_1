@@ -96,7 +96,10 @@ public class MessagesFragment extends Fragment {
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
                         String data = dataSnapshot.child("message").getValue().toString();
-                        holder.setMessage(data);
+                        String from = dataSnapshot.child("from").getValue().toString();
+                        String time = dataSnapshot.child("time").getValue().toString();
+                        holder.setMessage(data, from);
+                        holder.setTime(time);
                     }
 
                     @Override
@@ -164,7 +167,7 @@ public class MessagesFragment extends Fragment {
     }
 
     public static class MessagesViewHolder extends RecyclerView.ViewHolder{
-
+        private DatabaseReference mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
         View mView;
 
         public MessagesViewHolder(View itemView){
@@ -173,9 +176,32 @@ public class MessagesFragment extends Fragment {
             mView = itemView;
         }
 
-        public void setMessage(String message){
-            TextView messageView = mView.findViewById(R.id.message_lastMessage_textView);
-            messageView.setText(message);
+        public void setTime(String time){
+            Timer timer = new Timer();
+            final TextView timeView = mView.findViewById(R.id.message_time_textView);
+            String messageTime = timer.getDataTimeStamp(Long.parseLong(time));
+            timeView.setText(messageTime);
+        }
+
+        public void setMessage(final String message, String from){
+            final TextView messageView = mView.findViewById(R.id.message_lastMessage_textView);
+            Users users = new Users();
+            if(from.equals(users.getUserID())) {
+                messageView.setText(message);
+            }else{
+                mUsersDatabase.child(from).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        String userName = dataSnapshot.getValue().toString();
+                        messageView.setText(message);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
         }
 
         public void setName(String name){

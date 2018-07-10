@@ -94,8 +94,10 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".MessageActivity"
-            android:parentActivityName=".MainActivity"  ></activity>
+        <activity
+            android:name=".MessageActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".QuestionairesActivity"></activity>
     </application>
 
 </manifest>

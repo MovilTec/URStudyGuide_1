@@ -92,7 +92,7 @@ public class Timer extends Application{
     public String getDateTimeStamp(long timeStamp){
 
         Date time = new Date(timeStamp);
-        SimpleDateFormat pre = new SimpleDateFormat("EEE dd MM HH:mm aa YYYY");
+        SimpleDateFormat pre = new SimpleDateFormat("EEE dd MM HH:mm aa yyyy");
 
         return pre.format(time);
     }
