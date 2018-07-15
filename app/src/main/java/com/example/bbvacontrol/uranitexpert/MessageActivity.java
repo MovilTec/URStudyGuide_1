@@ -245,6 +245,7 @@ public class MessageActivity extends AppCompatActivity {
     private void sendMessage() {
         String Message = messageText.getText().toString();
         if(!TextUtils.isEmpty(Message)){
+            messageText.setText("");
 
             String current_user_ref = "Messages/" + users.getUserID() + "/" + mChatUser;
             String chat_user_ref = "Messages/" + mChatUser + "/" + users.getUserID();
@@ -270,10 +271,11 @@ public class MessageActivity extends AppCompatActivity {
                     if(databaseError != null){
                         Exception e = databaseError.toException();
                         Log.d("Message Log", "En error has ocurred!. ERROR CODE:" + e);
-                        messageText.setText("");
-                    }else{
-                        messageText.setText("");
+//                        messageText.setText("");
                     }
+//                    else{
+//                        messageText.setText("");
+//                    }
                 }
             });
         }
