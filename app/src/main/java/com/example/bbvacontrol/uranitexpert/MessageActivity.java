@@ -271,6 +271,8 @@ public class MessageActivity extends AppCompatActivity {
                         Exception e = databaseError.toException();
                         Log.d("Message Log", "En error has ocurred!. ERROR CODE:" + e);
                         messageText.setText("");
+                    }else{
+                        messageText.setText("");
                     }
                 }
             });
