@@ -56,6 +56,8 @@ public class MessageActivity extends AppCompatActivity {
     private MessageAdapter messageAdapter;
     private static final int TOTAL_ITEMS_TO_LOAD = 10;
     private int mCurrentPage = 1;
+    private int itemPos = 0;
+    private String mLastKey, mPrevKey = "";
 
     Users users = new Users();
 
@@ -195,8 +197,11 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 mCurrentPage++;
-                messagesList.clear();
-                loadMessages();
+
+                //messagesList.clear();
+                itemPos = 0;
+
+                loadMoreMessages();
             }
         });
 
@@ -213,11 +218,70 @@ public class MessageActivity extends AppCompatActivity {
 
                 Messages message  = dataSnapshot.getValue(Messages.class);
 
+                itemPos++;
+                if(itemPos == 1){
+                    String messageKey = dataSnapshot.getKey();
+
+                    mLastKey = messageKey;
+                    mPrevKey = messageKey;
+                }
+
                 messagesList.add(message);
                 messageAdapter.notifyDataSetChanged();
 
                 mRecyclerView.scrollToPosition(messagesList.size() - 1);
                 mRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void loadMoreMessages(){
+
+        DatabaseReference messageRef = mRootRef.child("messages").child(users.getUserID()).child(mChatUser);
+
+        Query messageQuery = messageRef.orderByKey().endAt(mLastKey).limitToLast(10);
+
+        messageQuery.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                Messages message = dataSnapshot.getValue(Messages.class);
+                String messageKey = dataSnapshot.getKey();
+                if(!mPrevKey.equals(messageKey)){
+                    messagesList.add(itemPos++, message);
+                }else{
+                    mPrevKey = mLastKey;
+                }
+
+                if(itemPos == 1){
+                    mLastKey = messageKey;
+                }
+
+                Log.d("TOTALKEYS", "Last Key : " + mLastKey + " | Prev Key : " + mPrevKey + " | Message Key : " + messageKey);
+
+                messageAdapter.notifyDataSetChanged();
+                mRefreshLayout.setRefreshing(false);
+                linearLayoutManager.scrollToPositionWithOffset(10, 0);
             }
 
             @Override

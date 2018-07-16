@@ -2,6 +2,8 @@ package com.example.bbvacontrol.uranitexpert;
 
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -21,11 +23,14 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         String from_user_id = remoteMessage.getData().get("from_user_id");
 
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                 //.setSmallIcon(R.drawable.notification_icon)
                 .setSmallIcon(R.drawable.default_user_image_1)
                 .setContentTitle(notificationTitle)
                 .setContentText(notificationBody)
+                .setSound(alarmSound)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         Intent resultIntent = new Intent(click_action);
