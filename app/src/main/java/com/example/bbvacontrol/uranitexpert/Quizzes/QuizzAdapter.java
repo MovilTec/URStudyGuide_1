@@ -2,6 +2,7 @@ package com.example.bbvacontrol.uranitexpert.Quizzes;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -13,7 +14,8 @@ import java.util.List;
 
 public class QuizzAdapter extends RecyclerView.Adapter<QuizzAdapter.mViewHolder> {
 
-    private List<Quizz> mDataset = new ArrayList<>();
+    private List<Quizz> mDataset;
+    private QuizzItemAction action;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -21,15 +23,17 @@ public class QuizzAdapter extends RecyclerView.Adapter<QuizzAdapter.mViewHolder>
     public static class mViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView textView;
-        public mViewHolder(TextView v) {
+
+        public mViewHolder(View v) {
             super(v);
-            textView = v;
+            textView = v.findViewById(R.id.quizzTitle);
         }
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public QuizzAdapter(List<Quizz> myDataset) {
+    public QuizzAdapter(List<Quizz> myDataset, QuizzItemAction action) {
         mDataset = myDataset;
+        this.action = action;
     }
 
 
@@ -38,9 +42,9 @@ public class QuizzAdapter extends RecyclerView.Adapter<QuizzAdapter.mViewHolder>
     public QuizzAdapter.mViewHolder onCreateViewHolder(ViewGroup parent,
                                                        int viewType) {
         // create a new view
-        TextView v = (TextView) LayoutInflater.from(parent.getContext())
+        View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.adapter_quizz_recycled_view, parent, false);
-        mViewHolder vh = new mViewHolder(v);
+        mViewHolder vh = new QuizzAdapter.mViewHolder(v);
         return vh;
     }
 
@@ -57,6 +61,10 @@ public class QuizzAdapter extends RecyclerView.Adapter<QuizzAdapter.mViewHolder>
     @Override
     public int getItemCount() {
         return mDataset.size();
+    }
+
+    public interface QuizzItemAction {
+        void onQuizzItemSelected(Quizz item);
     }
 
 }

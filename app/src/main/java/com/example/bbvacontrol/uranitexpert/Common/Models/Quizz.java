@@ -22,24 +22,26 @@ public class Quizz implements Serializable {
         }
 
         public float getPrice() {
-            return price;
+            return noQuestions;
         }
 
         public void setPrice(int price) {
-            this.price = price;
+            this.noQuestions = price;
         }
 
         private String name;
         private String description;
-        private float price;
+    //private String Author;
+    //private String Members;
+    private int noQuestions;
 
         public Quizz() {
 
         }
 
-        public Quizz(String name, String description, int price) {
+    public Quizz(String name, String description, int questions) {
             this.name = name;
             this.description = description;
-            this.price = price;
+        this.noQuestions = questions;
         }
 }

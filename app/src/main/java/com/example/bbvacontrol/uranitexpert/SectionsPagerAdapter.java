@@ -23,10 +23,8 @@ class SectionsPagerAdapter extends FragmentPagerAdapter{
                 MessagesFragment messagesFragment= new MessagesFragment();
                 return messagesFragment;
             case 2:
-                RequestFragment requestFragment = new RequestFragment();
-                return requestFragment;
-            case 3:
-                // TODO:- Add the quizes Activity!
+//                RequestFragment requestFragment = new RequestFragment();
+//                return requestFragment;
                 QuizzesFragment quizzFragment = new QuizzesFragment();
                 return quizzFragment;
             default:
@@ -36,7 +34,7 @@ class SectionsPagerAdapter extends FragmentPagerAdapter{
 
     @Override
     public int getCount() {
-        return 4;
+        return 3;
     }
 
     @Override
@@ -47,8 +45,6 @@ class SectionsPagerAdapter extends FragmentPagerAdapter{
             case 1:
                 return "Messages";
             case 2:
-                return "Requests";
-            case 3:
                 return "Quizzes";
             default:
                 return null;

@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private Toolbar mToolbar;
-    private SectionsPagerAdapter mSections;
+    private SectionsPagerAdapter mAdapter;
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
     private DatabaseReference deviceToken_Reference;
@@ -44,20 +44,29 @@ public class MainActivity extends AppCompatActivity {
         if(mAuth.getCurrentUser() != null) {
             mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(users.getUserID());
         }
+        setupToolBar();
+        setupPager();
+    }
+
+    private void setupToolBar() {
         mToolbar = findViewById(R.id.main_page_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("URStudyGuide");
+    }
 
+    private void setupPager() {
         mViewPager = findViewById(R.id.main_tabPager);
-        mSections = new SectionsPagerAdapter(getSupportFragmentManager());
+        mAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        mViewPager.setAdapter(mSections);
+        // It can only handle three pages!!!
+        mViewPager.setAdapter(mAdapter);
 
         mTabLayout = findViewById(R.id.main_tabs);
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
-        public void sendMessage(View view) {
+
+    public void sendMessage(View view) {
         Intent intent = new Intent(this, NetworkActivity.class);
         startActivity(intent);
     }

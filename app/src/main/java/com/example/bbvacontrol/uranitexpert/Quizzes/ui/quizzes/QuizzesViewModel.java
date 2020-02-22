@@ -21,7 +21,7 @@ public class QuizzesViewModel extends ViewModel {
     public QuizzNavigator navigator;
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference quizzesRef = database.getReference("quizzes");
+    DatabaseReference quizzesRef = database.getReference("Quizzes");
 
     void getAvilableQuizzes() {
         final List<Quizz> quizz = new ArrayList<>();

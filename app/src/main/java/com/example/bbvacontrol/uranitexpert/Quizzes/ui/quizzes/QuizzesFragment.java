@@ -1,6 +1,7 @@
 package com.example.bbvacontrol.uranitexpert.Quizzes.ui.quizzes;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,8 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
-
 import com.example.bbvacontrol.uranitexpert.Common.Models.Quizz;
 import com.example.bbvacontrol.uranitexpert.Quizzes.QuizzAdapter;
 import com.example.bbvacontrol.uranitexpert.Quizzes.QuizzNavigator;
@@ -25,6 +26,7 @@ public class QuizzesFragment extends Fragment implements QuizzNavigator {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
+    private Button quizzButton;
 
     public static QuizzesFragment newInstance() {
         return new QuizzesFragment();
@@ -36,6 +38,8 @@ public class QuizzesFragment extends Fragment implements QuizzNavigator {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.quizzes_fragment, container, false);
         recyclerView = view.findViewById(R.id.quizzes_recycler_view);
+        quizzButton = view.findViewById(R.id.quizz_floatingActionButton);
+
         return view;
     }
 
@@ -43,12 +47,12 @@ public class QuizzesFragment extends Fragment implements QuizzNavigator {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(QuizzesViewModel.class);
-        // TODO: Use the ViewModel
+        mViewModel.navigator = this;
         mViewModel.getAvilableQuizzes();
-        setupView();
+        setupRecyclerView();
     }
 
-    void setupView() {
+    private void setupRecyclerView() {
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         recyclerView.setHasFixedSize(true);
@@ -58,15 +62,32 @@ public class QuizzesFragment extends Fragment implements QuizzNavigator {
         recyclerView.setLayoutManager(layoutManager);
     }
 
-    void showErrorMessage(String message) {
+    private void setupQuizzButton() {
+        quizzButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO:- Send to Create Quizz View
+//                Intent intent = new Intent(this, DisplayMessageActivity.class);
+//                intent.putExtra(EXTRA_MESSAGE, message);
+//                startActivity(intent);
+
+            }
+        });
+    }
+
+    private void showErrorMessage(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onDataRetrieve(List<Quizz> items) {
-        // specify an adapter (see also next example)
         if (items.size() > 0) {
-            mAdapter = new QuizzAdapter(items);
+            mAdapter = new QuizzAdapter(items, new QuizzAdapter.QuizzItemAction() {
+                @Override
+                public void onQuizzItemSelected(Quizz item) {
+                    //TODO:- Send to the Quiz View
+                }
+            });
             recyclerView.setAdapter(mAdapter);
             return;
         }
