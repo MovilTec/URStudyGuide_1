@@ -1,4 +1,4 @@
-package com.example.bbvacontrol.uranitexpert;
+package com.example.bbvacontrol.uranitexpert.Common.Models;
 
 public class MessageModelingClass {
 

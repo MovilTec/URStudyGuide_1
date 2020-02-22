@@ -1,4 +1,4 @@
-package com.example.bbvacontrol.uranitexpert;
+package com.example.bbvacontrol.uranitexpert.Common.Services;
 
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -8,6 +8,7 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
+import com.example.bbvacontrol.uranitexpert.R;
 import com.google.firebase.messaging.RemoteMessage;
 
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {

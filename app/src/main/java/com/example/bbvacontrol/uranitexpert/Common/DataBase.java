@@ -1,11 +1,14 @@
-package com.example.bbvacontrol.uranitexpert;
+package com.example.bbvacontrol.uranitexpert.Common;
 
-import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.bbvacontrol.uranitexpert.ButtonAction;
+import com.example.bbvacontrol.uranitexpert.Questions;
+import com.example.bbvacontrol.uranitexpert.R;
 
 import java.util.Random;
 

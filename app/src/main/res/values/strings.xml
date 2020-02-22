@@ -5,4 +5,5 @@
     <string name="hello_blank_fragment">vista principal Redes</string>
     <string name="title_activity_client_support">client_support</string>
     <string name="ChangeStatus_dialog">Change Status</string>
+    <string name="quizz_title">Quizz Title</string>
 </resources>

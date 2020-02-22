@@ -1,13 +1,16 @@
-package com.example.bbvacontrol.uranitexpert;
+package com.example.bbvacontrol.uranitexpert.Messages;
 
-import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.example.bbvacontrol.uranitexpert.Common.Models.Messages;
+import com.example.bbvacontrol.uranitexpert.Common.Models.Users;
+import com.example.bbvacontrol.uranitexpert.Common.Timer;
+import com.example.bbvacontrol.uranitexpert.R;
+
 import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 

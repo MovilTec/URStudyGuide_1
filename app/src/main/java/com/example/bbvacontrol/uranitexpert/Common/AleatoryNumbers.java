@@ -1,4 +1,4 @@
-package com.example.bbvacontrol.uranitexpert;
+package com.example.bbvacontrol.uranitexpert.Common;
 
 import java.util.Random;
 import java.util.Set;

@@ -1,8 +1,6 @@
-package com.example.bbvacontrol.uranitexpert;
+package com.example.bbvacontrol.uranitexpert.Messages;
 
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,6 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.bbvacontrol.uranitexpert.Common.Models.MessageModelingClass;
+import com.example.bbvacontrol.uranitexpert.Common.Models.Users;
+import com.example.bbvacontrol.uranitexpert.Common.Timer;
+import com.example.bbvacontrol.uranitexpert.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.ChildEventListener;

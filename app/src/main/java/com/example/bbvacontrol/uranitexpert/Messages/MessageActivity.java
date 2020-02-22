@@ -1,4 +1,4 @@
-package com.example.bbvacontrol.uranitexpert;
+package com.example.bbvacontrol.uranitexpert.Messages;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -14,12 +14,14 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.bbvacontrol.uranitexpert.Common.Models.Messages;
+import com.example.bbvacontrol.uranitexpert.Common.Models.Users;
+import com.example.bbvacontrol.uranitexpert.Common.Timer;
+import com.example.bbvacontrol.uranitexpert.R;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

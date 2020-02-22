@@ -13,7 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <service android:name=".FirebaseMessagingService">
+        <activity android:name=".Quizzes.Quizzes"></activity>
+
+        <service android:name=".Common.Services.FirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -43,7 +45,7 @@
             android:value=".MainActivity" />
 
         <activity
-            android:name=".DataBase"
+            android:name=".Common.DataBase"
             android:parentActivityName=".MainActivity" />
 
         <meta-data
@@ -90,9 +92,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MessageActivity"
+            android:name=".Messages.MessageActivity"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".QuestionairesActivity"></activity>
+        <activity android:name=".Questioners.QuestionairesActivity" />
     </application>
 
 </manifest>
