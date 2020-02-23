@@ -12,7 +12,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class Questions {
 
 
-    FirebaseRequests requests = new FirebaseRequests();
+    FirebaseRequests requests = FirebaseRequests.getInstance();
 
     public void questionsRetrive(String ToppicReference, String question, final TextView textView, final Button button1, final Button button2, final Button button3){
 

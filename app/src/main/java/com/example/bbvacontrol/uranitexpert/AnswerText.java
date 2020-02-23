@@ -27,7 +27,7 @@ public class AnswerText {
         }
     }
 
-    FirebaseRequests requests = new FirebaseRequests();
+    FirebaseRequests requests = FirebaseRequests.getInstance();
 
     public void retrivingAnswers(String ToppicReference, String question, String id) {
 

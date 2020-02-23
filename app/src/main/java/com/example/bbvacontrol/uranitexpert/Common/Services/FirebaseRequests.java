@@ -4,12 +4,55 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.bbvacontrol.uranitexpert.AnswerText;
+import com.example.bbvacontrol.uranitexpert.R;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class FirebaseRequests {
+public class FirebaseRequests <V> {
+
+    private static FirebaseRequests shared = null;
+    private DatabaseReference userReference, quizzReference;
+
+    public static FirebaseRequests getInstance() {
+        if (shared == null)
+            shared = new FirebaseRequests();
+
+        return shared;
+    }
+
+    private FirebaseRequests() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        userReference = database.getReference("Users").child(FirebaseAuth.getInstance().getUid());
+        quizzReference = database.getReference("Quizzes");
+    }
+
+    public void singleRequest(RequestType type, ValueEventListener listener) {
+        switch (type) {
+            case QUIZZ:
+                quizzReference.addListenerForSingleValueEvent(listener);
+            default:
+                break;
+        }
+    }
+
+    public void write(RequestType type, Object value, OnSuccessListener successListner, OnFailureListener failureListener) {
+        switch (type) {
+            case QUIZZ:
+                quizzReference.push()
+                        .setValue(value)
+                        .addOnSuccessListener(successListner)
+                        .addOnFailureListener(failureListener);
+            default:
+                break;
+        }
+    }
 
     public void databaseRequest(DatabaseReference databaseReference, final TextView textView){
 
