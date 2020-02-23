@@ -6,4 +6,11 @@
     <string name="title_activity_client_support">client_support</string>
     <string name="ChangeStatus_dialog">Change Status</string>
     <string name="quizz_title">Quizz Title</string>
+    <!-- Quizz Creator View   -->
+    <string name="quizzcreator_quizz_name">Name of your Quizz</string>
+    <string name="quizzcreator_number_questions">Number of questions</string>
+
+    <!--  Quizz Creator Adapter  -->
+    <string name="quizzcreator_adapter_question">Question</string>
+
 </resources>

@@ -31,9 +31,9 @@ public class Quizz implements Serializable {
 
         private String name;
         private String description;
-    //private String Author;
-    //private String Members;
-    private int noQuestions;
+        //private String Author;
+        //private String Members;
+        private int noQuestions;
 
         public Quizz() {
 

@@ -49,6 +49,8 @@ dependencies {
     implementation 'com.android.support:support-annotations:27.1.1'
     //Image compresor to Thumbnail
     implementation 'id.zelory:compressor:2.1.0'
+    // Number Picker
+    implementation 'com.github.travijuu:numberpicker:1.0.7'
 
 }
 
