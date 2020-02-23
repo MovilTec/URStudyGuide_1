@@ -14,16 +14,16 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <EditText
                 android:id="@+id/editText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="32dp"
                 android:autofillHints="auto"
-                android:layout_gravity="center_horizontal"
                 android:ems="10"
                 android:hint="@string/quizzcreator_quizz_name"
                 android:inputType="textPersonName"
@@ -46,9 +46,9 @@
 
                 <com.travijuu.numberpicker.library.NumberPicker
                     android:id="@+id/number_picker"
-                    android:layout_gravity="center_vertical"
                     android:layout_width="130dp"
                     android:layout_height="40dp"
+                    android:layout_gravity="center_vertical"
                     numberpicker:focusable="false"
                     numberpicker:max="99"
                     numberpicker:min="1"
@@ -59,22 +59,26 @@
             <LinearLayout
                 android:id="@+id/quizzcreator_linearLayout"
                 android:layout_width="match_parent"
-                android:layout_height="360dp"
+                android:layout_height="475dp"
                 android:orientation="horizontal">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/quizzcreator_recyclerView"
 
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent">
+
+                </android.support.v7.widget.RecyclerView>
+
             </LinearLayout>
 
             <Button
                 android:id="@+id/quizzcreator_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="44dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="44dp"
+                android:layout_weight="7"
                 android:text="Create quizz" />
 
         </LinearLayout>

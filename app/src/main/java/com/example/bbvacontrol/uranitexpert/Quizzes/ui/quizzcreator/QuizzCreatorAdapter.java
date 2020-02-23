@@ -4,9 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.example.bbvacontrol.uranitexpert.Common.Models.TestItem;
@@ -22,6 +19,21 @@ import java.util.List;
 public class QuizzCreatorAdapter extends RecyclerView.Adapter<QuizzCreatorAdapter.mViewHolder> {
 
     private List<String> testItems = new ArrayList<>();
+    private List<TestItem> _testItems;
+    private QuizzCreatorAnswerAdapter answerAdapter;
+    private ValueChangedListener onValueChange = new ValueChangedListener() {
+        @Override
+        public void valueChanged(int value, ActionEnum action) {
+            switch(action) {
+                case INCREMENT:
+                    answerAdapter.addAnswers();
+                    break;
+                case DECREMENT:
+                    answerAdapter.removeAnswers();
+                    break;
+            }
+        }
+    };
 
     public QuizzCreatorAdapter() {
         TestItem testItem = new TestItem();
@@ -38,7 +50,7 @@ public class QuizzCreatorAdapter extends RecyclerView.Adapter<QuizzCreatorAdapte
 
     @Override
     public void onBindViewHolder(mViewHolder holder, int position) {
-        ListAdapter answerAdapter = new QuizzCreatorAnswerAdapter();
+        answerAdapter = new QuizzCreatorAnswerAdapter();
         holder.answers.setAdapter(answerAdapter);
         holder.numberPicker.setValueChangedListener(onValueChange);
     }
@@ -47,6 +59,8 @@ public class QuizzCreatorAdapter extends RecyclerView.Adapter<QuizzCreatorAdapte
     public int getItemCount() {
         return testItems.size();
     }
+
+    // ---------- Public class methods --------------
 
     public int addQuestions() {
         testItems.add("New Item");
@@ -58,17 +72,10 @@ public class QuizzCreatorAdapter extends RecyclerView.Adapter<QuizzCreatorAdapte
         return testItems.size() - 1;
     }
 
-    private ValueChangedListener onValueChange = new ValueChangedListener() {
-        @Override
-        public void valueChanged(int value, ActionEnum action) {
-            switch(action) {
-                case INCREMENT:
-                    break;
-                case DECREMENT:
-                    break;
-            }
-        }
-    };
+    public List<TestItem> getQuizz() {
+        // TODO:- Create and get the quizz object
+        return _testItems;
+    }
 
     public static class mViewHolder extends RecyclerView.ViewHolder {
 

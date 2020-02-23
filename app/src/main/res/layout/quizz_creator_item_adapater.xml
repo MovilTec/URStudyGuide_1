@@ -54,9 +54,9 @@
                 android:layout_gravity="center_vertical"
                 numberpicker:focusable="false"
                 numberpicker:max="99"
-                numberpicker:min="1"
+                numberpicker:min="2"
                 numberpicker:unit="1"
-                numberpicker:value="1" />
+                numberpicker:value="2" />
         </LinearLayout>
 
     </LinearLayout>

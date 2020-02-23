@@ -9,9 +9,12 @@ import android.widget.ListAdapter;
 import com.example.bbvacontrol.uranitexpert.R;
 
 public class QuizzCreatorAnswerAdapter extends BaseAdapter {
+    // MARK:-
+    private int count = 2;
+
     @Override
     public int getCount() {
-        return 2;
+        return count;
     }
 
     @Override
@@ -29,5 +32,17 @@ public class QuizzCreatorAnswerAdapter extends BaseAdapter {
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.quizzcreator_answers_item_listview, viewGroup, false);
         return v;
+    }
+
+    public void addAnswers() {
+        count++;
+        notifyDataSetChanged();
+    }
+
+    public void removeAnswers() {
+        if (count > 2) {
+            count--;
+            notifyDataSetChanged();
+        }
     }
 }
