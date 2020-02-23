@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.Toast;
 import com.example.bbvacontrol.uranitexpert.Common.Models.Quizz;
 import com.example.bbvacontrol.uranitexpert.Quizzes.QuizzAdapter;
+import com.example.bbvacontrol.uranitexpert.Quizzes.QuizzCreator;
 import com.example.bbvacontrol.uranitexpert.Quizzes.QuizzNavigator;
 import com.example.bbvacontrol.uranitexpert.R;
 
@@ -26,7 +28,7 @@ public class QuizzesFragment extends Fragment implements QuizzNavigator {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    private Button quizzButton;
+    private FloatingActionButton quizzButton;
 
     public static QuizzesFragment newInstance() {
         return new QuizzesFragment();
@@ -50,6 +52,7 @@ public class QuizzesFragment extends Fragment implements QuizzNavigator {
         mViewModel.navigator = this;
         mViewModel.getAvilableQuizzes();
         setupRecyclerView();
+        setupQuizzButton();
     }
 
     private void setupRecyclerView() {
@@ -66,11 +69,8 @@ public class QuizzesFragment extends Fragment implements QuizzNavigator {
         quizzButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO:- Send to Create Quizz View
-//                Intent intent = new Intent(this, DisplayMessageActivity.class);
-//                intent.putExtra(EXTRA_MESSAGE, message);
-//                startActivity(intent);
-
+                Intent intent = new Intent(getContext(), QuizzCreator.class);
+                startActivity(intent);
             }
         });
     }
