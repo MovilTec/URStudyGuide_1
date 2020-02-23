@@ -50,10 +50,6 @@ public class QuizzCreatorFragment extends Fragment {
 
     private void setupNumberPicker() {
 
-//        mNumberPicker.setMax(15);
-//        mNumberPicker.setMin(1);
-//        mNumberPicker.setUnit(2);
-
         mNumberPicker.setValueChangedListener(new ValueChangedListener() {
             @Override
             public void valueChanged(int value, ActionEnum action) {
@@ -62,6 +58,7 @@ public class QuizzCreatorFragment extends Fragment {
                         mAdapter.notifyItemInserted(mAdapter.addQuestions());
                         break;
                     case DECREMENT:
+                        mAdapter.notifyItemRemoved(mAdapter.removeQuestions());
                         break;
                 }
             }

@@ -12,5 +12,9 @@
 
     <!--  Quizz Creator Adapter  -->
     <string name="quizzcreator_adapter_question">Question</string>
+    <string name="quizzcreator_adapter_numberofanswers">Number of answers</string>
+    <!--  Quizz Creator Answer ListView  -->
+    <string name="quizzcreator_answer_text">Answer</string>
+    <string name="quizzcreator_answer_toggle">isCorrect</string>
 
 </resources>
