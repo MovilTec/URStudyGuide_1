@@ -11,19 +11,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.bbvacontrol.uranitexpert.Common.Helpers.AlertableFragment;
+import com.example.bbvacontrol.uranitexpert.Common.Models.TestItem;
+import com.example.bbvacontrol.uranitexpert.Quizzes.QuizzCreatorNavigator;
 import com.example.bbvacontrol.uranitexpert.R;
 import com.travijuu.numberpicker.library.Enums.ActionEnum;
 import com.travijuu.numberpicker.library.Interface.ValueChangedListener;
 import com.travijuu.numberpicker.library.NumberPicker;
 
-public class QuizzCreatorFragment extends Fragment {
+import java.util.List;
+
+public class QuizzCreatorFragment extends Fragment implements QuizzCreatorNavigator {
 
     private QuizzCreatorViewModel mViewModel;
     private NumberPicker mNumberPicker;
     private RecyclerView mRecyclerView;
     private QuizzCreatorAdapter mAdapter;
-
-    private int mCounter = 1;
 
     public static QuizzCreatorFragment newInstance() {
         return new QuizzCreatorFragment();
@@ -33,6 +36,7 @@ public class QuizzCreatorFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.quizz_creator_fragment, container, false);
         mNumberPicker = view.findViewById(R.id.number_picker);
         mRecyclerView = view.findViewById(R.id.quizzcreator_recyclerView);
@@ -43,7 +47,6 @@ public class QuizzCreatorFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(QuizzCreatorViewModel.class);
-        // TODO: Use the ViewModel
         setupNumberPicker();
         setupRecyclerView();
     }
@@ -69,8 +72,23 @@ public class QuizzCreatorFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
 
-        mAdapter = new QuizzCreatorAdapter();
+        mAdapter = new QuizzCreatorAdapter(new QuizzCreatorAdapter.QuizzCreatorHandler() {
+
+            @Override
+            public void onCreateAction(List<TestItem> testItems) {
+//                mViewModel.createQuizz(testItems);
+            }
+        });
         mRecyclerView.setAdapter(mAdapter);
     }
 
+    @Override
+    public void onCreatedQuizz() {
+        //TODO:- Something when quizz created
+    }
+
+    @Override
+    public void onError(String error) {
+
+    }
 }

@@ -1,4 +1,4 @@
-package com.example.bbvacontrol.uranitexpert.Quizzes;
+package com.example.bbvacontrol.uranitexpert.Quizzes.ui.quizzes;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.example.bbvacontrol.uranitexpert.Common.Models.Quizz;
 import com.example.bbvacontrol.uranitexpert.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class QuizzAdapter extends RecyclerView.Adapter<QuizzAdapter.mViewHolder> {

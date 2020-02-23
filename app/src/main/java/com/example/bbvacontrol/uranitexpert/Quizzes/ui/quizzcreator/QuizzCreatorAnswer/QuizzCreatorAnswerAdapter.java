@@ -4,27 +4,36 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
 
+import com.example.bbvacontrol.uranitexpert.Common.Models.Answer;
+import com.example.bbvacontrol.uranitexpert.Quizzes.QuizzCreator;
 import com.example.bbvacontrol.uranitexpert.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class QuizzCreatorAnswerAdapter extends BaseAdapter {
-    // MARK:-
-    private int count = 2;
+
+    private List<Answer> answers = new ArrayList();
+
+    public QuizzCreatorAnswerAdapter() {
+        answers.add(new Answer());
+        answers.add(new Answer());
+    }
 
     @Override
     public int getCount() {
-        return count;
+        return answers.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return null;
+        return answers.get(i);
     }
 
     @Override
     public long getItemId(int i) {
-        return 0;
+        return i;
     }
 
     @Override
@@ -35,13 +44,13 @@ public class QuizzCreatorAnswerAdapter extends BaseAdapter {
     }
 
     public void addAnswers() {
-        count++;
+        answers.add(new Answer());
         notifyDataSetChanged();
     }
 
     public void removeAnswers() {
-        if (count > 2) {
-            count--;
+        if (answers.size() > 2) {
+            answers.remove(answers.size()-1);
             notifyDataSetChanged();
         }
     }

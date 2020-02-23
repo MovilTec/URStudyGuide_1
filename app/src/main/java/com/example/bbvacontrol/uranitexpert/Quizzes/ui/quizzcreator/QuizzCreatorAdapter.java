@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.bbvacontrol.uranitexpert.Common.Models.TestItem;
@@ -21,6 +22,7 @@ public class QuizzCreatorAdapter extends RecyclerView.Adapter<QuizzCreatorAdapte
     private List<String> testItems = new ArrayList<>();
     private List<TestItem> _testItems;
     private QuizzCreatorAnswerAdapter answerAdapter;
+    private QuizzCreatorHandler onCreateQuizz;
     private ValueChangedListener onValueChange = new ValueChangedListener() {
         @Override
         public void valueChanged(int value, ActionEnum action) {
@@ -35,9 +37,10 @@ public class QuizzCreatorAdapter extends RecyclerView.Adapter<QuizzCreatorAdapte
         }
     };
 
-    public QuizzCreatorAdapter() {
+    public QuizzCreatorAdapter(QuizzCreatorHandler createQuizzAction) {
         TestItem testItem = new TestItem();
         testItems.add("");
+        onCreateQuizz = createQuizzAction;
     }
 
     @Override
@@ -53,6 +56,12 @@ public class QuizzCreatorAdapter extends RecyclerView.Adapter<QuizzCreatorAdapte
         answerAdapter = new QuizzCreatorAnswerAdapter();
         holder.answers.setAdapter(answerAdapter);
         holder.numberPicker.setValueChangedListener(onValueChange);
+//        holder.quizzCreatorButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                onCreateQuizz.onCreateAction(_testItems);
+//            }
+//        });
     }
 
     @Override
@@ -81,12 +90,18 @@ public class QuizzCreatorAdapter extends RecyclerView.Adapter<QuizzCreatorAdapte
 
         public ListView answers;
         public NumberPicker numberPicker;
+        public Button quizzCreatorButton;
 
         public mViewHolder(View itemView) {
             super(itemView);
             answers = itemView.findViewById(R.id.quizzcreator_listView);
             numberPicker = itemView.findViewById(R.id.answer_number_picker);
+            quizzCreatorButton = itemView.findViewById(R.id.quizzcreator_button);
         }
+    }
+
+    public interface QuizzCreatorHandler {
+        void onCreateAction(List<TestItem> testItems);
     }
 
 }

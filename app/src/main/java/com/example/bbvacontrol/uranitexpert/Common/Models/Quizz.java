@@ -1,47 +1,63 @@
 package com.example.bbvacontrol.uranitexpert.Common.Models;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Quizz implements Serializable {
 
+    private String name;
+    private String description;
+    private String author;
+    private List<String> members;
+    private List<TestItem> testItems;
 
-        public String getName() {
-            return name;
-        }
+    public Quizz() { }
 
-        public void setName(String name) {
-            this.name = name;
-        }
+    public Quizz(String name, String description, String author, List<String> members, List<TestItem> testItems) {
+        this.name = name;
+        this.description = description;
+        this.author = author;
+        this.members = members;
+        this.testItems = testItems;
+    }
 
-        public String getDescription() {
-            return description;
-        }
+    public String getName() {
+        return name;
+    }
 
-        public void setDescription(String description) {
-            this.description = description;
-        }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-        public float getPrice() {
-            return noQuestions;
-        }
+    public String getDescription() {
+        return description;
+    }
 
-        public void setPrice(int price) {
-            this.noQuestions = price;
-        }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-        private String name;
-        private String description;
-        //private String Author;
-        //private String Members;
-        private int noQuestions;
+    public String getAuthor() {
+        return author;
+    }
 
-        public Quizz() {
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 
-        }
+    public List<String> getMembers() {
+        return members;
+    }
 
-    public Quizz(String name, String description, int questions) {
-            this.name = name;
-            this.description = description;
-        this.noQuestions = questions;
-        }
+    public void setMembers(List<String> members) {
+        this.members = members;
+    }
+
+    public List<TestItem> getTestItems() {
+        return testItems;
+    }
+
+    public void setTestItems(List<TestItem> testItems) {
+        this.testItems = testItems;
+    }
 }
