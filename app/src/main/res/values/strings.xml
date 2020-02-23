@@ -1,6 +1,9 @@
 <resources>
-    <string name="app_name">U R an ITexpert?</string>
+    <string name="app_name">URStudyGuide</string>
 
+    <!--  DATABASE CONSTANTS  -->
+    <string name="database_users">Users</string>
+    <string name="database_quizzes">Quizzes</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">vista principal Redes</string>
     <string name="title_activity_client_support">client_support</string>
@@ -13,6 +16,7 @@
     <!--  Quizz Creator Adapter  -->
     <string name="quizzcreator_adapter_question">Question</string>
     <string name="quizzcreator_adapter_numberofanswers">Number of answers</string>
+    <string name="quizzcreator_adapter_create_button">CREATE QUIZZ</string>
     <!--  Quizz Creator Answer ListView  -->
     <string name="quizzcreator_answer_text">Answer</string>
     <string name="quizzcreator_answer_toggle">isCorrect</string>
