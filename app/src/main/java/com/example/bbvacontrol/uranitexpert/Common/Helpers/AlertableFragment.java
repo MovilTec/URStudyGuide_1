@@ -16,18 +16,18 @@ interface Alertable {
 public abstract class AlertableFragment extends Fragment implements Alertable {
 
 
-    public AlertableFragment newInstance()
-    {
+//    public AlertableFragment newInstance()
+//    {
+//
+//        Bundle args = new Bundle();
+//        // args.putInt(ARG_PAGE, page);
+//        AlertableFragment fragment = provideYourFragment();
+//        fragment.setArguments(args);
+//        return fragment;
+//
+//    }
 
-        Bundle args = new Bundle();
-        // args.putInt(ARG_PAGE, page);
-        AlertableFragment fragment = provideYourFragment();
-        fragment.setArguments(args);
-        return fragment;
-
-    }
-
-    public abstract AlertableFragment provideYourFragment();
+//    public abstract AlertableFragment provideYourFragment();
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

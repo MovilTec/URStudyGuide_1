@@ -21,7 +21,7 @@ import com.travijuu.numberpicker.library.NumberPicker;
 
 import java.util.List;
 
-public class QuizzCreatorFragment extends Fragment implements QuizzCreatorNavigator {
+public class QuizzCreatorFragment extends AlertableFragment implements QuizzCreatorNavigator {
 
     private QuizzCreatorViewModel mViewModel;
     private NumberPicker mNumberPicker;
@@ -32,12 +32,20 @@ public class QuizzCreatorFragment extends Fragment implements QuizzCreatorNaviga
         return new QuizzCreatorFragment();
     }
 
-    @Nullable
+//    @Nullable
+//    @Override
+//    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+//                             @Nullable Bundle savedInstanceState) {
+//        super.onCreateView(inflater, container, savedInstanceState);
+//        View view = inflater.inflate(R.layout.quizz_creator_fragment, container, false);
+//        mNumberPicker = view.findViewById(R.id.number_picker);
+//        mRecyclerView = view.findViewById(R.id.quizzcreator_recyclerView);
+//        return view;
+//    }
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.quizz_creator_fragment, container, false);
+    public View provideYourFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.quizz_creator_fragment, parent, false);
         mNumberPicker = view.findViewById(R.id.number_picker);
         mRecyclerView = view.findViewById(R.id.quizzcreator_recyclerView);
         return view;
