@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.bbvacontrol.uranitexpert.Common.Helpers.AlertableFragment;
 import com.example.bbvacontrol.uranitexpert.Common.Models.TestItem;
@@ -27,6 +28,7 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
     private NumberPicker mNumberPicker;
     private RecyclerView mRecyclerView;
     private QuizzCreatorAdapter mAdapter;
+    private Button mQuizzCreatorButton;
 
     public static QuizzCreatorFragment newInstance() {
         return new QuizzCreatorFragment();
@@ -48,6 +50,7 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
         View view = inflater.inflate(R.layout.quizz_creator_fragment, parent, false);
         mNumberPicker = view.findViewById(R.id.number_picker);
         mRecyclerView = view.findViewById(R.id.quizzcreator_recyclerView);
+        mQuizzCreatorButton = view.findViewById(R.id.quizzcreator_button);
         return view;
     }
 
@@ -55,6 +58,7 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(QuizzCreatorViewModel.class);
+        setupView();
         setupNumberPicker();
         setupRecyclerView();
     }
@@ -81,13 +85,23 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
         mRecyclerView.setLayoutManager(layoutManager);
 
         mAdapter = new QuizzCreatorAdapter(new QuizzCreatorAdapter.QuizzCreatorHandler() {
-
             @Override
-            public void onCreateAction(List<TestItem> testItems) {
-//                mViewModel.createQuizz(testItems);
+            public void onErrorMessage(String errorMessage) {
+                onError(errorMessage);
             }
         });
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    private void setupView() {
+        mQuizzCreatorButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String quizzName =  "Quizz Name";
+                List<TestItem> testItems = mAdapter.getTestItems();
+                mViewModel.createQuizz(quizzName, testItems);
+            }
+        });
     }
 
     @Override

@@ -1,10 +1,14 @@
 package com.example.bbvacontrol.uranitexpert.Quizzes.ui.quizzcreator;
 
+import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.example.bbvacontrol.uranitexpert.Common.Models.TestItem;
@@ -19,49 +23,63 @@ import java.util.List;
 
 public class QuizzCreatorAdapter extends RecyclerView.Adapter<QuizzCreatorAdapter.mViewHolder> {
 
-    private List<String> testItems = new ArrayList<>();
-    private List<TestItem> _testItems;
+    private List<TestItem> testItems = new ArrayList();
+    private RecyclerView.RecycledViewPool viewPool;
     private QuizzCreatorAnswerAdapter answerAdapter;
-    private QuizzCreatorHandler onCreateQuizz;
+    private List<QuizzCreatorAnswerAdapter> answerAdapters = new ArrayList();
+    private List<EditText> mQuestions = new ArrayList();
+    private QuizzCreatorHandler mQuizzCreatorHandler;
+
+    private Context parentContext;
+
     private ValueChangedListener onValueChange = new ValueChangedListener() {
         @Override
         public void valueChanged(int value, ActionEnum action) {
             switch(action) {
                 case INCREMENT:
-                    answerAdapter.addAnswers();
+                    answerAdapter.notifyItemInserted(answerAdapter.addAnswers());
+//                    notifyDataSetChanged();
                     break;
                 case DECREMENT:
+                    //TODO:- Implement the remove action
                     answerAdapter.removeAnswers();
                     break;
             }
         }
     };
 
-    public QuizzCreatorAdapter(QuizzCreatorHandler createQuizzAction) {
+    public QuizzCreatorAdapter(QuizzCreatorHandler quizzCreatorHandler) {
         TestItem testItem = new TestItem();
-        testItems.add("");
-        onCreateQuizz = createQuizzAction;
+        TestItem testItem2 = new TestItem();
+        testItems.add(testItem);
+        testItems.add(testItem2);
+        mQuizzCreatorHandler = quizzCreatorHandler;
+        viewPool = new RecyclerView.RecycledViewPool();
     }
 
     @Override
     public mViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.quizz_creator_item_adapater, parent, false);
+        parentContext = parent.getContext();
         QuizzCreatorAdapter.mViewHolder vh = new QuizzCreatorAdapter.mViewHolder(v);
         return vh;
     }
 
     @Override
     public void onBindViewHolder(mViewHolder holder, int position) {
+        // TODO:- Maybe the solution for reference lost is in the answer adapter!
         answerAdapter = new QuizzCreatorAnswerAdapter();
+        LinearLayoutManager layoutManager = new LinearLayoutManager(parentContext);
+//        layoutManager.setInitialPrefetchItemCount(3);
+
+        holder.answers.setLayoutManager(layoutManager);
+        answerAdapters.add(answerAdapter);
         holder.answers.setAdapter(answerAdapter);
+        holder.answers.setRecycledViewPool(viewPool);
+
         holder.numberPicker.setValueChangedListener(onValueChange);
-//        holder.quizzCreatorButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                onCreateQuizz.onCreateAction(_testItems);
-//            }
-//        });
+        mQuestions.add(holder.quizzQuestion);
     }
 
     @Override
@@ -72,7 +90,8 @@ public class QuizzCreatorAdapter extends RecyclerView.Adapter<QuizzCreatorAdapte
     // ---------- Public class methods --------------
 
     public int addQuestions() {
-        testItems.add("New Item");
+        TestItem testItem = new TestItem();
+        testItems.add(testItem);
         return testItems.size() - 1;
     }
 
@@ -83,25 +102,49 @@ public class QuizzCreatorAdapter extends RecyclerView.Adapter<QuizzCreatorAdapte
 
     public List<TestItem> getQuizz() {
         // TODO:- Create and get the quizz object
-        return _testItems;
+        return testItems;
     }
 
     public static class mViewHolder extends RecyclerView.ViewHolder {
 
-        public ListView answers;
+        public RecyclerView answers;
         public NumberPicker numberPicker;
         public Button quizzCreatorButton;
+        public EditText quizzQuestion;
 
         public mViewHolder(View itemView) {
             super(itemView);
             answers = itemView.findViewById(R.id.quizzcreator_listView);
             numberPicker = itemView.findViewById(R.id.answer_number_picker);
             quizzCreatorButton = itemView.findViewById(R.id.quizzcreator_button);
+            quizzQuestion = itemView.findViewById(R.id.quizzcreator_question);
         }
     }
 
+    public List<TestItem> getTestItems() {
+        // TODO:- Validate that the test Items
+        for (int i=0; i<testItems.size(); i++) {
+            String question = mQuestions.get(i).getText().toString();
+            validateQuestion(question);
+            TestItem testItem = testItems.get(i);
+
+            testItem.setQuestion(question);
+            testItem.setAnswers(answerAdapters.get(i).getAnwsers());
+        }
+        return testItems;
+    }
+
+    // ----- Private Methods ----
+
+    private void validateQuestion(String question) {
+        if (question.isEmpty()) {
+            mQuizzCreatorHandler.onErrorMessage("No se ingreso texto en alguna de las preguntas");
+        }
+    }
+
+    // -------- Interface Comunication --------
     public interface QuizzCreatorHandler {
-        void onCreateAction(List<TestItem> testItems);
+        void onErrorMessage(String errorMessage);
     }
 
 }
