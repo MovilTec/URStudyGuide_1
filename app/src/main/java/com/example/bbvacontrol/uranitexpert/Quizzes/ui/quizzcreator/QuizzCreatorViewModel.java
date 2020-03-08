@@ -17,7 +17,7 @@ import java.util.List;
 
 public class QuizzCreatorViewModel extends ViewModel {
 
-//    private FirebaseRequests firebaseRequests = FirebaseRequests.getInstance();
+    private FirebaseRequests firebaseRequests = FirebaseRequests.getInstance();
     QuizzCreatorNavigator navigator;
 
     void createQuizz(String quizzName, List<TestItem> testItems) {
@@ -25,7 +25,7 @@ public class QuizzCreatorViewModel extends ViewModel {
         String quizzDescription = "";
         List<String> members = new ArrayList();
         Quizz quizz = new Quizz(quizzName, "", author, members, testItems);
-//        firebaseRequests.write(RequestType.QUIZZ, quizz, onSuccess, onFailure);
+        firebaseRequests.write(RequestType.QUIZZ, quizz, onSuccess, onFailure);
     }
 
     private OnSuccessListener onSuccess = new OnSuccessListener() {

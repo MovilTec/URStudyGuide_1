@@ -4,8 +4,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.example.bbvacontrol.uranitexpert.Common.Models.Answer;
 import com.example.bbvacontrol.uranitexpert.R;
@@ -15,14 +17,16 @@ import java.util.List;
 
 public class QuizzCreatorAnswerAdapter extends RecyclerView.Adapter<QuizzCreatorAnswerAdapter.mViewHolder> {
 
-    private List<Answer> answers = new ArrayList();
+    private List<Answer> answers;
+
+    private Boolean isThereTrueAwnser = false;
+    private int trueAnswerIndex = -1;
 
     private List<EditText> mAnswerTexts = new ArrayList();
     private List<RadioButton> mAnswerValidations = new ArrayList();
 
-    public QuizzCreatorAnswerAdapter() {
-        answers.add(new Answer());
-        answers.add(new Answer());
+    public QuizzCreatorAnswerAdapter(List<Answer> answers) {
+       this.answers = answers;
 //        answers.add(new Answer());
 //        answers.add(new Answer());
     }
@@ -44,6 +48,8 @@ public class QuizzCreatorAnswerAdapter extends RecyclerView.Adapter<QuizzCreator
     public void onBindViewHolder(QuizzCreatorAnswerAdapter.mViewHolder holder, int position) {
         mAnswerTexts.add(holder.mAnswerText);
         mAnswerValidations.add(holder.mAnswerValidation);
+        holder.mAnswerValidation.setOnCheckedChangeListener(onAnswerSetToTrue);
+        holder.mAnswerValidation.setId(position);
     }
 
     public static class mViewHolder extends RecyclerView.ViewHolder {
@@ -59,7 +65,6 @@ public class QuizzCreatorAnswerAdapter extends RecyclerView.Adapter<QuizzCreator
     public int addAnswers() {
         answers.add(new Answer());
         return answers.size() - 1;
-//        notifyDataSetChanged();
     }
 
     public void removeAnswers() {
@@ -71,16 +76,68 @@ public class QuizzCreatorAnswerAdapter extends RecyclerView.Adapter<QuizzCreator
 
     public List<Answer> getAnwsers() {
         for(int i=0; i<answers.size(); i++) {
-            String text = mAnswerTexts.get(i).toString();
-            answers.get(i).setText(text);
+            try {
+                String text = validateAwnsers(mAnswerTexts.get(i));
+                answers.get(i).setText(text);
+            } catch (InvalidAwnserException e) {
+                //TODO:- Handle the exception
+
+            }
         }
         return answers;
     }
 
     // ------- Private Methods ------
-    private void validateAwnsers(String answer) {
-
+    private String validateAwnsers(EditText editText) throws InvalidAwnserException {
+        String awnser = editText.getText().toString();
+        if (!awnser.isEmpty()) {
+            return awnser;
+        }
+        throw new InvalidAwnserException("");
     }
 
+    private CompoundButton.OnCheckedChangeListener onAnswerSetToTrue = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            setTrueAwnser(compoundButton.getId());
+        }
+    };
 
+    private void setTrueAwnser(int buttonId) {
+        if (!isThereTrueAwnser) {
+            isThereTrueAwnser = true;
+            for(int i=0; i<answers.size(); i++) {
+                if (mAnswerValidations.get(i).getId() == buttonId) {
+                    answers.get(i).setCorrect(true);
+                    trueAnswerIndex = i;
+                    break;
+                }
+            }
+        } else {
+            if (mAnswerValidations.get(trueAnswerIndex).getId() != buttonId) {
+                answers.get(trueAnswerIndex).setCorrect(false);
+                mAnswerValidations.get(trueAnswerIndex).setChecked(false);
+                for (int i = 0; i < answers.size(); i++) {
+                    if (mAnswerValidations.get(i).getId() == buttonId) {
+                        answers.get(i).setCorrect(true);
+                        trueAnswerIndex = i;
+                        break;
+                    }
+                }
+            }
+        }
+
+    }
+}
+
+class InvalidAwnserException extends Exception {
+    public InvalidAwnserException (String errorMessage) {
+        super(errorMessage);
+    }
+}
+
+class NotTrueAnswerSelectedException extends Exception {
+    public NotTrueAnswerSelectedException () {
+        super();
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.bbvacontrol.uranitexpert.Quizzes.ui.quizzcreator;
 
 import android.content.Context;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.example.bbvacontrol.uranitexpert.Common.Models.Answer;
 import com.example.bbvacontrol.uranitexpert.Common.Models.TestItem;
 import com.example.bbvacontrol.uranitexpert.Quizzes.ui.quizzcreator.QuizzCreatorAnswer.QuizzCreatorAnswerAdapter;
 import com.example.bbvacontrol.uranitexpert.R;
@@ -24,11 +26,13 @@ import java.util.List;
 public class QuizzCreatorAdapter extends RecyclerView.Adapter<QuizzCreatorAdapter.mViewHolder> {
 
     private List<TestItem> testItems = new ArrayList();
-    private RecyclerView.RecycledViewPool viewPool;
+    private RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
     private QuizzCreatorAnswerAdapter answerAdapter;
     private List<QuizzCreatorAnswerAdapter> answerAdapters = new ArrayList();
     private List<EditText> mQuestions = new ArrayList();
     private QuizzCreatorHandler mQuizzCreatorHandler;
+
+    private EditText mQuizzNameEditText;
 
     private Context parentContext;
 
@@ -50,11 +54,11 @@ public class QuizzCreatorAdapter extends RecyclerView.Adapter<QuizzCreatorAdapte
 
     public QuizzCreatorAdapter(QuizzCreatorHandler quizzCreatorHandler) {
         TestItem testItem = new TestItem();
-        TestItem testItem2 = new TestItem();
+//        TestItem testItem2 = new TestItem();
         testItems.add(testItem);
-        testItems.add(testItem2);
+//        testItems.add(testItem2);
+        initializeAnswers();
         mQuizzCreatorHandler = quizzCreatorHandler;
-        viewPool = new RecyclerView.RecycledViewPool();
     }
 
     @Override
@@ -68,14 +72,25 @@ public class QuizzCreatorAdapter extends RecyclerView.Adapter<QuizzCreatorAdapte
 
     @Override
     public void onBindViewHolder(mViewHolder holder, int position) {
-        // TODO:- Maybe the solution for reference lost is in the answer adapter!
-        answerAdapter = new QuizzCreatorAnswerAdapter();
-        LinearLayoutManager layoutManager = new LinearLayoutManager(parentContext);
-//        layoutManager.setInitialPrefetchItemCount(3);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(
+                parentContext,
+                LinearLayoutManager.HORIZONTAL,
+                false
+        );
 
+        layoutManager.setInitialPrefetchItemCount(testItems.get(position).getAnswers().size());
         holder.answers.setLayoutManager(layoutManager);
+        holder.answers.setHasFixedSize(true);
+        holder.answers.setNestedScrollingEnabled(false);
+
+        answerAdapter = new QuizzCreatorAnswerAdapter(testItems.get(position).getAnswers());
+
+//        answerAdapter.notifyDataSetChanged();
+
         answerAdapters.add(answerAdapter);
+
         holder.answers.setAdapter(answerAdapter);
+
         holder.answers.setRecycledViewPool(viewPool);
 
         holder.numberPicker.setValueChangedListener(onValueChange);
@@ -135,6 +150,15 @@ public class QuizzCreatorAdapter extends RecyclerView.Adapter<QuizzCreatorAdapte
     }
 
     // ----- Private Methods ----
+
+    private void initializeAnswers() {
+        for (TestItem testItem :testItems) {
+            List<Answer> answers = new ArrayList();
+            answers.add(new Answer());
+            answers.add(new Answer());
+            testItem.setAnswers(answers);
+        }
+    }
 
     private void validateQuestion(String question) {
         if (question.isEmpty()) {

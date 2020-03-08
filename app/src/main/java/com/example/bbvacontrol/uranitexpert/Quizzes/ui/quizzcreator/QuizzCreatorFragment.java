@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.example.bbvacontrol.uranitexpert.Common.Helpers.AlertableFragment;
 import com.example.bbvacontrol.uranitexpert.Common.Models.TestItem;
@@ -29,21 +30,11 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
     private RecyclerView mRecyclerView;
     private QuizzCreatorAdapter mAdapter;
     private Button mQuizzCreatorButton;
+    private EditText mQuizzName;
 
     public static QuizzCreatorFragment newInstance() {
         return new QuizzCreatorFragment();
     }
-
-//    @Nullable
-//    @Override
-//    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-//                             @Nullable Bundle savedInstanceState) {
-//        super.onCreateView(inflater, container, savedInstanceState);
-//        View view = inflater.inflate(R.layout.quizz_creator_fragment, container, false);
-//        mNumberPicker = view.findViewById(R.id.number_picker);
-//        mRecyclerView = view.findViewById(R.id.quizzcreator_recyclerView);
-//        return view;
-//    }
 
     @Override
     public View provideYourFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
@@ -51,6 +42,7 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
         mNumberPicker = view.findViewById(R.id.number_picker);
         mRecyclerView = view.findViewById(R.id.quizzcreator_recyclerView);
         mQuizzCreatorButton = view.findViewById(R.id.quizzcreator_button);
+        mQuizzName = view.findViewById(R.id.quizzcreator_quizzName);
         return view;
     }
 
@@ -97,11 +89,22 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
         mQuizzCreatorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String quizzName =  "Quizz Name";
-                List<TestItem> testItems = mAdapter.getTestItems();
-                mViewModel.createQuizz(quizzName, testItems);
+                try {
+                    String quizzName = validateQuizzName(mQuizzName);
+                    List<TestItem> testItems = mAdapter.getTestItems();
+                    mViewModel.createQuizz(quizzName, testItems);
+                } catch (IncorrectQuizzName e) {
+                    onError(e.getLocalizedMessage());
+                }
             }
         });
+    }
+
+    private String validateQuizzName(EditText quizzName) throws IncorrectQuizzName {
+        if (!quizzName.getText().toString().isEmpty()) {
+            return quizzName.getText().toString();
+        }
+        throw new IncorrectQuizzName("");
     }
 
     @Override
@@ -112,5 +115,11 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
     @Override
     public void onError(String error) {
 
+    }
+}
+
+class IncorrectQuizzName extends Exception {
+    public IncorrectQuizzName(String errorMessage) {
+        super(errorMessage);
     }
 }
