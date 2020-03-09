@@ -5,14 +5,20 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/quizzTitle"
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:paddingLeft="@dimen/fab_margin"
-        android:text="@string/quizz_title"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:layout_height="match_parent">
+
+        <TextView
+                android:id="@+id/quizzTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:paddingLeft="@dimen/fab_margin"
+                android:text="@string/quizz_title"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+    </android.support.v7.widget.CardView>
+
 </LinearLayout>

@@ -20,5 +20,6 @@
     <!--  Quizz Creator Answer ListView  -->
     <string name="quizzcreator_answer_text">Answer</string>
     <string name="quizzcreator_answer_toggle">isCorrect</string>
-
+    <!--  Quizz Detail -->
+    <string name="quizzdetail_question">Quizz Question</string>
 </resources>

@@ -1,5 +1,7 @@
 package com.example.bbvacontrol.uranitexpert.Common.Models;
 
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.util.List;
 

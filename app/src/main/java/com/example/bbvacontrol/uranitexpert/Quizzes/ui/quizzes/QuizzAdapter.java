@@ -9,11 +9,13 @@ import android.widget.TextView;
 import com.example.bbvacontrol.uranitexpert.Common.Models.Quizz;
 import com.example.bbvacontrol.uranitexpert.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class QuizzAdapter extends RecyclerView.Adapter<QuizzAdapter.mViewHolder> {
 
-    private List<Quizz> mDataset;
+    private List<Quizz> mQuizzes;
+    private List<TextView> mViews = new ArrayList();
     private QuizzItemAction action;
 
     // Provide a reference to the views for each data item
@@ -31,7 +33,7 @@ public class QuizzAdapter extends RecyclerView.Adapter<QuizzAdapter.mViewHolder>
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public QuizzAdapter(List<Quizz> myDataset, QuizzItemAction action) {
-        mDataset = myDataset;
+        mQuizzes = myDataset;
         this.action = action;
     }
 
@@ -52,18 +54,32 @@ public class QuizzAdapter extends RecyclerView.Adapter<QuizzAdapter.mViewHolder>
     public void onBindViewHolder(mViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.textView.setText(mDataset.get(position).getName());
-
+        holder.textView.setText(mQuizzes.get(position).getName());
+        holder.textView.setOnClickListener(onQuizzClick);
+        holder.textView.setId(position);
+        mViews.add(holder.textView);
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mDataset.size();
+        return mQuizzes.size();
     }
 
     public interface QuizzItemAction {
         void onQuizzItemSelected(Quizz item);
     }
+
+    // -------- Private Methods --------
+    private View.OnClickListener onQuizzClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            for(int i=0;i<mViews.size();i++) {
+                if (view.getId() == mViews.get(i).getId()) {
+                    action.onQuizzItemSelected(mQuizzes.get(i));
+                }
+            }
+        }
+    };
 
 }

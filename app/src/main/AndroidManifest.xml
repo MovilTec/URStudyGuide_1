@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Quizzes.QuizzCreator"></activity>
+        <activity android:name=".Quizzes.QuizzDetail"></activity>
+        <activity android:name=".Quizzes.QuizzCreator" />
         <activity android:name=".Quizzes.Quizzes" />
 
         <service android:name=".Common.Services.FirebaseMessagingService">
