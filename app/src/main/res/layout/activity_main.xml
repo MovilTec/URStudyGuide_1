@@ -1,139 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.bbvacontrol.uranitexpert.MainActivity">
+    tools:context=".MainActivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appBarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <include
-            android:id="@+id/main_page_toolbar"
-            layout="@layout/app_bar_layout" />
-
-        <android.support.design.widget.TabLayout
-            android:id="@+id/main_tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:tabTextColor="#fff"
-            app:tabSelectedTextColor="@color/colorAccent">
-        </android.support.design.widget.TabLayout>
-
-
-    </android.support.design.widget.AppBarLayout>
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/main_tabPager"
-        android:layout_width="0dp"
-        android:layout_height="475dp"
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello World!"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="121dp"
-            android:layout_height="26dp"
-            android:text="R U an IT expert?"
-            android:textAlignment="center" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+<!--<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    tools:context="com.example.urstudyguide_migration.MainActivity">-->
 
-        <Button
-            android:id="@+id/Programming_button"
-            android:layout_width="212dp"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:onClick="openProgrammingActivity"
-            android:text="Programing"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView"
-            app:layout_constraintVertical_bias="0.05" />
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:id="@+id/appBarLayout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content">-->
 
-        <Button
-            android:id="@+id/DataBase_button"
-            android:layout_width="212dp"
-            android:layout_height="51dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:onClick="openDataBaseActivity"
-            android:text="DataBase"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/Programming_button"
-            app:layout_constraintVertical_bias="0.0" />
+<!--        <include-->
+<!--            android:id="@+id/main_page_toolbar"-->
+<!--            layout="@layout/app_bar_layout" />-->
 
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="212dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:onClick="sendMessage"
-            android:text="Network"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/DataBase_button"
-            app:layout_constraintVertical_bias="0.011" />
+<!--        <com.google.android.material.tabs.TabLayout-->
+<!--            android:id="@+id/main_tabs"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
 
-        <Button
-            android:id="@+id/button4"
-            android:layout_width="212dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:onClick="openClientSupportActivity"
-            android:text="Client Support"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button3"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <Button
-            android:id="@+id/Examen_Programa"
-            android:layout_width="212dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:onClick="openClientSupportActivity"
-            android:text="Programming Final Test"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button4"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <Button
-            android:id="@+id/MCSAButton"
-            android:layout_width="212dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:backgroundTint="@android:color/holo_purple"
-            android:onClick="openMCSA_70_740_Activity"
-            android:text="MCSA 70-740"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/Examen_Programa"
-            app:layout_constraintVertical_bias="0.0" />
+<!--            app:tabSelectedTextColor="@color/colorAccent">-->
+<!--        </com.google.android.material.tabs.TabLayout>-->
 
 
-    </android.support.v4.view.ViewPager>
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+<!--    <android.support.v4.view.ViewPager-->
+<!--        android:id="@+id/main_tabPager"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="475dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="1.0"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"-->
+<!--        app:layout_constraintVertical_bias="0.0">-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/textView"-->
+<!--            android:layout_width="121dp"-->
+<!--            android:layout_height="26dp"-->
+<!--            android:text="R U an IT expert?"-->
+<!--            android:textAlignment="center" />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/Programming_button"-->
+<!--            android:layout_width="212dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_centerVertical="true"-->
+<!--            android:layout_marginBottom="8dp"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:onClick="openProgrammingActivity"-->
+<!--            android:text="Programing"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/textView"-->
+<!--            app:layout_constraintVertical_bias="0.05" />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/DataBase_button"-->
+<!--            android:layout_width="212dp"-->
+<!--            android:layout_height="51dp"-->
+<!--            android:layout_marginBottom="8dp"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:onClick="openDataBaseActivity"-->
+<!--            android:text="DataBase"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/Programming_button"-->
+<!--            app:layout_constraintVertical_bias="0.0" />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/button3"-->
+<!--            android:layout_width="212dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginBottom="8dp"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:onClick="sendMessage"-->
+<!--            android:text="Network"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/DataBase_button"-->
+<!--            app:layout_constraintVertical_bias="0.011" />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/button4"-->
+<!--            android:layout_width="212dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginBottom="8dp"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:onClick="openClientSupportActivity"-->
+<!--            android:text="Client Support"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/button3"-->
+<!--            app:layout_constraintVertical_bias="0.0" />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/Examen_Programa"-->
+<!--            android:layout_width="212dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginBottom="8dp"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:onClick="openClientSupportActivity"-->
+<!--            android:text="Programming Final Test"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/button4"-->
+<!--            app:layout_constraintVertical_bias="0.0" />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/MCSAButton"-->
+<!--            android:layout_width="212dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginBottom="8dp"-->
+<!--            android:layout_marginEnd="8dp"-->
+<!--            android:layout_marginStart="8dp"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:backgroundTint="@android:color/holo_purple"-->
+<!--            android:onClick="openMCSA_70_740_Activity"-->
+<!--            android:text="MCSA 70-740"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/Examen_Programa"-->
+<!--            app:layout_constraintVertical_bias="0.0" />-->
 
 
-</android.support.constraint.ConstraintLayout>
+<!--    </android.support.v4.view.ViewPager>-->
+
+
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->
