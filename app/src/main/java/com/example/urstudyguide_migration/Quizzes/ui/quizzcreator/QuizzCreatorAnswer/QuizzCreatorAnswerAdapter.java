@@ -4,6 +4,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
 
 
 import com.example.urstudyguide_migration.Common.Models.Answer;
@@ -15,6 +17,7 @@ import java.util.List;
 public class QuizzCreatorAnswerAdapter extends BaseAdapter {
 
     private List<Answer> answers = new ArrayList();
+    private List<EditText> answersEdit = new ArrayList();
 
     public QuizzCreatorAnswerAdapter() {
         answers.add(new Answer());
@@ -40,7 +43,21 @@ public class QuizzCreatorAnswerAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.quizzcreator_answers_item_listview, viewGroup, false);
+        EditText editText = v.findViewById(R.id.quizzcreator_answer_text);
+        answersEdit.add(i, editText);
         return v;
+    }
+
+    public View getViewByPosition(int pos, ListView listView) {
+        final int firstListItemPosition = listView.getFirstVisiblePosition();
+        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
+
+        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
+            return listView.getAdapter().getView(pos, null, listView);
+        } else {
+            final int childIndex = pos - firstListItemPosition;
+            return listView.getChildAt(childIndex);
+        }
     }
 
     public void addAnswers() {
@@ -53,5 +70,13 @@ public class QuizzCreatorAnswerAdapter extends BaseAdapter {
             answers.remove(answers.size()-1);
             notifyDataSetChanged();
         }
+    }
+
+    public List<Answer> getAnwsers() {
+        for(int i=0;i<answers.size(); i++) {
+            Answer answer = answers.get(1);
+            answer.setText(answersEdit.get(1).getText().toString());
+        }
+        return answers;
     }
 }

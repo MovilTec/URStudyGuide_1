@@ -137,7 +137,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser user){
         if(user == null){
-            //somthing related to the user
+            //TODO:- somthing related to the user
         }
     }
 

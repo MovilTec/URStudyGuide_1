@@ -1,9 +1,12 @@
 package com.example.urstudyguide_migration.Quizzes.ui.quizzcreator;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
@@ -11,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.urstudyguide_migration.Common.Helpers.AlertableFragment;
+import com.example.urstudyguide_migration.Common.Models.Quizz;
 import com.example.urstudyguide_migration.Common.Models.TestItem;
 import com.example.urstudyguide_migration.Quizzes.QuizzCreatorNavigator;
 import com.example.urstudyguide_migration.R;
@@ -26,27 +30,30 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
     private NumberPicker mNumberPicker;
     private RecyclerView mRecyclerView;
     private QuizzCreatorAdapter mAdapter;
+    private Button mCreateQuizzButton;
+    private TextView mQuizzName;
+
+    private Button.OnClickListener createQuizzAction = new Button.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            List<TestItem> mTestItems = mAdapter.getQuizz();
+            String quizzName = mQuizzName.getText().toString();
+            Intent intent = new Intent();
+        }
+    };
 
     public static QuizzCreatorFragment newInstance() {
         return new QuizzCreatorFragment();
     }
-
-//    @Nullable
-//    @Override
-//    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-//                             @Nullable Bundle savedInstanceState) {
-//        super.onCreateView(inflater, container, savedInstanceState);
-//        View view = inflater.inflate(R.layout.quizz_creator_fragment, container, false);
-//        mNumberPicker = view.findViewById(R.id.number_picker);
-//        mRecyclerView = view.findViewById(R.id.quizzcreator_recyclerView);
-//        return view;
-//    }
 
     @Override
     public View provideYourFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.quizz_creator_fragment, parent, false);
         mNumberPicker = view.findViewById(R.id.number_picker);
         mRecyclerView = view.findViewById(R.id.quizzcreator_recyclerView);
+        mCreateQuizzButton = view.findViewById(R.id.quizzcreator_button);
+        mCreateQuizzButton.setOnClickListener(createQuizzAction);
+        mQuizzName = view.findViewById(R.id.quizzcreator_quizzName);
         return view;
     }
 
@@ -80,10 +87,9 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
         mRecyclerView.setLayoutManager(layoutManager);
 
         mAdapter = new QuizzCreatorAdapter(new QuizzCreatorAdapter.QuizzCreatorHandler() {
-
             @Override
-            public void onCreateAction(List<TestItem> testItems) {
-//                mViewModel.createQuizz(testItems);
+            public void onErrorMessage(String errorMessage) {
+
             }
         });
         mRecyclerView.setAdapter(mAdapter);

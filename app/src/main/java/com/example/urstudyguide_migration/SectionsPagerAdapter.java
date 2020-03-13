@@ -23,9 +23,10 @@ class SectionsPagerAdapter extends FragmentPagerAdapter {
             case 1:
                 MessagesFragment messagesFragment= new MessagesFragment();
                 return messagesFragment;
-            case 2:
+//            case 2:
 //                RequestFragment requestFragment = new RequestFragment();
 //                return requestFragment;
+            case 2:
                 QuizzesFragment quizzFragment = new QuizzesFragment();
                 return quizzFragment;
             default:
@@ -45,6 +46,8 @@ class SectionsPagerAdapter extends FragmentPagerAdapter {
                 return "Questioners";
             case 1:
                 return "Messages";
+//            case 2:
+//                return "Requests";
             case 2:
                 return "Quizzes";
             default:

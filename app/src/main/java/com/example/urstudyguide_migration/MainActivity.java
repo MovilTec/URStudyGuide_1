@@ -55,26 +55,26 @@ public class MainActivity extends AppCompatActivity {
         if(mAuth.getCurrentUser() != null) {
             mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(users.getUserID());
         }
-//        setupToolBar();
-//        setupPager();
+        setupToolBar();
+        setupPager();
     }
 
-//    private void setupToolBar() {
-//        mToolbar = findViewById(R.id.main_page_toolbar);
-//        setSupportActionBar(mToolbar);
-//        getSupportActionBar().setTitle("URStudyGuide");
-//    }
-//
-//    private void setupPager() {
-//        mViewPager = findViewById(R.id.main_tabPager);
-//        mAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-//
-//        // It can only handle three pages!!!
-//        mViewPager.setAdapter(mAdapter);
-//
-//        mTabLayout = findViewById(R.id.main_tabs);
-//        mTabLayout.setupWithViewPager(mViewPager);
-//    }
+    private void setupToolBar() {
+        mToolbar = findViewById(R.id.main_page_toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle("URStudyGuide");
+    }
+
+    private void setupPager() {
+        mViewPager = findViewById(R.id.main_tabPager);
+        mAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
+        // It can only handle three pages!!!
+        mViewPager.setAdapter(mAdapter);
+
+        mTabLayout = findViewById(R.id.main_tabs);
+        mTabLayout.setupWithViewPager(mViewPager);
+    }
 
 
     public void sendMessage(View view) {
@@ -142,8 +142,8 @@ public class MainActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
         deviceToken_Reference = FirebaseDatabase.getInstance().getReference().child("Users").child(users.getUserID()).child("device_token");
         if(item.getItemId() == R.id.main_LogOut_button){
-//            FirebaseAuth.getInstance().signOut();
-//            sendToStart();
+            FirebaseAuth.getInstance().signOut();
+            sendToStart();
             deviceToken_Reference.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {

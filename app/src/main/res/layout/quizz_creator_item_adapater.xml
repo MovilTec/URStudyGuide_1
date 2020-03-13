@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:numberpicker="http://schemas.android.com/apk/res-auto"
@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <EditText
-            android:id="@+id/editText2"
+            android:id="@+id/quizzcreator_question"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:ems="10"
@@ -40,7 +40,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/quizzcreator_answer_textView1"
+                android:id="@+id/quizzcretor_textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
@@ -61,4 +61,4 @@
 
     </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -16,6 +16,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Quizzes.QuizzDetail"></activity>
         <activity android:name=".Quizzes.QuizzCreator"></activity>
         <activity android:name=".Quizzes.Quizzes" />
 
@@ -24,14 +25,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".NetworkActivity"
             android:parentActivityName=".MainActivity" />
