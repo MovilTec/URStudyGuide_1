@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RadioButton;
 
 
 import com.example.urstudyguide_migration.Common.Models.Answer;
@@ -17,7 +18,6 @@ import java.util.List;
 public class QuizzCreatorAnswerAdapter extends BaseAdapter {
 
     private List<Answer> answers = new ArrayList();
-    private List<EditText> answersEdit = new ArrayList();
 
     public QuizzCreatorAnswerAdapter() {
         answers.add(new Answer());
@@ -43,8 +43,6 @@ public class QuizzCreatorAnswerAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.quizzcreator_answers_item_listview, viewGroup, false);
-        EditText editText = v.findViewById(R.id.quizzcreator_answer_text);
-        answersEdit.add(i, editText);
         return v;
     }
 
@@ -70,13 +68,5 @@ public class QuizzCreatorAnswerAdapter extends BaseAdapter {
             answers.remove(answers.size()-1);
             notifyDataSetChanged();
         }
-    }
-
-    public List<Answer> getAnwsers() {
-        for(int i=0;i<answers.size(); i++) {
-            Answer answer = answers.get(1);
-            answer.setText(answersEdit.get(1).getText().toString());
-        }
-        return answers;
     }
 }

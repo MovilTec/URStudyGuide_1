@@ -17,6 +17,7 @@ import com.example.urstudyguide_migration.Common.Helpers.AlertableFragment;
 import com.example.urstudyguide_migration.Common.Models.Quizz;
 import com.example.urstudyguide_migration.Common.Models.TestItem;
 import com.example.urstudyguide_migration.Quizzes.QuizzCreatorNavigator;
+import com.example.urstudyguide_migration.Quizzes.QuizzDetail;
 import com.example.urstudyguide_migration.R;
 import com.travijuu.numberpicker.library.Enums.ActionEnum;
 import com.travijuu.numberpicker.library.Interface.ValueChangedListener;
@@ -38,7 +39,7 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
         public void onClick(View v) {
             List<TestItem> mTestItems = mAdapter.getQuizz();
             String quizzName = mQuizzName.getText().toString();
-            Intent intent = new Intent();
+            mViewModel.createQuizz(quizzName, mTestItems);
         }
     };
 
@@ -61,6 +62,7 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(QuizzCreatorViewModel.class);
+        mViewModel.navigator = this;
         setupNumberPicker();
         setupRecyclerView();
     }
@@ -97,11 +99,13 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
 
     @Override
     public void onCreatedQuizz() {
-        //TODO:- Something when quizz created
+        Intent intent = new Intent(getContext(), QuizzDetail.class);
+//        intent.putExtra("quizz", quizz);
+        startActivity(intent);
     }
 
 
     public void onError(String error) {
-
+        displayErrorMessage(error);
     }
 }

@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.urstudyguide_migration.Common.Models.Quizz;
 import com.example.urstudyguide_migration.Common.Models.TestItem;
+import com.example.urstudyguide_migration.Common.Services.FirebaseRequests;
+import com.example.urstudyguide_migration.Common.Services.RequestType;
 import com.example.urstudyguide_migration.Quizzes.QuizzCreatorNavigator;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -16,7 +18,7 @@ import io.reactivex.annotations.NonNull;
 
 public class QuizzCreatorViewModel extends ViewModel {
 
-//    private FirebaseRequests firebaseRequests = FirebaseRequests.getInstance();
+    private FirebaseRequests firebaseRequests = FirebaseRequests.getInstance();
     QuizzCreatorNavigator navigator;
 
     void createQuizz(String quizzName, List<TestItem> testItems) {
@@ -24,7 +26,7 @@ public class QuizzCreatorViewModel extends ViewModel {
         String quizzDescription = "";
         List<String> members = new ArrayList();
         Quizz quizz = new Quizz(quizzName, "", author, members, testItems);
-//        firebaseRequests.write(RequestType.QUIZZ, quizz, onSuccess, onFailure);
+        firebaseRequests.write(RequestType.QUIZZ, quizz, onSuccess, onFailure);
     }
 
     private OnSuccessListener onSuccess = new OnSuccessListener() {

@@ -4,6 +4,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -88,22 +90,24 @@ public class QuizzCreatorAdapter extends RecyclerView.Adapter<QuizzCreatorAdapte
     }
 
     public List<TestItem> getQuizz() {
-        // TODO:- Create and get the quizz object
         // TODO:- Validate that the test Items
         for (int i=0; i<testItems.size(); i++) {
             String question = mQuestions.get(i).getText().toString();
             validateQuestion(question);
             TestItem testItem = testItems.get(i);
-
             testItem.setQuestion(question);
+            List<Answer> answers = new ArrayList();
             for(int j=0;j<answerAdapters.get(i).getCount();j++) {
+                Answer answer = new Answer();
                 View view = answerAdapters.get(i).getViewByPosition(j, mAwnserList);
                 EditText editText = view.findViewById(R.id.quizzcreator_answer_text);
-//                RadioButton radioButton = view.findViewById(R.id.quizzcreator_answer_radioButton);
+                CheckBox checkBox = view.findViewById(R.id.quizzcreator_answer_radioButton);
                 String awnserText = editText.getText().toString();
-                testItem.getAnswers().get(j).setText(awnserText);
+                answer.setText(awnserText);
+                answer.setCorrect(checkBox.isChecked());
+                answers.add(answer);
             }
-
+            testItem.setAnswers(answers);
         }
         return testItems;
     }

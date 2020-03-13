@@ -23,7 +23,7 @@
             android:inputType="textPersonName"
             android:hint="@string/quizzcreator_answer_text"/>
 
-        <RadioButton
+        <CheckBox
             android:id="@+id/quizzcreator_answer_radioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
