@@ -3,6 +3,8 @@ package com.example.urstudyguide_migration.Quizzes.ui.simulator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -37,6 +39,8 @@ public class SimulatorAdapter extends RecyclerView.Adapter<SimulatorAdapter.mVie
     @Override
     public void onBindViewHolder(@NonNull mViewHolder holder, int position) {
         holder.question.setText(mQuesions.get(position).getQuestion());
+        BaseAdapter mListAdapter = new SimulatorAnswersAdapter(mQuesions.get(position).getAnswers());
+        holder.answers.setAdapter(mListAdapter);
     }
 
     @Override
@@ -57,4 +61,5 @@ public class SimulatorAdapter extends RecyclerView.Adapter<SimulatorAdapter.mVie
             answers = v.findViewById(R.id.simulator_item_listview);
         }
     }
+
 }
