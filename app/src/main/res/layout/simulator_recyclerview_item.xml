@@ -12,16 +12,9 @@
         android:textAlignment="center"
         android:textSize="24sp" />
 
-    <LinearLayout
+    <ListView
+        android:id="@+id/simulator_item_listview"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <ListView
-            android:id="@+id/simulator_item_listview"
-            android:layout_width="match_parent"
-            android:layout_height="300dp" />
-    </LinearLayout>
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.urstudyguide_migration.Common.Models.Quizz;
 import com.example.urstudyguide_migration.R;
@@ -25,9 +26,10 @@ public class SimulatorFragment extends Fragment {
 
     private SimulatorViewModel mViewModel;
     private RecyclerView mRecyclerview;
-    private RecyclerView.Adapter mAdapater;
+    private RecyclerView.Adapter mAdapter;
     private Toolbar mToolBar;
     private Quizz mQuizz;
+    private Button mSubmitButton;
 
     public static SimulatorFragment newInstance() {
         return new SimulatorFragment();
@@ -42,6 +44,7 @@ public class SimulatorFragment extends Fragment {
         mToolBar = view.findViewById(R.id.quizzsimulator_toolbar);
         Intent intent = getActivity().getIntent();
         mQuizz = (Quizz) intent.getSerializableExtra("Quizz");
+        mSubmitButton = view.findViewById(R.id.quizzsimulator_submit_button);
         return view;
     }
 
@@ -49,9 +52,9 @@ public class SimulatorFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(SimulatorViewModel.class);
-        // TODO: Use the ViewModel
         setupToolBar();
         setupRecyclerView();
+        setupView();
     }
 
     private void setupToolBar() {
@@ -63,10 +66,15 @@ public class SimulatorFragment extends Fragment {
     private void setupRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         mRecyclerview.setLayoutManager(layoutManager);
-//        mRecyclerview.setHasFixedSize(true);
+        mAdapter = new SimulatorAdapter(mQuizz.getTestItems());
+        mRecyclerview.setAdapter(mAdapter);
+    }
 
-        mAdapater = new SimulatorAdapter(mQuizz.getTestItems());
-        mRecyclerview.setAdapter(mAdapater);
+    private void setupView() {
+        mSubmitButton.setOnClickListener(v -> {
+            //TODO:- Make a quizz validation
+            mAdapter.get
+        });
     }
 
 }
