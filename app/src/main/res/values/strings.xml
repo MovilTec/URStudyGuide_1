@@ -21,4 +21,10 @@
     <string name="quizzcreator_answer_text">Answer</string>
     <string name="quizzcreator_answer_toggle">isCorrect</string>
 
+    <!--  Quizz Detail View  -->
+    <string name="quizzdetail_edit_button">Edit</string>
+    <string name="quizzdetail_start_button">Start</string>
+
+    <!--  Simulator   -->
+    <string name="simulator_item_question">Question</string>
 </resources>

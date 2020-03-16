@@ -1,4 +1,4 @@
-package com.example.urstudyguide_migration;
+package com.example.urstudyguide_migration.Main;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -14,6 +14,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.urstudyguide_migration.Common.Models.Users;
+import com.example.urstudyguide_migration.Common.User;
+import com.example.urstudyguide_migration.MainActivity;
+import com.example.urstudyguide_migration.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
@@ -105,6 +108,8 @@ public class RegisterActivity extends AppCompatActivity {
                                         // Sign in success, update UI with the signed-in user's information
                                         Log.d(TAG, "createUserWithEmail:success");
                                         FirebaseUser user = mAuth.getCurrentUser();
+                                        //Saving the userID
+                                        User.getInstance().setUserID(getBaseContext(), users.getUserID());
                                         //updateUI(user);
                                         Intent mainIntent = new Intent(RegisterActivity.this, MainActivity.class);
                                         startActivity(mainIntent);

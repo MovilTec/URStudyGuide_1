@@ -1,4 +1,4 @@
-package com.example.urstudyguide_migration;
+package com.example.urstudyguide_migration.Main;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.urstudyguide_migration.Common.Models.Users;
+import com.example.urstudyguide_migration.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;

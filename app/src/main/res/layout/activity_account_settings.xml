@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--suppress AndroidDomInspection -->
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary"
-    tools:context=".AccountSettings">
+    tools:context=".Main.AccountSettings">
 
     <include layout="@layout/app_bar_layout" android:id="@+id/accountSettings_toolbar" />
 
@@ -109,4 +110,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/accountSettings_changeStatus_button"
         app:layout_constraintVertical_bias="0.028" />
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

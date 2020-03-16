@@ -1,4 +1,4 @@
-package com.example.urstudyguide_migration;
+package com.example.urstudyguide_migration.Social;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.urstudyguide_migration.Common.Models.UsersModelingClass;
+import com.example.urstudyguide_migration.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;

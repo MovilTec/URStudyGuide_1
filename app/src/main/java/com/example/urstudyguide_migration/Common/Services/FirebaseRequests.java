@@ -16,7 +16,7 @@ import com.google.firebase.database.ValueEventListener;
 public class FirebaseRequests <V> {
 
     private static FirebaseRequests shared = null;
-    private DatabaseReference userReference, quizzReference;
+    private DatabaseReference userReference, usersReference, quizzReference;
 
     public static FirebaseRequests getInstance() {
         if (shared == null)
@@ -27,7 +27,8 @@ public class FirebaseRequests <V> {
 
     private FirebaseRequests() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        userReference = database.getReference("Users").child(FirebaseAuth.getInstance().getUid());
+        usersReference = database.getReference("Users");
+        userReference = usersReference.child(FirebaseAuth.getInstance().getUid());
         quizzReference = database.getReference("Quizzes");
     }
 
@@ -35,6 +36,10 @@ public class FirebaseRequests <V> {
         switch (type) {
             case QUIZZ:
                 quizzReference.addListenerForSingleValueEvent(listener);
+            case USER:
+                userReference.addListenerForSingleValueEvent(listener);
+            case USERS:
+                usersReference.addListenerForSingleValueEvent(listener);
             default:
                 break;
         }

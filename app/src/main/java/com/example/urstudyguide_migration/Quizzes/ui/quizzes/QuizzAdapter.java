@@ -1,5 +1,6 @@
 package com.example.urstudyguide_migration.Quizzes.ui.quizzes;
 
+import android.content.ClipData;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.urstudyguide_migration.Common.Helpers.FirebaseRealtimeDatabaseReponse;
 import com.example.urstudyguide_migration.Common.Models.Quizz;
 import com.example.urstudyguide_migration.R;
 
@@ -16,9 +18,9 @@ import java.util.List;
 
 public class QuizzAdapter extends RecyclerView.Adapter<QuizzAdapter.mViewHolder> {
 
-    private List<Quizz> mQuizzes;
-    private List<TextView> mViews = new ArrayList();
-    private QuizzItemAction action;
+    private static List<Quizz> mQuizzes;
+    private static List<CardView> mViews = new ArrayList();
+    private static QuizzItemAction action;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -28,8 +30,11 @@ public class QuizzAdapter extends RecyclerView.Adapter<QuizzAdapter.mViewHolder>
         public TextView quizzName;
         public CardView cardView;
         public TextView quizzAuthor;
+        public ClipData.Item currentItem;
+
         public mViewHolder(View v) {
             super(v);
+            v.setOnClickListener(onQuizzClick);
             cardView = v.findViewById(R.id.quizzAdapter_cardView);
             quizzName = v.findViewById(R.id.quizzTitle);
             quizzAuthor = v.findViewById(R.id.quizzAuthor);
@@ -60,11 +65,8 @@ public class QuizzAdapter extends RecyclerView.Adapter<QuizzAdapter.mViewHolder>
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.quizzName.setText(mQuizzes.get(position).getName());
-        //TODO:- Convert the authorid to readable name!
-        holder.quizzAuthor.setText("by " + mQuizzes.get(position).getAuthor());
-        holder.quizzName.setId(position);
-        holder.cardView.setOnClickListener(onQuizzClick);
-        mViews.add(holder.quizzName);
+        mQuizzes.get(position).getAuthorName(holder.quizzAuthor);
+        mViews.add(holder.cardView);
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -78,15 +80,13 @@ public class QuizzAdapter extends RecyclerView.Adapter<QuizzAdapter.mViewHolder>
     }
 
     // -------- Private Methods --------
-    private CardView.OnClickListener onQuizzClick = new CardView.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            for(int i=0;i<mViews.size();i++) {
-                if (view.getId() == mViews.get(i).getId()) {
-                    action.onQuizzItemSelected(mQuizzes.get(i));
-                }
+    private static View.OnClickListener onQuizzClick = (view ->  {
+        for(int i=0;i<mViews.size();i++) {
+            if (view.getVerticalScrollbarPosition() == mViews.get(i).getVerticalScrollbarPosition()) {
+//            if (view.getId() == mViews.get(i).getId()) {
+                action.onQuizzItemSelected(mQuizzes.get(i));
             }
         }
-    };
+    });
 
 }

@@ -71,12 +71,9 @@ public class QuizzesFragment extends Fragment implements QuizzNavigator {
     }
 
     private void setupQuizzButton() {
-        quizzButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), QuizzCreator.class);
-                startActivity(intent);
-            }
+        quizzButton.setOnClickListener(view -> {
+            Intent intent = new Intent(getContext(), QuizzCreator.class);
+            startActivity(intent);
         });
     }
 
@@ -103,6 +100,6 @@ public class QuizzesFragment extends Fragment implements QuizzNavigator {
 
     @Override
     public void onQuizzCreated() {
-
+        // TODO:-
     }
 }

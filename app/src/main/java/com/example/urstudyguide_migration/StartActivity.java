@@ -7,6 +7,9 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.urstudyguide_migration.Main.LoginActivity;
+import com.example.urstudyguide_migration.Main.RegisterActivity;
+
 
 public class StartActivity extends AppCompatActivity {
 

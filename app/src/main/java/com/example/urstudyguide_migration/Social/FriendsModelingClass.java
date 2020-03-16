@@ -1,4 +1,4 @@
-package com.example.urstudyguide_migration;
+package com.example.urstudyguide_migration.Social;
 
 public class FriendsModelingClass {
 

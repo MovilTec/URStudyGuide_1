@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.urstudyguide_migration.Messages.MessagesFragment;
 import com.example.urstudyguide_migration.Quizzes.ui.quizzes.QuizzesFragment;
+import com.example.urstudyguide_migration.Social.FriendsFragment;
 
 class SectionsPagerAdapter extends FragmentPagerAdapter {
 

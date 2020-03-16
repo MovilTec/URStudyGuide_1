@@ -1,15 +1,37 @@
 package com.example.urstudyguide_migration.Common.Models;
 
+import android.os.Build;
+import android.view.View;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+
+import com.example.urstudyguide_migration.Common.Helpers.FirebaseReponseWithString;
+import com.example.urstudyguide_migration.Common.Services.FirebaseRequests;
+import com.example.urstudyguide_migration.Common.Services.RequestType;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.io.Serializable;
 import java.util.List;
+import java.util.concurrent.*;
+import java.util.function.Consumer;
 
 public class Quizz implements Serializable {
 
     private String name;
     private String description;
-    private String author;
+    static private String author;
     private List<String> members;
     private List<TestItem> testItems;
+
+    static private String authorName;
 
     public Quizz() { }
 
@@ -60,4 +82,32 @@ public class Quizz implements Serializable {
     public void setTestItems(List<TestItem> testItems) {
         this.testItems = testItems;
     }
+
+    public void getAuthorName(TextView textView ) {
+
+         ValueEventListener listener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot data : dataSnapshot.getChildren()) {
+                    if (data.getKey().equals(author)) {
+                        for(DataSnapshot authorData : data.getChildren()) {
+                            if(authorData.getKey().equals("name")) {
+                                textView.setText("by" + authorData.getValue().toString());
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        FirebaseRequests.getInstance().singleRequest(RequestType.USERS, listener);
+    }
+
+
 }
+

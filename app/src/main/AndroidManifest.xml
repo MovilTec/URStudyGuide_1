@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Quizzes.Simulator"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -16,8 +17,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Quizzes.QuizzDetail"></activity>
-        <activity android:name=".Quizzes.QuizzCreator"></activity>
+        <activity android:name=".Quizzes.QuizzDetail" />
+        <activity android:name=".Quizzes.QuizzCreator" />
         <activity android:name=".Quizzes.Quizzes" />
 
         <service android:name=".Common.Services.FirebaseMessagingService">
@@ -25,6 +26,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
         <activity
             android:name=".NetworkActivity"
             android:parentActivityName=".MainActivity" />
@@ -59,10 +61,10 @@
 
         <activity android:name=".StartActivity" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".Main.RegisterActivity"
             android:parentActivityName=".StartActivity" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".Main.LoginActivity"
             android:parentActivityName=".StartActivity" />
         <activity
             android:name=".MCSA_70_740_Activity"
@@ -71,17 +73,17 @@
             android:name=".MCSA_70_740_Questions"
             android:parentActivityName=".MCSA_70_740_Activity" />
         <activity
-            android:name=".AccountSettings"
+            android:name=".Main.AccountSettings"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
-            android:name=".UsersActivity"
+            android:name=".Social.UsersActivity"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".ProfileActivity"
-            android:parentActivityName=".UsersActivity">
+            android:name=".Social.ProfileActivity"
+            android:parentActivityName=".Social.UsersActivity">
             <intent-filter>
                 <action android:name="com.example.bbvacontrol.urstudyguide_TARGET_NOTIFICATION" />
 

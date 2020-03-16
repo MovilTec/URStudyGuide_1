@@ -1,4 +1,4 @@
-package com.example.urstudyguide_migration;
+package com.example.urstudyguide_migration.Social;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.urstudyguide_migration.Common.Models.Users;
+import com.example.urstudyguide_migration.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 

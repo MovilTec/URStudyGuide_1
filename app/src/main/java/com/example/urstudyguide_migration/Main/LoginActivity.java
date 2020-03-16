@@ -1,4 +1,4 @@
-package com.example.urstudyguide_migration;
+package com.example.urstudyguide_migration.Main;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -14,6 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.urstudyguide_migration.Common.Models.Users;
+import com.example.urstudyguide_migration.Common.User;
+import com.example.urstudyguide_migration.MainActivity;
+import com.example.urstudyguide_migration.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -107,7 +110,10 @@ public class LoginActivity extends AppCompatActivity {
                                 deviceToken_Reference.setValue(deviceToken).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        if(task.isSuccessful()){
+                                        if(task.isSuccessful()) {
+                                            //Saving the userID
+                                            User.getInstance().setUserID(getBaseContext(), users.getUserID());
+                                            // Sending to the mainActivity
                                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                             startActivity(intent);
                                             finish();

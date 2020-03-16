@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:attr/colorButtonNormal"
-    tools:context=".ProfileActivity">
+    tools:context=".Social.ProfileActivity">
 
     <include
         android:id="@+id/profile_tool_bar"

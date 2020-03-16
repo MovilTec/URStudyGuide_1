@@ -12,9 +12,14 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.urstudyguide_migration.Common.Models.Quizz;
+import com.example.urstudyguide_migration.Common.Models.Users;
+import com.example.urstudyguide_migration.Common.User;
+import com.example.urstudyguide_migration.Quizzes.QuizzCreator;
+import com.example.urstudyguide_migration.Quizzes.Simulator;
 import com.example.urstudyguide_migration.R;
 
 public class QuizzDetailFragment extends Fragment {
@@ -22,7 +27,20 @@ public class QuizzDetailFragment extends Fragment {
     private QuizzDetailViewModel mViewModel;
     private Toolbar mToolbar;
     private Quizz mQuizz;
-    private TextView mTextView;
+    private TextView mTextView, mAuthor;
+    private Button mStartButton, mEditButton;
+
+    private View.OnClickListener startButtonAction = (v -> {
+        Intent intent = new Intent(getContext(), Simulator.class);
+        intent.putExtra("Quizz", mQuizz);
+        startActivity(intent);
+    });
+
+    private View.OnClickListener editButtonAction = ( v -> {
+        Intent intent = new Intent(getContext(), QuizzCreator.class);
+        intent.putExtra("Quizz", mQuizz);
+        startActivity(intent);
+    });
 
     public static QuizzDetailFragment newInstance() {
         return new QuizzDetailFragment();
@@ -36,7 +54,7 @@ public class QuizzDetailFragment extends Fragment {
         Intent intent = getActivity().getIntent();
         mQuizz = (Quizz) intent.getSerializableExtra("Quizz");
         setupNavBar(view, mQuizz.getName());
-        setupView(view, mQuizz.getDescription());
+        setupView(view);
         return view;
     }
 
@@ -54,10 +72,32 @@ public class QuizzDetailFragment extends Fragment {
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void setupView(View view, String description) {
+    private void setupView(View view) {
         mTextView = view.findViewById(R.id.quizzdetail_textView);
-        mTextView.setText(description);
-        // TODO:- Set the start quizz button and the editor button and validation
+        mAuthor = view.findViewById(R.id.quizzdetail_author_textView);
+        mEditButton = view.findViewById(R.id.quizzdetail_edit_button);
+        mEditButton.setOnClickListener(editButtonAction);
+
+        mStartButton = view.findViewById(R.id.quizzdetail_start_button);
+        mStartButton.setOnClickListener(startButtonAction);
+
+        mTextView.setText(mQuizz.getDescription());
+        validateEdit();
     }
 
+    private void validateEdit() {
+        String userID = User.getInstance().getUserID(getContext());
+        if(userID == null) {
+            userID = new Users().getUserID();
+            if (!mQuizz.getAuthor().equals(userID)) {
+                mEditButton.setAlpha(0);
+                mEditButton.setEnabled(false);
+            }
+        } else {
+            if (!mQuizz.getAuthor().equals(userID)) {
+                mEditButton.setAlpha(0);
+                mEditButton.setEnabled(false);
+            }
+        }
+    }
 }
