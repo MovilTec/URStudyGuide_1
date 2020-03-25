@@ -26,7 +26,7 @@ public class SimulatorFragment extends Fragment {
 
     private SimulatorViewModel mViewModel;
     private RecyclerView mRecyclerview;
-    private RecyclerView.Adapter mAdapter;
+    private SimulatorAdapter mAdapter;
     private Toolbar mToolBar;
     private Quizz mQuizz;
     private Button mSubmitButton;
@@ -73,7 +73,7 @@ public class SimulatorFragment extends Fragment {
     private void setupView() {
         mSubmitButton.setOnClickListener(v -> {
             //TODO:- Make a quizz validation
-            mAdapter.get
+            mAdapter.getTestItems();
         });
     }
 

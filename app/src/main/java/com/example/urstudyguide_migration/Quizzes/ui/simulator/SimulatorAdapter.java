@@ -82,10 +82,11 @@ public class SimulatorAdapter extends RecyclerView.Adapter<SimulatorAdapter.mVie
 
     //------ Public Methods --------
 
-    public void getTestItems() {
+    public List<TestItem> getTestItems() {
         for(int i=0; i < mQuesions.size(); i++) {
 
         }
+        return null;
     }
 
     // -------  Private Methods ---------
