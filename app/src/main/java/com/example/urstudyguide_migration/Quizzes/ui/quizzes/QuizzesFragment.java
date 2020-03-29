@@ -31,7 +31,7 @@ public class QuizzesFragment extends Fragment implements QuizzNavigator {
 
     private QuizzesViewModel mViewModel;
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private QuizzAdapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private FloatingActionButton quizzButton;
 
@@ -84,13 +84,11 @@ public class QuizzesFragment extends Fragment implements QuizzNavigator {
     @Override
     public void onDataRetrieve(List<Quizz> items) {
         if (items.size() > 0) {
-            mAdapter = new QuizzAdapter(items, new QuizzAdapter.QuizzItemAction() {
-                @Override
-                public void onQuizzItemSelected(Quizz item) {
-                Intent intent = new Intent(getContext(), QuizzDetail.class);
-                intent.putExtra("Quizz", item);
-                startActivity(intent);
-                }
+            mAdapter = new QuizzAdapter(items, position -> {
+            Intent intent = new Intent(getContext(), QuizzDetail.class);
+            Quizz item = mAdapter.getQuizz(position);
+            intent.putExtra("Quizz", item);
+            startActivity(intent);
             });
             recyclerView.setAdapter(mAdapter);
             return;

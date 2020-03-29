@@ -1,6 +1,7 @@
 package com.example.urstudyguide_migration.Quizzes.ui.quizzes;
 
 import android.content.ClipData;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,30 +17,13 @@ import com.example.urstudyguide_migration.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import static androidx.constraintlayout.widget.Constraints.TAG;
+
 public class QuizzAdapter extends RecyclerView.Adapter<QuizzAdapter.mViewHolder> {
 
     private static List<Quizz> mQuizzes;
     private static List<CardView> mViews = new ArrayList();
     private static QuizzItemAction action;
-
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
-    public static class mViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
-        public TextView quizzName;
-        public CardView cardView;
-        public TextView quizzAuthor;
-        public ClipData.Item currentItem;
-
-        public mViewHolder(View v) {
-            super(v);
-            v.setOnClickListener(onQuizzClick);
-            cardView = v.findViewById(R.id.quizzAdapter_cardView);
-            quizzName = v.findViewById(R.id.quizzTitle);
-            quizzAuthor = v.findViewById(R.id.quizzAuthor);
-        }
-    }
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public QuizzAdapter(List<Quizz> myDataset, QuizzItemAction action) {
@@ -55,7 +39,7 @@ public class QuizzAdapter extends RecyclerView.Adapter<QuizzAdapter.mViewHolder>
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.adapter_quizz_recycled_view, parent, false);
-        mViewHolder vh = new QuizzAdapter.mViewHolder(v);
+        mViewHolder vh = new QuizzAdapter.mViewHolder(v, action);
         return vh;
     }
 
@@ -75,18 +59,32 @@ public class QuizzAdapter extends RecyclerView.Adapter<QuizzAdapter.mViewHolder>
         return mQuizzes.size();
     }
 
-    public interface QuizzItemAction {
-        void onQuizzItemSelected(Quizz item);
+    // Provide a reference to the views for each data item
+    // Complex data items may need more than one view per item, and
+    // you provide access to all the views for a data item in a view holder
+    public static class mViewHolder extends RecyclerView.ViewHolder {
+        public TextView quizzName, quizzAuthor;
+        public CardView cardView;
+        QuizzItemAction quizzItemAction;
+
+        public mViewHolder(View v, QuizzItemAction quizzItemAction) {
+            super(v);
+            cardView = v.findViewById(R.id.quizzAdapter_cardView);
+            cardView.setOnClickListener((view) -> {
+                action.onQuizzItemSelected(getAdapterPosition());
+            });
+            quizzName = v.findViewById(R.id.quizzTitle);
+            quizzAuthor = v.findViewById(R.id.quizzAuthor);
+            this.quizzItemAction = quizzItemAction;
+        }
     }
 
-    // -------- Private Methods --------
-    private static View.OnClickListener onQuizzClick = (view ->  {
-        for(int i=0;i<mViews.size();i++) {
-            if (view.getVerticalScrollbarPosition() == mViews.get(i).getVerticalScrollbarPosition()) {
-//            if (view.getId() == mViews.get(i).getId()) {
-                action.onQuizzItemSelected(mQuizzes.get(i));
-            }
-        }
-    });
+    public interface QuizzItemAction {
+        void onQuizzItemSelected(int position);
+    }
 
+    // --- Public Methods --- //
+    public Quizz getQuizz(int position) {
+        return mQuizzes.get(position);
+    }
 }
