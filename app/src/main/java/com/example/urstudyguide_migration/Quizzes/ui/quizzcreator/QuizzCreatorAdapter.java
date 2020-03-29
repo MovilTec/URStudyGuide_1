@@ -1,5 +1,6 @@
 package com.example.urstudyguide_migration.Quizzes.ui.quizzcreator;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +8,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
 
@@ -31,19 +34,6 @@ public class QuizzCreatorAdapter extends RecyclerView.Adapter<QuizzCreatorAdapte
     private QuizzCreatorHandler mQuizzCreatorHandler;
     private List<EditText> mQuestions = new ArrayList();
     private ListView mAwnserList;
-    private ValueChangedListener onValueChange = new ValueChangedListener() {
-        @Override
-        public void valueChanged(int value, ActionEnum action) {
-            switch(action) {
-                case INCREMENT:
-                    answerAdapter.addAnswers();
-                    break;
-                case DECREMENT:
-                    answerAdapter.removeAnswers();
-                    break;
-            }
-        }
-    };
 
     public QuizzCreatorAdapter(QuizzCreatorHandler createQuizzAction) {
         TestItem testItem = new TestItem();
@@ -66,8 +56,11 @@ public class QuizzCreatorAdapter extends RecyclerView.Adapter<QuizzCreatorAdapte
         holder.answers.setAdapter(answerAdapter);
 
         mAwnserList = holder.answers;
+        setListViewHeightBasedOnChildren(holder.answers);
 
-        holder.numberPicker.setValueChangedListener(onValueChange);
+        //TODO:- Create a custom method that takes the adpater as parameter
+        CustomNumberPicker customNumberPicker = new CustomNumberPicker();
+        customNumberPicker.setup(answerAdapter, holder.answers, holder.numberPicker);
         mQuestions.add(holder.quizzQuestion);
     }
 
@@ -135,9 +128,34 @@ public class QuizzCreatorAdapter extends RecyclerView.Adapter<QuizzCreatorAdapte
         }
     }
 
+    /**** Method for Setting the Height of the ListView dynamically.
+     **** Hack to fix the issue of not showing all the items of the ListView
+     **** when placed inside a ScrollView  ****/
+    private static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null)
+            return;
+
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
+        int totalHeight = 0;
+        View view = null;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            view = listAdapter.getView(i, view, listView);
+            if (i == 0)
+                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += view.getMeasuredHeight() + 24;
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+    }
+
     // -------- Interface Comunication --------
     public interface QuizzCreatorHandler {
         void onErrorMessage(String errorMessage);
     }
-
 }
+

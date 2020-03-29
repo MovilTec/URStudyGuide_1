@@ -69,17 +69,14 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
 
     private void setupNumberPicker() {
 
-        mNumberPicker.setValueChangedListener(new ValueChangedListener() {
-            @Override
-            public void valueChanged(int value, ActionEnum action) {
-                switch (action) {
-                    case INCREMENT:
-                        mAdapter.notifyItemInserted(mAdapter.addQuestions());
-                        break;
-                    case DECREMENT:
-                        mAdapter.notifyItemRemoved(mAdapter.removeQuestions());
-                        break;
-                }
+        mNumberPicker.setValueChangedListener((value, action) -> {
+            switch (action) {
+                case INCREMENT:
+                    mAdapter.notifyItemInserted(mAdapter.addQuestions());
+                    break;
+                case DECREMENT:
+                    mAdapter.notifyItemRemoved(mAdapter.removeQuestions());
+                    break;
             }
         });
     }

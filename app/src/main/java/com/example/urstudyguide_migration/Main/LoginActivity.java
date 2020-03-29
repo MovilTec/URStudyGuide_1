@@ -59,40 +59,34 @@ public class LoginActivity extends AppCompatActivity {
         mLoginProgress = new ProgressDialog(this);
         mRessetPassProgress = new ProgressDialog(this);
 
-        mButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email_account = email.getText().toString();
-                String password_account = password.getText().toString();
-                if(!TextUtils.isEmpty(email_account) || !TextUtils.isEmpty(password_account)){
+        mButton.setOnClickListener(v -> {
+            String email_account = email.getText().toString();
+            String password_account = password.getText().toString();
+            if(!TextUtils.isEmpty(email_account) || !TextUtils.isEmpty(password_account)){
 
-                    mLoginProgress.setTitle("Loggin In");
-                    mLoginProgress.setMessage("Please wait while checking your information");
-                    mLoginProgress.setCanceledOnTouchOutside(false);
-                    mLoginProgress.show();
+                mLoginProgress.setTitle("Loggin In");
+                mLoginProgress.setMessage("Please wait while checking your information");
+                mLoginProgress.setCanceledOnTouchOutside(false);
+                mLoginProgress.show();
 
-                    singInUser(email_account, password_account);
-                }
+                singInUser(email_account, password_account);
             }
         });
 
-        ForgotPasswordButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email_account = email.getText().toString();
-                if(!TextUtils.isEmpty(email_account)){
+        ForgotPasswordButton.setOnClickListener(v -> {
+            String email_account = email.getText().toString();
+            if(!TextUtils.isEmpty(email_account)){
 
-                    mRessetPassProgress.setTitle("Reset Password");
-                    mRessetPassProgress.setMessage("Please wait while sending reset email password");
-                    mRessetPassProgress.setCanceledOnTouchOutside(false);
-                    mRessetPassProgress.show();
+                mRessetPassProgress.setTitle("Reset Password");
+                mRessetPassProgress.setMessage("Please wait while sending reset email password");
+                mRessetPassProgress.setCanceledOnTouchOutside(false);
+                mRessetPassProgress.show();
 
-                    forgotPass(email_account);
+                forgotPass(email_account);
 
-                }else{
-                    mRessetPassProgress.hide();
-                    Toast.makeText(LoginActivity.this, "Please enter the forgotten password email address", Toast.LENGTH_LONG).show();
-                }
+            }else{
+                mRessetPassProgress.hide();
+                Toast.makeText(LoginActivity.this, "Please enter the forgotten password email address", Toast.LENGTH_LONG).show();
             }
         });
     }
