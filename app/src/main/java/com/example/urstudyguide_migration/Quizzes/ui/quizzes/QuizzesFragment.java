@@ -98,6 +98,6 @@ public class QuizzesFragment extends Fragment implements QuizzNavigator {
 
     @Override
     public void onQuizzCreated() {
-        // TODO:-
+        // TODO:- Refesh the view?
     }
 }

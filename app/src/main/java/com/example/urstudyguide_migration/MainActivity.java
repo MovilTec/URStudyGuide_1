@@ -77,29 +77,6 @@ public class MainActivity extends AppCompatActivity {
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
-
-    public void sendMessage(View view) {
-        Intent intent = new Intent(this, NetworkActivity.class);
-        startActivity(intent);
-    }
-    public void openProgrammingActivity(View view){
-        Intent intent = new Intent(this, Programming.class);
-        startActivity(intent);
-    }
-    public void openDataBaseActivity(View view){
-        Intent intent = new Intent(this, DataBase.class);
-        startActivity(intent);
-    }
-    public void openClientSupportActivity(View view){
-        Intent intent = new Intent(this, ClientSupport.class);
-        startActivity(intent);
-    }
-
-    public void openMCSA_70_740_Activity(View view){
-        Intent intent = new Intent(this, MCSA_70_740_Activity.class);
-        startActivity(intent);
-    }
-
     @Override
     public void onStart() {
         super.onStart();
