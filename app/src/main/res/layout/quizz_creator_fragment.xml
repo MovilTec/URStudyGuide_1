@@ -11,7 +11,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <include
@@ -62,37 +62,31 @@
                     numberpicker:value="1" />
             </LinearLayout>
 
-<!--            <ScrollView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content">-->
-                <LinearLayout
-                    android:id="@+id/quizzcreator_linearLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/quizzcreator_recyclerView"
-
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                </LinearLayout>
-<!--            </ScrollView>-->
-
+                        <ScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
             <LinearLayout
+                android:id="@+id/quizzcreator_linearLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/quizzcreator_recyclerView"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
                 <Button
                     android:id="@+id/quizzcreator_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="44dp"
                     android:text="@string/quizzcreator_adapter_create_button" />
+
             </LinearLayout>
+                        </ScrollView>
+
 
         </LinearLayout>
 

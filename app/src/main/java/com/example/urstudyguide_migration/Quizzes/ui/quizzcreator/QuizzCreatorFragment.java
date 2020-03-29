@@ -85,11 +85,8 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
 
-        mAdapter = new QuizzCreatorAdapter(new QuizzCreatorAdapter.QuizzCreatorHandler() {
-            @Override
-            public void onErrorMessage(String errorMessage) {
+        mAdapter = new QuizzCreatorAdapter(errorMessage -> {
 
-            }
         });
         mRecyclerView.setAdapter(mAdapter);
     }
