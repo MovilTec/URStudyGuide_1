@@ -79,11 +79,11 @@
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
-            android:name=".Social.UsersActivity"
+            android:name=".Social.Users.UsersActivity"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".Social.ProfileActivity"
-            android:parentActivityName=".Social.UsersActivity">
+            android:parentActivityName=".Social.Users.UsersActivity">
             <intent-filter>
                 <action android:name="com.example.bbvacontrol.urstudyguide_TARGET_NOTIFICATION" />
 
