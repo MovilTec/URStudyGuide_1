@@ -1,34 +1,52 @@
 package com.example.urstudyguide_migration.Quizzes.ui.simulator;
 
-import android.content.Context;
-import android.icu.lang.UCharacter;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.urstudyguide_migration.Common.Models.Answer;
 import com.example.urstudyguide_migration.Common.Models.TestItem;
 import com.example.urstudyguide_migration.R;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.BlockingDeque;
 
 
 public class SimulatorAdapter extends RecyclerView.Adapter<SimulatorAdapter.mViewHolder> {
 
-    private List<TestItem> mQuesions;
+    private List<TestItem> mQuestions;
+    private List<SimulatorAnswersAdapter> answersAdapters = new ArrayList();
+    private List<ListView> mAnswersLists = new ArrayList();
+    private ListView mAnswersList;
+    private Double grade;
+    private CompoundButton.OnCheckedChangeListener checkListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            //TODO:-
+//            Answer answer = mAnswers.get(compoundButton.getId());
+//            if(answer.isCorrect()) {
+//                compoundButton.setBackgroundColor(Color.GREEN);
+//            } else {
+//                compoundButton.setBackgroundColor(Color.RED);
+//            }
+        }
+    };
 
     public SimulatorAdapter(List<TestItem> questions) {
-        mQuesions = questions;
+        mQuestions = questions;
     }
 
     @NonNull
@@ -44,30 +62,23 @@ public class SimulatorAdapter extends RecyclerView.Adapter<SimulatorAdapter.mVie
 
     @Override
     public void onBindViewHolder(@NonNull mViewHolder holder, int position) {
-        holder.question.setText(mQuesions.get(position).getQuestion());
+        holder.question.setText(mQuestions.get(position).getQuestion());
 
-//        ViewGroup.LayoutParams params = holder.answers.getLayoutParams();
-//        int totalHeight = 0;
-//        for(int i=0; i < mQuesions.get(position).getAnswers().size(); i++) {
-//            totalHeight += 100;
-//        }
-//        params.height = totalHeight;
-//        holder.answers.setLayoutParams(params);
-
-        BaseAdapter mListAdapter = new SimulatorAnswersAdapter(mQuesions.get(position).getAnswers());
+        SimulatorAnswersAdapter mListAdapter = new SimulatorAnswersAdapter(mQuestions.get(position).getAnswers(), checkListener);
+        answersAdapters.add(mListAdapter);
         holder.answers.setAdapter(mListAdapter);
+//        setupListView(holder.answers, mListAdapter, mQuestions.get(position).getAnswers());
 
+        mAnswersLists.add(holder.answers);
+        mAnswersList = holder.answers;
         setListViewHeightBasedOnChildren(holder.answers);
     }
 
     @Override
     public int getItemCount() {
-        return mQuesions.size();
+        return mQuestions.size();
     }
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
     public static class mViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView question;
@@ -82,14 +93,41 @@ public class SimulatorAdapter extends RecyclerView.Adapter<SimulatorAdapter.mVie
 
     //------ Public Methods --------
 
-    public List<TestItem> getTestItems() {
-        for(int i=0; i < mQuesions.size(); i++) {
-
+    public double getGrade() {
+        int rawGrade = mQuestions.size();
+        for(int i = 0; i < mQuestions.size(); i++) {
+            List<Answer> reactiveAnswers = mQuestions.get(i).getAnswers();
+            for(int j=0;j<reactiveAnswers.size();j++) {
+                Answer respuesta =  mQuestions.get(i).getAnswers().get(j);
+                // Getting each a
+                View view = answersAdapters.get(i).getViewByPosition(j, mAnswersLists.get(i));
+                final CheckBox checkBox = view.findViewById(R.id.simulator_answer_list_item_checkBox);
+                final boolean isCorrectAnswer = respuesta.isCorrect();
+                final boolean isChoosenAnswer = checkBox.isChecked();
+                //Sí esta seleccionada la respuesta, pero no es la respuesta correcta se le resta puntos
+                if (checkBox != null) {
+                    if (isChoosenAnswer && !isCorrectAnswer) {
+                        rawGrade--;
+                    }
+                }
+            }
         }
-        return null;
+        return (10.0 * rawGrade) / mQuestions.size();
     }
 
     // -------  Private Methods ---------
+
+    private void setupListView(ListView listView, SimulatorAnswersAdapter adapter, List<Answer> answers) {
+        for(int i=0;i<answers.size();i++) {
+            final Answer answer = answers.get(i);
+            final View view = adapter.getViewByPosition(i, listView);
+
+            final TextView textView = view.findViewById(R.id.simulator_answer_list_item_answer);
+            final CheckBox checkBox = view.findViewById(R.id.simulator_answer_list_item_checkBox);
+
+            textView.setText(answer.getText());
+        }
+    }
 
     /**** Method for Setting the Height of the ListView dynamically.
      **** Hack to fix the issue of not showing all the items of the ListView

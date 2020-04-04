@@ -1,5 +1,6 @@
 package com.example.urstudyguide_migration.Quizzes.ui.simulator;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
@@ -73,7 +74,12 @@ public class SimulatorFragment extends Fragment {
     private void setupView() {
         mSubmitButton.setOnClickListener(v -> {
             //TODO:- Make a quizz validation
-            mAdapter.getTestItems();
+            double grade = mAdapter.getGrade();
+            AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+            alert.setTitle("Calificación!")
+                    .setMessage(String.valueOf(grade));
+            alert.create();
+            alert.show();
         });
     }
 
