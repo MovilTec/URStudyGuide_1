@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 public class User {
     private static User shared = null;
+    private Context context;
     public static User getInstance() {
         if (shared == null)
             shared = new User();
@@ -19,8 +20,17 @@ public class User {
         editor.commit();
     }
 
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
     public String getUserID(Context context) {
         SharedPreferences preferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+        return preferences.getString("userID", null);
+    }
+
+    public String getUserId() {
+        SharedPreferences preferences = context.getSharedPreferences("MyPreferences", context.MODE_PRIVATE);
         return preferences.getString("userID", null);
     }
 }

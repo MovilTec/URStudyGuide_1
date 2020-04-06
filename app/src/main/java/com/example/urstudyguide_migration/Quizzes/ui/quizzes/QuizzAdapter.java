@@ -15,19 +15,23 @@ import com.example.urstudyguide_migration.Common.Models.Quizz;
 import com.example.urstudyguide_migration.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class QuizzAdapter extends RecyclerView.Adapter<QuizzAdapter.mViewHolder> {
 
-    private static List<Quizz> mQuizzes;
+    private static HashMap<String, Quizz> mQuizzes;
+    private static List<Quizz> mQuizzesList;
     private static List<CardView> mViews = new ArrayList();
     private static QuizzItemAction action;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public QuizzAdapter(List<Quizz> myDataset, QuizzItemAction action) {
-        mQuizzes = myDataset;
+    public QuizzAdapter(Map<String, Quizz> myDataset, QuizzItemAction action) {
+        mQuizzes = (HashMap<String, Quizz>) myDataset;
+        mQuizzesList = new ArrayList(mQuizzes.values());
         this.action = action;
     }
 
@@ -48,8 +52,8 @@ public class QuizzAdapter extends RecyclerView.Adapter<QuizzAdapter.mViewHolder>
     public void onBindViewHolder(mViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.quizzName.setText(mQuizzes.get(position).getName());
-        mQuizzes.get(position).getAuthorName(holder.quizzAuthor);
+        holder.quizzName.setText(mQuizzesList.get(position).getName());
+        mQuizzesList.get(position).getAuthorName(holder.quizzAuthor);
         mViews.add(holder.cardView);
     }
 
@@ -85,6 +89,10 @@ public class QuizzAdapter extends RecyclerView.Adapter<QuizzAdapter.mViewHolder>
 
     // --- Public Methods --- //
     public Quizz getQuizz(int position) {
-        return mQuizzes.get(position);
+        return mQuizzesList.get(position);
+    }
+    public String getQuizzId(int position) {
+        List<String> keys = new ArrayList(mQuizzes.keySet());
+        return keys.get(position);
     }
 }

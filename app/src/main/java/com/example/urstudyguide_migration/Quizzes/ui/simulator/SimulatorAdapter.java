@@ -104,8 +104,8 @@ public class SimulatorAdapter extends RecyclerView.Adapter<SimulatorAdapter.mVie
                 final CheckBox checkBox = view.findViewById(R.id.simulator_answer_list_item_checkBox);
                 final boolean isCorrectAnswer = respuesta.isCorrect();
                 final boolean isChoosenAnswer = checkBox.isChecked();
-                //Sí esta seleccionada la respuesta, pero no es la respuesta correcta se le resta puntos
                 if (checkBox != null) {
+                //Sí esta seleccionada la respuesta, pero no es la respuesta correcta se le resta puntos
                     if (isChoosenAnswer && !isCorrectAnswer) {
                         rawGrade--;
                     }

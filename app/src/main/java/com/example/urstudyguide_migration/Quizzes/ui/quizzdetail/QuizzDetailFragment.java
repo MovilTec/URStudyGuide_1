@@ -29,10 +29,12 @@ public class QuizzDetailFragment extends Fragment {
     private Quizz mQuizz;
     private TextView mTextView, mAuthor;
     private Button mStartButton, mEditButton;
+    private String quizzId;
 
     private View.OnClickListener startButtonAction = (v -> {
         Intent intent = new Intent(getContext(), Simulator.class);
         intent.putExtra("Quizz", mQuizz);
+        intent.putExtra("quizzId", quizzId);
         startActivity(intent);
     });
 
@@ -53,6 +55,7 @@ public class QuizzDetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.quizz_detail_fragment, container, false);
         Intent intent = getActivity().getIntent();
         mQuizz = (Quizz) intent.getSerializableExtra("Quizz");
+        quizzId = (String) intent.getSerializableExtra("quizzId");
         setupNavBar(view, mQuizz.getName());
         setupView(view);
         return view;

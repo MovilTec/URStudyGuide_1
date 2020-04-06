@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.urstudyguide_migration.Common.Models.Users;
+import com.example.urstudyguide_migration.Common.User;
 import com.example.urstudyguide_migration.Main.AccountSettings;
 import com.example.urstudyguide_migration.Social.Users.UsersActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -52,7 +53,9 @@ public class MainActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         f.logEvent("Prueba", bundle);
         if(mAuth.getCurrentUser() != null) {
-            mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(users.getUserID());
+            User user = User.getInstance();
+            user.setContext(this);
+            mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUserId());
         }
         setupToolBar();
         setupPager();

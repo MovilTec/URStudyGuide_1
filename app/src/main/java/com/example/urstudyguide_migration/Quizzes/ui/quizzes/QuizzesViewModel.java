@@ -13,7 +13,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.annotations.NonNull;
 
@@ -27,13 +29,14 @@ public class QuizzesViewModel extends ViewModel {
     DatabaseReference quizzesRef = database.getReference("Quizzes");
 
     void getAvilableQuizzes() {
-        final List<Quizz> quizz = new ArrayList<>();
+        final Map<String, Quizz> quizz = new HashMap();
         quizzesRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot postData : dataSnapshot.getChildren()) {
                     Quizz quizzItem = postData.getValue(Quizz.class);
-                    quizz.add(quizzItem);
+                    String key = postData.getKey();
+                    quizz.put(key, quizzItem);
                 }
                 navigator.onDataRetrieve(quizz);
             }

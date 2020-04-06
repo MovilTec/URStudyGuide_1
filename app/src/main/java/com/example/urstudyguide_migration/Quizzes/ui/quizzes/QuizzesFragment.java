@@ -23,7 +23,9 @@ import com.example.urstudyguide_migration.Quizzes.QuizzNavigator;
 import com.example.urstudyguide_migration.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.annotations.NonNull;
 
@@ -82,13 +84,15 @@ public class QuizzesFragment extends Fragment implements QuizzNavigator {
     }
 
     @Override
-    public void onDataRetrieve(List<Quizz> items) {
+    public void onDataRetrieve(Map<String, Quizz> items) {
         if (items.size() > 0) {
             mAdapter = new QuizzAdapter(items, position -> {
-            Intent intent = new Intent(getContext(), QuizzDetail.class);
-            Quizz item = mAdapter.getQuizz(position);
-            intent.putExtra("Quizz", item);
-            startActivity(intent);
+                Intent intent = new Intent(getContext(), QuizzDetail.class);
+                Quizz item = mAdapter.getQuizz(position);
+                String quizzId = mAdapter.getQuizzId(position);
+                intent.putExtra("Quizz", item);
+                intent.putExtra("quizzId", quizzId);
+                startActivity(intent);
             });
             recyclerView.setAdapter(mAdapter);
             return;

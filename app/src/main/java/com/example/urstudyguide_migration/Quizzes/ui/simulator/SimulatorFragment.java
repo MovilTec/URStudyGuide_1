@@ -18,18 +18,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.urstudyguide_migration.Common.Models.Quizz;
+import com.example.urstudyguide_migration.Quizzes.SimulatorNavigator;
 import com.example.urstudyguide_migration.R;
 
 
-public class SimulatorFragment extends Fragment {
+public class SimulatorFragment extends Fragment implements SimulatorNavigator {
 
     private SimulatorViewModel mViewModel;
     private RecyclerView mRecyclerview;
     private SimulatorAdapter mAdapter;
     private Toolbar mToolBar;
     private Quizz mQuizz;
+    private String quizzId;
     private Button mSubmitButton;
 
     public static SimulatorFragment newInstance() {
@@ -45,6 +48,7 @@ public class SimulatorFragment extends Fragment {
         mToolBar = view.findViewById(R.id.quizzsimulator_toolbar);
         Intent intent = getActivity().getIntent();
         mQuizz = (Quizz) intent.getSerializableExtra("Quizz");
+        quizzId = (String) intent.getSerializableExtra("quizzId");
         mSubmitButton = view.findViewById(R.id.quizzsimulator_submit_button);
         return view;
     }
@@ -53,6 +57,7 @@ public class SimulatorFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(SimulatorViewModel.class);
+        mViewModel.navigator = this;
         setupToolBar();
         setupRecyclerView();
         setupView();
@@ -62,6 +67,8 @@ public class SimulatorFragment extends Fragment {
         ((AppCompatActivity)getActivity()).setSupportActionBar(mToolBar);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(mQuizz.getName());
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //TODO:- Make the back button to send back!!
+
     }
 
     private void setupRecyclerView() {
@@ -73,14 +80,26 @@ public class SimulatorFragment extends Fragment {
 
     private void setupView() {
         mSubmitButton.setOnClickListener(v -> {
-            //TODO:- Make a quizz validation
+            //TODO:- Set the attempt by the user!
             double grade = mAdapter.getGrade();
+            mViewModel.setAttempt(quizzId, grade);
             AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
             alert.setTitle("Calificación!")
                     .setMessage(String.valueOf(grade));
             alert.create();
             alert.show();
+            //TODO:- Erase Quizz!!
         });
     }
 
+    // ------- Navigator Implementation ---------
+    @Override
+    public void onSucces() {
+        System.out.println("Éxito al registrar intento!!");
+    }
+
+    @Override
+    public void onError(String errorMessage) {
+        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
+    }
 }
