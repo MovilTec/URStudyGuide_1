@@ -16,8 +16,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.urstudyguide_migration.Common.Models.Quizz;
+import com.example.urstudyguide_migration.Common.Models.QuizzAttempt;
 import com.example.urstudyguide_migration.Common.Models.Users;
 import com.example.urstudyguide_migration.Common.User;
+import com.example.urstudyguide_migration.Quizzes.QuizzAttempts;
 import com.example.urstudyguide_migration.Quizzes.QuizzCreator;
 import com.example.urstudyguide_migration.Quizzes.Simulator;
 import com.example.urstudyguide_migration.R;
@@ -28,7 +30,7 @@ public class QuizzDetailFragment extends Fragment {
     private Toolbar mToolbar;
     private Quizz mQuizz;
     private TextView mTextView, mAuthor;
-    private Button mStartButton, mEditButton;
+    private Button mStartButton, mEditButton, mAttemptsButton;
     private String quizzId;
 
     private View.OnClickListener startButtonAction = (v -> {
@@ -41,6 +43,13 @@ public class QuizzDetailFragment extends Fragment {
     private View.OnClickListener editButtonAction = ( v -> {
         Intent intent = new Intent(getContext(), QuizzCreator.class);
         intent.putExtra("Quizz", mQuizz);
+        startActivity(intent);
+    });
+
+    private View.OnClickListener attemptsButtonAction = ( v -> {
+        Intent intent = new Intent(getContext(), QuizzAttempts.class);
+        intent.putExtra("quizzName", mQuizz.getName());
+        intent.putExtra("quizzId", quizzId);
         startActivity(intent);
     });
 
@@ -81,14 +90,17 @@ public class QuizzDetailFragment extends Fragment {
         mEditButton = view.findViewById(R.id.quizzdetail_edit_button);
         mEditButton.setOnClickListener(editButtonAction);
 
+        mAttemptsButton = view.findViewById(R.id.quizzdetail_attempts_button);
+        mAttemptsButton.setOnClickListener(attemptsButtonAction);
+
         mStartButton = view.findViewById(R.id.quizzdetail_start_button);
         mStartButton.setOnClickListener(startButtonAction);
 
         mTextView.setText(mQuizz.getDescription());
-        validateEdit();
+        validateOptions();
     }
 
-    private void validateEdit() {
+    private void validateOptions() {
         String userID = User.getInstance().getUserID(getContext());
         if(userID == null) {
             userID = new Users().getUserID();
@@ -100,6 +112,9 @@ public class QuizzDetailFragment extends Fragment {
             if (!mQuizz.getAuthor().equals(userID)) {
                 mEditButton.setAlpha(0);
                 mEditButton.setEnabled(false);
+
+                mAttemptsButton.setAlpha(0);
+                mAttemptsButton.setEnabled(false);
             }
         }
     }

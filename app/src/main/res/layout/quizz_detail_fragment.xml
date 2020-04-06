@@ -19,21 +19,31 @@
         android:id="@+id/quizzdetail_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="QuizzDetailFragment"
+        android:text="@string/quizzdetail_quizz_description_textView"
         android:textSize="22sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.129"
-        tools:text="QuizzQuestion" />
+        app:layout_constraintVertical_bias="0.129" />
+
+    <Button
+        android:id="@+id/quizzdetail_attempts_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:background="@color/colorAccent"
+        android:text="@string/quizzdetail_attempts_button"
+        app:layout_constraintBottom_toTopOf="@+id/quizzdetail_edit_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/quizzdetail_edit_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/message_text_background"
         android:text="@string/quizzdetail_edit_button"
         android:textColor="@color/colorLightGray"
@@ -58,7 +68,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
-        android:text="TextView"
+        android:text="@string/quizzdetail_author_textView"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

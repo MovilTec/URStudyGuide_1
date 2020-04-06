@@ -1,5 +1,6 @@
 package com.example.urstudyguide_migration.Quizzes.ui.quizzcreator;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,24 +35,29 @@ public class QuizzCreatorAdapter extends RecyclerView.Adapter<QuizzCreatorAdapte
     private QuizzCreatorHandler mQuizzCreatorHandler;
     private List<EditText> mQuestions = new ArrayList();
     private ListView mAwnserList;
+    private Context context;
+//    private Activity activity;
 
     public QuizzCreatorAdapter(QuizzCreatorHandler createQuizzAction) {
         TestItem testItem = new TestItem();
         testItems.add(testItem);
         mQuizzCreatorHandler = createQuizzAction;
+//        this.activity = activity;
     }
 
     @Override
     public mViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.quizz_creator_item_adapater, parent, false);
+        context = parent.getContext();
         QuizzCreatorAdapter.mViewHolder vh = new QuizzCreatorAdapter.mViewHolder(v);
         return vh;
     }
 
     @Override
     public void onBindViewHolder(mViewHolder holder, int position) {
-        answerAdapter = new QuizzCreatorAnswerAdapter();
+
+        answerAdapter = new QuizzCreatorAnswerAdapter(context);
         answerAdapters.add(answerAdapter);
         holder.answers.setAdapter(answerAdapter);
 

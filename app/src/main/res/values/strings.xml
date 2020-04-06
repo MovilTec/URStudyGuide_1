@@ -24,6 +24,10 @@
     <!--  Quizz Detail View  -->
     <string name="quizzdetail_edit_button">Edit</string>
     <string name="quizzdetail_start_button">Start</string>
+    <string name="quizzdetail_attempts_button">Attempts</string>
+
+    <string name="quizzdetail_author_textView">Author\'s Name</string>
+    <string name="quizzdetail_quizz_description_textView">Quizz Description</string>
 
     <!--  Simulator   -->
     <string name="simulator_item_question">Question</string>
