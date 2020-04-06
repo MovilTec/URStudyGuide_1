@@ -1,6 +1,5 @@
 package com.example.urstudyguide_migration.Social.Users;
 
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,19 +7,18 @@ import android.widget.TextView;
 
 import com.example.urstudyguide_migration.Common.Models.UsersModelingClass;
 import com.example.urstudyguide_migration.R;
-import com.example.urstudyguide_migration.Social.ProfileActivity;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.squareup.picasso.Picasso;
 
-import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.annotations.NonNull;
 
 import static androidx.recyclerview.widget.RecyclerView.*;
 
-public class UsersAdapter extends FirebaseRecyclerAdapter<UsersModelingClass, UsersAdapter.UsersViewHolder> {
+public class UsersFirebaseAdapter extends FirebaseRecyclerAdapter<UsersModelingClass, UsersFirebaseAdapter.UsersViewHolder> {
 
+    private UserSelection userSelection;
 
     /**
      * Initialize a {@link Adapter} that listens to a Firebase query. See
@@ -28,8 +26,14 @@ public class UsersAdapter extends FirebaseRecyclerAdapter<UsersModelingClass, Us
      *
      * @param options
      */
-    public UsersAdapter(FirebaseRecyclerOptions<UsersModelingClass> options) {
+    public UsersFirebaseAdapter(FirebaseRecyclerOptions<UsersModelingClass> options) {
         super(options);
+    }
+
+    public UsersFirebaseAdapter(FirebaseRecyclerOptions<UsersModelingClass> options, UserSelection userSelection) {
+        super(options);
+
+        this.userSelection = userSelection;
     }
 
     public static class UsersViewHolder extends ViewHolder {
@@ -69,15 +73,8 @@ public class UsersAdapter extends FirebaseRecyclerAdapter<UsersModelingClass, Us
 
             final String user_id = getRef(i).getKey();
 
-            holder.mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-//                    Intent profileIntent = new Intent(UsersActivity.this, ProfileActivity.class);
-//                    profileIntent.putExtra("user_id", user_id);
-//                    startActivity(profileIntent);
-
-                }
+            holder.mView.setOnClickListener(v -> {
+                userSelection.onUserSelected(user_id);
             });
 
         }
@@ -89,4 +86,8 @@ public class UsersAdapter extends FirebaseRecyclerAdapter<UsersModelingClass, Us
 
             return new UsersViewHolder(view);
         }
+
+    public interface UserSelection {
+        void onUserSelected(String userID);
+    }
 }

@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.urstudyguide_migration.Common.Models.Quizz;
 import com.example.urstudyguide_migration.Common.Models.UsersModelingClass;
+import com.example.urstudyguide_migration.Common.User;
 import com.example.urstudyguide_migration.R;
 import com.example.urstudyguide_migration.Social.ProfileActivity;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -65,69 +66,14 @@ public class UsersActivity extends AppCompatActivity {
                 .setQuery(query, UsersModelingClass.class)
                 .build();
 
-        //TODO:- Migrate to the user's Adapter implementation!
-        FirebaseRecyclerAdapter firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<UsersModelingClass, UsersViewHolder>(options) {
-            @Override
-            protected void onBindViewHolder(@NonNull UsersViewHolder holder, int position, @NonNull UsersModelingClass model) {
-                holder.setName(model.name);
-                holder.getStatus(model.status);
-                holder.getUserImage(model.thumb_image);
+    FirebaseRecyclerAdapter firebaseRecyclerAdapter = new UsersFirebaseAdapter(options, userID -> {
+            Intent profileIntent = new Intent(UsersActivity.this, ProfileActivity.class);
+            profileIntent.putExtra("user_id", userID);
+            startActivity(profileIntent);
+    });
 
-                final String user_id = getRef(position).getKey();
-
-                holder.mView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        Intent profileIntent = new Intent(UsersActivity.this, ProfileActivity.class);
-                        profileIntent.putExtra("user_id", user_id);
-                        startActivity(profileIntent);
-
-                    }
-                });
-
-            }
-
-            @NonNull
-            @Override
-            public UsersViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.users_own_view, parent, false);
-
-                return new UsersViewHolder(view);
-            }
-        };
-
-        mUsersList.setAdapter(firebaseRecyclerAdapter);
-        firebaseRecyclerAdapter.startListening();
-
-    }
-
-    public static class UsersViewHolder extends RecyclerView.ViewHolder {
-
-        View mView;
-
-        public UsersViewHolder(View itemView) {
-            super(itemView);
-
-            mView = itemView;
-        }
-        public void setName(String name){
-            TextView userNameView = mView.findViewById(R.id.users_userName);
-            userNameView.setText(name);
-        }
-
-        public void getStatus(String status){
-            TextView userStatusView = mView.findViewById(R.id.users_userStatus);
-            userStatusView.setText(status);
-        }
-
-        //Aquí es donde se cambia la imagen
-        public void getUserImage(String Thumb_image){
-            CircleImageView usersImageView = mView.findViewById(R.id.users_circleImageView);
-            if(!Thumb_image.equals("default")) {
-                Picasso.get().load(Thumb_image).into(usersImageView);
-            }
-        }
+    mUsersList.setAdapter(firebaseRecyclerAdapter);
+    firebaseRecyclerAdapter.startListening();
 
     }
 
