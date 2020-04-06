@@ -12,14 +12,18 @@ import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.urstudyguide_migration.Common.Models.Quizz;
 import com.example.urstudyguide_migration.Common.Models.UsersModelingClass;
 import com.example.urstudyguide_migration.R;
 import com.example.urstudyguide_migration.Social.ProfileActivity;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -44,7 +48,6 @@ public class UsersActivity extends AppCompatActivity {
         mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
 
         mUsersList = findViewById(R.id.users_list);
-        mUsersList.setHasFixedSize(true);
         mUsersList.setLayoutManager(new LinearLayoutManager(this));
     }
 
@@ -56,9 +59,9 @@ public class UsersActivity extends AppCompatActivity {
 }
 
  public void startListening(){
- Query query = FirebaseDatabase.getInstance().getReference().child("Users").limitToLast(50);
+    Query query = FirebaseDatabase.getInstance().getReference().child("Users").limitToLast(50);
 
-        FirebaseRecyclerOptions<UsersModelingClass> options = new FirebaseRecyclerOptions.Builder<UsersModelingClass>()
+    FirebaseRecyclerOptions<UsersModelingClass> options = new FirebaseRecyclerOptions.Builder<UsersModelingClass>()
                 .setQuery(query, UsersModelingClass.class)
                 .build();
 
