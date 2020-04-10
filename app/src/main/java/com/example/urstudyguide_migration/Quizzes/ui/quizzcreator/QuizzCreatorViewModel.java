@@ -20,6 +20,8 @@ public class QuizzCreatorViewModel extends ViewModel {
 
     private FirebaseRequests firebaseRequests = FirebaseRequests.getInstance();
     QuizzCreatorNavigator navigator;
+    private List<TestItem> testItems = new ArrayList();
+    private int tposition;
 
     void createQuizz(String quizzName, List<TestItem> testItems) {
         String author = FirebaseAuth.getInstance().getUid();
@@ -38,8 +40,31 @@ public class QuizzCreatorViewModel extends ViewModel {
 
     private OnFailureListener onFailure = new OnFailureListener() {
         @Override
-        public void onFailure(@NonNull Exception e) {
+        public
+        void onFailure(@NonNull Exception e) {
             navigator.onError(e.getLocalizedMessage());
         }
     };
+
+    public void addQuestions() {
+        TestItem testItem = new TestItem();
+        testItems.add(testItem);
+    }
+
+    public void removeQuestions() {
+        testItems.remove(testItems.size() - 1);
+    }
+
+    public void setPosition(int position) {
+        this.tposition = position;
+    }
+
+    public void setTestItem(int position, TestItem testItem) {
+        testItems.set(tposition, testItem);
+        navigator.updateRecyclerView(tposition, testItem);
+    }
+
+    public TestItem getTestItem() {
+        return testItems.get(tposition);
+    }
 }

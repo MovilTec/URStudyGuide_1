@@ -38,11 +38,11 @@ public class QuizzCreatorAdapter extends RecyclerView.Adapter<QuizzCreatorAdapte
     private Context context;
 //    private Activity activity;
 
-    public QuizzCreatorAdapter(QuizzCreatorHandler createQuizzAction) {
+    public QuizzCreatorAdapter(QuizzCreatorHandler createQuizzAction, Context context) {
         TestItem testItem = new TestItem();
         testItems.add(testItem);
         mQuizzCreatorHandler = createQuizzAction;
-//        this.activity = activity;
+//        this.context = context;
     }
 
     @Override
@@ -59,7 +59,9 @@ public class QuizzCreatorAdapter extends RecyclerView.Adapter<QuizzCreatorAdapte
 
         answerAdapter = new QuizzCreatorAnswerAdapter(context);
         answerAdapters.add(answerAdapter);
+
         holder.answers.setAdapter(answerAdapter);
+        holder.answers.setTag(position);
 
         mAwnserList = holder.answers;
         setListViewHeightBasedOnChildren(holder.answers);
@@ -73,6 +75,16 @@ public class QuizzCreatorAdapter extends RecyclerView.Adapter<QuizzCreatorAdapte
     @Override
     public int getItemCount() {
         return testItems.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return super.getItemId(position);
     }
 
     // ---------- Public class methods --------------

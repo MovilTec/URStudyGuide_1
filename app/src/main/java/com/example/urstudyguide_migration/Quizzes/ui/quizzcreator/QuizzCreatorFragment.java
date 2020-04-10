@@ -17,7 +17,9 @@ import com.example.urstudyguide_migration.Common.Helpers.AlertableFragment;
 import com.example.urstudyguide_migration.Common.Models.Quizz;
 import com.example.urstudyguide_migration.Common.Models.TestItem;
 import com.example.urstudyguide_migration.Quizzes.QuizzCreatorNavigator;
+import com.example.urstudyguide_migration.Quizzes.QuizzCreatorQuestion;
 import com.example.urstudyguide_migration.Quizzes.QuizzDetail;
+import com.example.urstudyguide_migration.Quizzes.ui.quizzcreatorquestion.QuizzCreatorQuestionFragment;
 import com.example.urstudyguide_migration.R;
 import com.travijuu.numberpicker.library.Enums.ActionEnum;
 import com.travijuu.numberpicker.library.Interface.ValueChangedListener;
@@ -25,21 +27,24 @@ import com.travijuu.numberpicker.library.NumberPicker;
 
 import java.util.List;
 
-public class QuizzCreatorFragment extends AlertableFragment implements QuizzCreatorNavigator {
+import static android.app.Activity.RESULT_OK;
+
+public class QuizzCreatorFragment extends AlertableFragment implements QuizzCreatorNavigator, QuizzCreatorPrubeAdatper.QuestionCreatable {
 
     private QuizzCreatorViewModel mViewModel;
     private NumberPicker mNumberPicker;
     private RecyclerView mRecyclerView;
-    private QuizzCreatorAdapter mAdapter;
+//    private QuizzCreatorAdapter mAdapter;
+    private QuizzCreatorPrubeAdatper mAdapter;
     private Button mCreateQuizzButton;
     private TextView mQuizzName;
 
     private Button.OnClickListener createQuizzAction = new Button.OnClickListener() {
         @Override
         public void onClick(View v) {
-            List<TestItem> mTestItems = mAdapter.getQuizz();
-            String quizzName = mQuizzName.getText().toString();
-            mViewModel.createQuizz(quizzName, mTestItems);
+//            List<TestItem> mTestItems = mAdapter.getQuizz();
+//            String quizzName = mQuizzName.getText().toString();
+//            mViewModel.createQuizz(quizzName, mTestItems);
         }
     };
 
@@ -61,21 +66,29 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(QuizzCreatorViewModel.class);
-        mViewModel.navigator = this;
+
         setupNumberPicker();
         setupRecyclerView();
     }
 
-    private void setupNumberPicker() {
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mViewModel = ViewModelProviders.of(getActivity()).get(QuizzCreatorViewModel.class);
+        mViewModel.navigator = this;
+        mViewModel.addQuestions();
+    }
 
+    private void setupNumberPicker() {
         mNumberPicker.setValueChangedListener((value, action) -> {
             switch (action) {
                 case INCREMENT:
                     mAdapter.notifyItemInserted(mAdapter.addQuestions());
+                    mViewModel.addQuestions();
                     break;
                 case DECREMENT:
                     mAdapter.notifyItemRemoved(mAdapter.removeQuestions());
+                    mViewModel.removeQuestions();
                     break;
             }
         });
@@ -84,9 +97,7 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
     private void setupRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
-        mAdapter = new QuizzCreatorAdapter(errorMessage -> {
-
-        });
+        mAdapter = new QuizzCreatorPrubeAdatper(this::onQuestionSelected);
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -100,5 +111,25 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
 
     public void onError(String error) {
         displayErrorMessage(error);
+    }
+
+    @Override
+    public void onQuestionSelected(int position) {
+
+        mViewModel.setPosition(position);
+        getActivity().
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.quizzcreator, QuizzCreatorQuestionFragment.newInstance())
+                .addToBackStack(this.toString())
+                .commit();
+//        Intent intent = new Intent(getContext(), QuizzCreatorQuestion.class);
+//        intent.putExtra("position", position);
+//        startActivity(intent);
+    }
+
+    @Override
+    public void updateRecyclerView(int position, TestItem testItem) {
+        mAdapter.updateTestItem(position, testItem);
+        mAdapter.notifyItemChanged(position);
     }
 }

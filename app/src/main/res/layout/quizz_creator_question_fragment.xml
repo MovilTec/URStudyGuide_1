@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:numberpicker="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/quizzcreatorquestion"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/darker_gray"
+    tools:context=".ui.quizzcreatorquestion.QuizzCreatorQuestionFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/quizzquestioncreator_question"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:autofillHints="auto"
+            android:ems="10"
+            android:hint="@string/quizzcreator_adapter_question"
+            android:inputType="textPersonName" />
+
+        <ListView
+            android:id="@+id/quizzquestioncreator_listView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:background="@color/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText2" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/quizzquestioncreator_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:text="@string/quizzcreator_adapter_numberofanswers"
+                android:textSize="18sp" />
+
+            <com.travijuu.numberpicker.library.NumberPicker
+                android:id="@+id/quizzquestioncreator_number_picker"
+                android:layout_width="130dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                numberpicker:focusable="false"
+                numberpicker:max="99"
+                numberpicker:min="2"
+                numberpicker:unit="1"
+                numberpicker:value="2" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

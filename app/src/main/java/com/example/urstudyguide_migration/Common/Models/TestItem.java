@@ -32,4 +32,19 @@ public class TestItem implements Serializable {
     public void setAnswers(List<Answer> answers) {
         this.answers = answers;
     }
+
+    //TODO:- Make the TestItem to evaluate himself!
+
+    public double evaluateQuestion(TestItem testToEvualte) {
+        int hits = 0;
+        //TODO:- Throw error!
+        if (this.answers.size() != testToEvualte.answers.size())
+            return -1;
+        hits = testToEvualte.answers.size();
+        for(int i=0; i<this.answers.size(); i++) {
+            if(!testToEvualte.answers.get(i).isCorrect() && this.answers.get(i).isCorrect())
+                hits--;
+        }
+        return hits / testToEvualte.answers.size();
+    }
 }

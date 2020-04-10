@@ -20,8 +20,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="@string/quizzcreator_answer_text"/>
+            android:hint="@string/quizzcreator_answer_text"
+            android:inputType="none" />
 
         <CheckBox
             android:id="@+id/quizzcreator_answer_radioButton"

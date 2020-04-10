@@ -45,9 +45,18 @@ public class FirebaseRequests <V> {
         }
     }
 
+    public void getRefetence(RequestType type) {
+
+    }
+
     public void write(RequestType type, Object value, OnSuccessListener successListner, OnFailureListener failureListener) {
         switch (type) {
             case QUIZZ:
+                quizzReference.push()
+                        .setValue(value)
+                        .addOnSuccessListener(successListner)
+                        .addOnFailureListener(failureListener);
+            case SIMULATOR_ATTEMPT:
                 quizzReference.push()
                         .setValue(value)
                         .addOnSuccessListener(successListner)

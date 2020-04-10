@@ -2,8 +2,10 @@ package com.example.urstudyguide_migration.Quizzes;
 
 import com.example.urstudyguide_migration.Common.Helpers.Navigator;
 import com.example.urstudyguide_migration.Common.Models.Quizz;
+import com.example.urstudyguide_migration.Common.Models.TestItem;
 
 public interface QuizzCreatorNavigator extends Navigator {
     void onCreatedQuizz();
     void onError(String errorMessage);
+    void updateRecyclerView(int position, TestItem testItem);
 }
