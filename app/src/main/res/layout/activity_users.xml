@@ -19,11 +19,11 @@
             android:background="@color/colorPrimary"
             android:theme="@style/Base.ThemeOverlay.AppCompat.Dark.ActionBar" >
 
-            <Button
-                android:layout_width="45dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:background="@android:drawable/ic_menu_search" />
+<!--            <Button-->
+<!--                android:layout_width="45dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="right"-->
+<!--                android:background="@android:drawable/ic_menu_search" />-->
         </androidx.appcompat.widget.Toolbar>
 
         <androidx.recyclerview.widget.RecyclerView

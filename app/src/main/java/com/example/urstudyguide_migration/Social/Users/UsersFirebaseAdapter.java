@@ -3,6 +3,8 @@ package com.example.urstudyguide_migration.Social.Users;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.example.urstudyguide_migration.Common.Models.UsersModelingClass;
@@ -11,12 +13,15 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.annotations.NonNull;
 
 import static androidx.recyclerview.widget.RecyclerView.*;
 
-public class UsersFirebaseAdapter extends FirebaseRecyclerAdapter<UsersModelingClass, UsersFirebaseAdapter.UsersViewHolder> {
+public class UsersFirebaseAdapter extends FirebaseRecyclerAdapter<UsersModelingClass, UsersFirebaseAdapter.UsersViewHolder> implements Filterable {
 
     private UserSelection userSelection;
 
@@ -35,6 +40,31 @@ public class UsersFirebaseAdapter extends FirebaseRecyclerAdapter<UsersModelingC
 
         this.userSelection = userSelection;
     }
+
+    @Override
+    public Filter getFilter() {
+        return usersFilter;
+    }
+
+    private Filter usersFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence charSequence) {
+            List<UsersModelingClass> filteredUsers = new ArrayList();
+            if (charSequence == null || charSequence.length() == 0)
+//                filteredUsers.addAll();
+                System.out.println();
+                else {
+                String filterPattern = charSequence.toString().toLowerCase().trim();
+//                for
+            }
+            return null;
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+
+        }
+    };
 
     public static class UsersViewHolder extends ViewHolder {
         View mView;
