@@ -15,7 +15,7 @@
         android:orientation="vertical">
 
         <include
-            android:id="@+id/main_page_toolbar"
+            android:id="@+id/quizzcreator_toolbar"
             layout="@layout/app_bar_layout" />
 
         <LinearLayout
@@ -28,10 +28,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
                 android:autofillHints="auto"
                 android:ems="10"
                 android:hint="@string/quizzcreator_quizz_name"
+                android:inputType="textPersonName"
+                android:padding="16dp" />
+
+            <EditText
+                android:id="@+id/quizzcreator_quizzDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp"
+                android:layout_marginHorizontal="16dp"
+                android:autofillHints="auto"
+                android:ems="10"
+                android:hint="@string/quizzcreator_quizz_description"
                 android:inputType="textPersonName"
                 android:padding="16dp" />
 

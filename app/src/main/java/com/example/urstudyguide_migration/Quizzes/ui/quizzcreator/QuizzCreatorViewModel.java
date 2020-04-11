@@ -23,11 +23,10 @@ public class QuizzCreatorViewModel extends ViewModel {
     private List<TestItem> testItems = new ArrayList();
     private int tposition;
 
-    void createQuizz(String quizzName) {
+    void createQuizz(String quizzName, String quizzDescription) {
         String author = FirebaseAuth.getInstance().getUid();
-        String quizzDescription = "";
         List<String> members = new ArrayList();
-        Quizz quizz = new Quizz(quizzName, "", author, members, testItems);
+        Quizz quizz = new Quizz(quizzName, quizzDescription, author, members, testItems);
         firebaseRequests.write(RequestType.QUIZZ, quizz, onSuccess, onFailure);
     }
 

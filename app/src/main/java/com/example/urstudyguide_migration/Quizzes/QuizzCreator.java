@@ -2,6 +2,7 @@ package com.example.urstudyguide_migration.Quizzes;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,18 +29,28 @@ public class QuizzCreator extends AppCompatActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                super.onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onBackPressed() {
 
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
-        for(Fragment f : fragments){
+        for(Fragment f : fragments) {
             if(f != null && f instanceof QuizzCreatorQuestionFragment)
                 ((QuizzCreatorQuestionFragment)f).onBackPressed();
+            else
+                super.onBackPressed();
         }
-//        super.onBackPressed();
     }
 
     public void callBack() {
         super.onBackPressed();
-
     }
 }

@@ -11,6 +11,7 @@
     <string name="quizz_title">Quizz Title</string>
     <!-- Quizz Creator View   -->
     <string name="quizzcreator_quizz_name">Name of your Quizz</string>
+    <string name="quizzcreator_quizz_description">A breaf description of your Qiuzz (Optional)</string>
     <string name="quizzcreator_number_questions">Number of questions</string>
 
     <!--  Quizz Creator Adapter  -->

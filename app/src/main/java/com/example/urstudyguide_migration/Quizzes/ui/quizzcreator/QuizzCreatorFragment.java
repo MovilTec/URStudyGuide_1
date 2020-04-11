@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,14 +38,21 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
     private RecyclerView mRecyclerView;
     private QuizzCreatorPrubeAdatper mAdapter;
     private Button mCreateQuizzButton;
-    private TextView mQuizzName;
+    private TextView mQuizzName, mQuizzDescription;
+    private Toolbar mToolbar;
 
     private Button.OnClickListener createQuizzAction = new Button.OnClickListener() {
         @Override
         public void onClick(View v) {
             List<String> students;
-            String quizzName = mQuizzName.getText().toString();
-            mViewModel.createQuizz(quizzName);
+            try {
+                String quizzName = validateQuizzName(mQuizzName.getText().toString());
+                String quizzDescription = mQuizzDescription.getText().toString();
+
+                mViewModel.createQuizz(quizzName, quizzDescription);
+            } catch (InvalidQuizzName ex) {
+                displayErrorMessage(ex.getLocalizedMessage());
+            }
         }
     };
 
@@ -59,6 +68,9 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
         mCreateQuizzButton = view.findViewById(R.id.quizzcreator_button);
         mCreateQuizzButton.setOnClickListener(createQuizzAction);
         mQuizzName = view.findViewById(R.id.quizzcreator_quizzName);
+        mQuizzDescription = view.findViewById(R.id.quizzcreator_quizzDescription);
+        mToolbar = view.findViewById(R.id.quizzcreator_toolbar);
+
         return view;
     }
 
@@ -68,6 +80,7 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
 
         setupNumberPicker();
         setupRecyclerView();
+        setupToolBar();
     }
 
     @Override
@@ -76,6 +89,12 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
         mViewModel = ViewModelProviders.of(getActivity()).get(QuizzCreatorViewModel.class);
         mViewModel.navigator = this;
         mViewModel.addQuestions();
+    }
+
+    private void setupToolBar() {
+        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Quizz Creator");
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void setupNumberPicker() {
@@ -98,6 +117,13 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
         mRecyclerView.setLayoutManager(layoutManager);
         mAdapter = new QuizzCreatorPrubeAdatper(this::onQuestionSelected);
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    private String validateQuizzName(String quizzName) throws InvalidQuizzName {
+        if(quizzName.isEmpty()) {
+            throw new InvalidQuizzName();
+        }
+        return quizzName;
     }
 
     @Override
@@ -127,5 +153,11 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
     public void updateRecyclerView(int position, TestItem testItem) {
         mAdapter.updateTestItem(position, testItem);
         mAdapter.notifyItemChanged(position);
+    }
+}
+
+class InvalidQuizzName extends Exception {
+    public InvalidQuizzName() {
+        super("No se ha ingresado el nombre del cuestionario!");
     }
 }
