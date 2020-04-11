@@ -37,7 +37,6 @@ public class QuizzCreatorQuestionFragment extends AlertableFragment implements B
     private NumberPicker numberPicker;
     private TestItem testItem = new TestItem();
     private QuizzCreatorAnswerAdapter answerAdapter;
-    private int position;
     private String mExceptions = "";
 
     public static QuizzCreatorQuestionFragment newInstance() {
@@ -48,8 +47,6 @@ public class QuizzCreatorQuestionFragment extends AlertableFragment implements B
     @Override
     public View provideYourFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.quizz_creator_question_fragment, parent, false);
-        Intent intent = getActivity().getIntent();
-        position = intent.getIntExtra("position", -1);
         setupView(view);
         return view;
     }
