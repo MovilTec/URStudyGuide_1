@@ -105,6 +105,9 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
             //
             mCreateQuizzButton.setText("SAVE CHANGES");
             mCreateQuizzButton.setOnClickListener(editQuizzAction);
+
+            //Setting the number picker base on the quizz questions
+            mNumberPicker.setValue(quizz.getTestItems().size());
         }
     }
 
