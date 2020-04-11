@@ -40,14 +40,20 @@ public class QuizzCreator extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
-        for(Fragment f : fragments) {
-            if(f != null && f instanceof QuizzCreatorQuestionFragment)
-                ((QuizzCreatorQuestionFragment)f).onBackPressed();
-            else
-                super.onBackPressed();
+        if(!isQuizzQuestionCreatorFragment(fragments)) {
+            super.onBackPressed();
         }
+    }
+
+    private boolean isQuizzQuestionCreatorFragment(List<Fragment> fragments) {
+        for(Fragment f : fragments) {
+            if(f != null && f instanceof QuizzCreatorQuestionFragment) {
+                ((QuizzCreatorQuestionFragment) f).onBackPressed();
+                return true;
+            }
+        }
+        return false;
     }
 
     public void callBack() {

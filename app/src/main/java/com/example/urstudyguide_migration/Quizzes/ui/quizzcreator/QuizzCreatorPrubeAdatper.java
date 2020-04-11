@@ -27,10 +27,12 @@ public class QuizzCreatorPrubeAdatper extends RecyclerView.Adapter<QuizzCreatorP
     private View.OnClickListener onClickListener;
     private QuestionCreatable questionCreatable;
 
-    public QuizzCreatorPrubeAdatper(QuestionCreatable questionCreatable) {
-        TestItem testItem = new TestItem();
-        testItem.setQuestion("Question No. 1");
-        this.testItems.add(testItem);
+    public QuizzCreatorPrubeAdatper(QuestionCreatable questionCreatable, List<TestItem> testItems) {
+        //TODO:- Settup the intial test text?
+//        TestItem testItem = new TestItem();
+//        testItem.setQuestion("Question No. 1");
+//        this.testItems.add(testItem);
+        this.testItems = testItems;
         this.questionCreatable = questionCreatable;
     }
 

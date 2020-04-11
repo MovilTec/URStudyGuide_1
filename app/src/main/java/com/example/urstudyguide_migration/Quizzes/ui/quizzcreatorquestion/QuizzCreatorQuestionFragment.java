@@ -106,6 +106,7 @@ public class QuizzCreatorQuestionFragment extends AlertableFragment implements B
             //TODO:- Run a validation for the answers
             testItem.setAnswers(answers);
             mViewModel.setTestItem(testItem);
+
             QuizzCreator a = (QuizzCreator) getActivity();
             a.callBack();
         } catch(InvalidAnswerQuestion | InvalidTestQuestion ex) {

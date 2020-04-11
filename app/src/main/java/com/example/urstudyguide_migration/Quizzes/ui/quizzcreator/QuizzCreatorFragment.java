@@ -44,7 +44,9 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
     private Button.OnClickListener createQuizzAction = new Button.OnClickListener() {
         @Override
         public void onClick(View v) {
+            //TODO:- Set the allowed audience?
             List<String> students;
+
             try {
                 String quizzName = validateQuizzName(mQuizzName.getText().toString());
                 String quizzDescription = mQuizzDescription.getText().toString();
@@ -56,6 +58,18 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
         }
     };
 
+    private Button.OnClickListener editQuizzAction = (v -> {
+        //TODO:- Save the edited test
+        try {
+            String quizzName = validateQuizzName(mQuizzName.getText().toString());
+            String quizzDescription = mQuizzDescription.getText().toString();
+
+            mViewModel.saveQuizz(quizzName, quizzDescription);
+        } catch (InvalidQuizzName ex) {
+            displayErrorMessage(ex.getLocalizedMessage());
+        }
+    });
+
     public static QuizzCreatorFragment newInstance() {
         return new QuizzCreatorFragment();
     }
@@ -63,6 +77,16 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
     @Override
     public View provideYourFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.quizz_creator_fragment, parent, false);
+        setupView(view);
+
+        Intent intent = getActivity().getIntent();
+        Quizz quizz = (Quizz) intent.getSerializableExtra("Quizz");
+        setupQuizzFromEdit(quizz);
+
+        return view;
+    }
+
+    private void setupView(View view ) {
         mNumberPicker = view.findViewById(R.id.number_picker);
         mRecyclerView = view.findViewById(R.id.quizzcreator_recyclerView);
         mCreateQuizzButton = view.findViewById(R.id.quizzcreator_button);
@@ -70,8 +94,18 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
         mQuizzName = view.findViewById(R.id.quizzcreator_quizzName);
         mQuizzDescription = view.findViewById(R.id.quizzcreator_quizzDescription);
         mToolbar = view.findViewById(R.id.quizzcreator_toolbar);
+    }
 
-        return view;
+    private void setupQuizzFromEdit(Quizz quizz) {
+        if(quizz != null) {
+            mViewModel.setQuizz(quizz);
+            mQuizzName.setText(quizz.getName());
+            mQuizzDescription.setText(quizz.getDescription());
+
+            //
+            mCreateQuizzButton.setText("SAVE CHANGES");
+            mCreateQuizzButton.setOnClickListener(editQuizzAction);
+        }
     }
 
     @Override
@@ -102,11 +136,11 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
             switch (action) {
                 case INCREMENT:
                     mAdapter.notifyItemInserted(mAdapter.addQuestions());
-                    mViewModel.addQuestions();
+//                    mViewModel.addQuestions();
                     break;
                 case DECREMENT:
                     mAdapter.notifyItemRemoved(mAdapter.removeQuestions());
-                    mViewModel.removeQuestions();
+//                    mViewModel.removeQuestions();
                     break;
             }
         });
@@ -115,7 +149,8 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
     private void setupRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
-        mAdapter = new QuizzCreatorPrubeAdatper(this::onQuestionSelected);
+        // Passing the data from the viewModel
+        mAdapter = new QuizzCreatorPrubeAdatper(this::onQuestionSelected, mViewModel.getTestItems());
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -145,7 +180,7 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
         getActivity().
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.quizzcreator, QuizzCreatorQuestionFragment.newInstance())
-                .addToBackStack(this.toString())
+                .addToBackStack(null)
                 .commit();
     }
 

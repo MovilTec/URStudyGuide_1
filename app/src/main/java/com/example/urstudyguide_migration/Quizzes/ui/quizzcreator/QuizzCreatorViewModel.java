@@ -30,6 +30,10 @@ public class QuizzCreatorViewModel extends ViewModel {
         firebaseRequests.write(RequestType.QUIZZ, quizz, onSuccess, onFailure);
     }
 
+    void saveQuizz(String quizzName, String quizzDescription) {
+        //TODO:- Recieve the route to save the edited Test
+    }
+
     private OnSuccessListener onSuccess = new OnSuccessListener() {
         @Override
         public void onSuccess(Object o) {
@@ -65,5 +69,13 @@ public class QuizzCreatorViewModel extends ViewModel {
 
     public TestItem getTestItem() {
         return testItems.get(tposition);
+    }
+
+    public List<TestItem> getTestItems() {
+        return this.testItems;
+    }
+
+    public void setQuizz(Quizz quizz) {
+        this.testItems = quizz.getTestItems();
     }
 }

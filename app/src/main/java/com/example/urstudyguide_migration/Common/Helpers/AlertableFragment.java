@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 interface Alertable {
@@ -30,8 +31,6 @@ public abstract class AlertableFragment extends Fragment implements Alertable {
 //
 //    }
 
-//    public abstract AlertableFragment provideYourFragment();
-
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = provideYourFragmentView(inflater,container,savedInstanceState);
@@ -44,11 +43,30 @@ public abstract class AlertableFragment extends Fragment implements Alertable {
         mContext = context;
     }
 
+    @Override
+    public void onDetach() {
+        mContext = null;
+        super.onDetach();
+    }
+
     public abstract View provideYourFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState);
 
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    public Activity getNonNullActivity() {
+        if (mContext instanceof Activity) {
+            Activity activity = (Activity) mContext;
+            return activity;
+        }
+        return getActivity();
     }
 
     public void displayErrorMessage(String error) {
