@@ -1,6 +1,8 @@
 package com.example.urstudyguide_migration.Quizzes;
 
 import android.os.Bundle;
+import android.view.MenuItem;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.urstudyguide_migration.Quizzes.ui.quizzdetail.QuizzDetailFragment;
@@ -17,5 +19,15 @@ public class QuizzDetail extends AppCompatActivity {
                     .replace(R.id.container, QuizzDetailFragment.newInstance())
                     .commitNow();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                super.onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
