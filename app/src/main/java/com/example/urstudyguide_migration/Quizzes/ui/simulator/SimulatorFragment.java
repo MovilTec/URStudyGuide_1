@@ -21,7 +21,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.urstudyguide_migration.Common.Models.Quizz;
-import com.example.urstudyguide_migration.Quizzes.SimulatorNavigator;
+import com.example.urstudyguide_migration.Quizzes.navigators.SimulatorNavigator;
 import com.example.urstudyguide_migration.R;
 
 

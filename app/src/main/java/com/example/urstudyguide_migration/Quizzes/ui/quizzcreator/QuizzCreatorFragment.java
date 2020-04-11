@@ -18,18 +18,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.urstudyguide_migration.Common.Helpers.AlertableFragment;
 import com.example.urstudyguide_migration.Common.Models.Quizz;
 import com.example.urstudyguide_migration.Common.Models.TestItem;
-import com.example.urstudyguide_migration.Quizzes.QuizzCreatorNavigator;
-import com.example.urstudyguide_migration.Quizzes.QuizzCreatorQuestion;
+import com.example.urstudyguide_migration.Quizzes.navigators.QuizzCreatorNavigator;
 import com.example.urstudyguide_migration.Quizzes.QuizzDetail;
 import com.example.urstudyguide_migration.Quizzes.ui.quizzcreatorquestion.QuizzCreatorQuestionFragment;
 import com.example.urstudyguide_migration.R;
-import com.travijuu.numberpicker.library.Enums.ActionEnum;
-import com.travijuu.numberpicker.library.Interface.ValueChangedListener;
 import com.travijuu.numberpicker.library.NumberPicker;
 
 import java.util.List;
-
-import static android.app.Activity.RESULT_OK;
 
 public class QuizzCreatorFragment extends AlertableFragment implements QuizzCreatorNavigator, QuizzCreatorPrubeAdatper.QuestionCreatable {
 

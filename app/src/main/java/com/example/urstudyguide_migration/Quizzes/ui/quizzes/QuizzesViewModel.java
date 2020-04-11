@@ -5,16 +5,14 @@ import android.util.Log;
 import androidx.lifecycle.ViewModel;
 
 import com.example.urstudyguide_migration.Common.Models.Quizz;
-import com.example.urstudyguide_migration.Quizzes.QuizzNavigator;
+import com.example.urstudyguide_migration.Quizzes.navigators.QuizzNavigator;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import io.reactivex.annotations.NonNull;

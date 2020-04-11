@@ -6,7 +6,7 @@ import com.example.urstudyguide_migration.Common.Models.Quizz;
 import com.example.urstudyguide_migration.Common.Models.TestItem;
 import com.example.urstudyguide_migration.Common.Services.FirebaseRequests;
 import com.example.urstudyguide_migration.Common.Services.RequestType;
-import com.example.urstudyguide_migration.Quizzes.QuizzCreatorNavigator;
+import com.example.urstudyguide_migration.Quizzes.navigators.QuizzCreatorNavigator;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,6 +32,7 @@ public class QuizzCreatorViewModel extends ViewModel {
 
     void saveQuizz(String quizzName, String quizzDescription) {
         //TODO:- Recieve the route to save the edited Test
+
     }
 
     private OnSuccessListener onSuccess = new OnSuccessListener() {

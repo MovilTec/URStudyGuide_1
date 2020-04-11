@@ -1,17 +1,13 @@
 package com.example.urstudyguide_migration.Quizzes.ui.simulator;
 
 import com.example.urstudyguide_migration.Common.User;
-import com.example.urstudyguide_migration.Quizzes.SimulatorNavigator;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.example.urstudyguide_migration.Quizzes.navigators.SimulatorNavigator;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 
 public class SimulatorViewModel extends ViewModel {

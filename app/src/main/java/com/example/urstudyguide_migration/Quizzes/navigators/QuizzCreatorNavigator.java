@@ -1,4 +1,4 @@
-package com.example.urstudyguide_migration.Quizzes;
+package com.example.urstudyguide_migration.Quizzes.navigators;
 
 import com.example.urstudyguide_migration.Common.Helpers.Navigator;
 import com.example.urstudyguide_migration.Common.Models.Quizz;

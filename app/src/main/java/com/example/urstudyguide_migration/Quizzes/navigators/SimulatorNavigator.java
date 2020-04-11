@@ -1,4 +1,4 @@
-package com.example.urstudyguide_migration.Quizzes;
+package com.example.urstudyguide_migration.Quizzes.navigators;
 
 public interface SimulatorNavigator {
     void onSucces();

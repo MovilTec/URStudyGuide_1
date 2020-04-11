@@ -19,12 +19,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.urstudyguide_migration.Common.Models.Quizz;
 import com.example.urstudyguide_migration.Quizzes.QuizzCreator;
 import com.example.urstudyguide_migration.Quizzes.QuizzDetail;
-import com.example.urstudyguide_migration.Quizzes.QuizzNavigator;
+import com.example.urstudyguide_migration.Quizzes.navigators.QuizzNavigator;
 import com.example.urstudyguide_migration.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import io.reactivex.annotations.NonNull;
