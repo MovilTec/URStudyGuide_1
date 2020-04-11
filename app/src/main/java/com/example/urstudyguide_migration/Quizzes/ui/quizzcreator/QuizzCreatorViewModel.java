@@ -23,7 +23,7 @@ public class QuizzCreatorViewModel extends ViewModel {
     private List<TestItem> testItems = new ArrayList();
     private int tposition;
 
-    void createQuizz(String quizzName, List<TestItem> testItems) {
+    void createQuizz(String quizzName) {
         String author = FirebaseAuth.getInstance().getUid();
         String quizzDescription = "";
         List<String> members = new ArrayList();
@@ -59,7 +59,7 @@ public class QuizzCreatorViewModel extends ViewModel {
         this.tposition = position;
     }
 
-    public void setTestItem(int position, TestItem testItem) {
+    public void setTestItem(TestItem testItem) {
         testItems.set(tposition, testItem);
         navigator.updateRecyclerView(tposition, testItem);
     }

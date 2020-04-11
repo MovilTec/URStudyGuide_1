@@ -10,6 +10,9 @@ public class TestItem implements Serializable {
     private List<Answer> answers = new ArrayList();
 
     public TestItem() {
+        //NOTE:- Seeting the default two answers
+        answers.add(new Answer());
+        answers.add(new Answer());
     }
 
     public TestItem(String question, List<Answer> answers) {

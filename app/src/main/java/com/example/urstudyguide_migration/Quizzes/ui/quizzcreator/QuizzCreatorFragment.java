@@ -34,7 +34,6 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
     private QuizzCreatorViewModel mViewModel;
     private NumberPicker mNumberPicker;
     private RecyclerView mRecyclerView;
-//    private QuizzCreatorAdapter mAdapter;
     private QuizzCreatorPrubeAdatper mAdapter;
     private Button mCreateQuizzButton;
     private TextView mQuizzName;
@@ -42,9 +41,9 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
     private Button.OnClickListener createQuizzAction = new Button.OnClickListener() {
         @Override
         public void onClick(View v) {
-//            List<TestItem> mTestItems = mAdapter.getQuizz();
-//            String quizzName = mQuizzName.getText().toString();
-//            mViewModel.createQuizz(quizzName, mTestItems);
+            List<String> students;
+            String quizzName = mQuizzName.getText().toString();
+            mViewModel.createQuizz(quizzName);
         }
     };
 
@@ -122,9 +121,6 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
                 .replace(R.id.quizzcreator, QuizzCreatorQuestionFragment.newInstance())
                 .addToBackStack(this.toString())
                 .commit();
-//        Intent intent = new Intent(getContext(), QuizzCreatorQuestion.class);
-//        intent.putExtra("position", position);
-//        startActivity(intent);
     }
 
     @Override

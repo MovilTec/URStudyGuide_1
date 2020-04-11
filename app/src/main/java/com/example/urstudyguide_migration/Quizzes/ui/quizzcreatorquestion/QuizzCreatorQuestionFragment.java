@@ -1,6 +1,5 @@
 package com.example.urstudyguide_migration.Quizzes.ui.quizzcreatorquestion;
 
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Intent;
@@ -20,25 +19,19 @@ import android.widget.ListView;
 import com.example.urstudyguide_migration.Common.Helpers.BackPressable;
 import com.example.urstudyguide_migration.Common.Models.Answer;
 import com.example.urstudyguide_migration.Common.Models.TestItem;
-import com.example.urstudyguide_migration.Quizzes.QuizzCreator;
-import com.example.urstudyguide_migration.Quizzes.QuizzDetail;
 import com.example.urstudyguide_migration.Quizzes.ui.quizzcreator.CustomNumberPicker;
 import com.example.urstudyguide_migration.Quizzes.ui.quizzcreator.QuizzCreatorAnswer.QuizzCreatorAnswerAdapter;
-import com.example.urstudyguide_migration.Quizzes.ui.quizzcreator.QuizzCreatorFragment;
-import com.example.urstudyguide_migration.Quizzes.ui.quizzcreator.QuizzCreatorPrubeAdatper;
 import com.example.urstudyguide_migration.Quizzes.ui.quizzcreator.QuizzCreatorViewModel;
 import com.example.urstudyguide_migration.R;
 import com.travijuu.numberpicker.library.NumberPicker;
 
 import java.util.List;
 
-import static android.app.Activity.RESULT_OK;
-
 public class QuizzCreatorQuestionFragment extends Fragment implements BackPressable {
 
     private QuizzCreatorViewModel mViewModel;
     private ListView listView;
-    private EditText question;
+    private EditText mQuestionText;
     private NumberPicker numberPicker;
     private TestItem testItem = new TestItem();
     private QuizzCreatorAnswerAdapter answerAdapter;
@@ -76,14 +69,15 @@ public class QuizzCreatorQuestionFragment extends Fragment implements BackPressa
 
     private void setupView(View view) {
         listView = view.findViewById(R.id.quizzquestioncreator_listView);
-        question = view.findViewById(R.id.quizzquestioncreator_question);
+        mQuestionText = view.findViewById(R.id.quizzquestioncreator_question);
         numberPicker = view.findViewById(R.id.quizzquestioncreator_number_picker);
 
-        question.setText(testItem.getQuestion());
+        mQuestionText.setText(testItem.getQuestion());
+        numberPicker.setValue(testItem.getAnswers().size());
     }
 
     private void setupListView() {
-        answerAdapter = new QuizzCreatorAnswerAdapter(getContext());
+        answerAdapter = new QuizzCreatorAnswerAdapter(getContext(), testItem.getAnswers());
         listView.setAdapter(answerAdapter);
 
         CustomNumberPicker customNumberPicker = new CustomNumberPicker();
@@ -91,8 +85,13 @@ public class QuizzCreatorQuestionFragment extends Fragment implements BackPressa
     }
 
     public void onBackPressed() {
-        //TODO:- Return the testItem
-        testItem.setQuestion(question.getText().toString());
+
+        String question = mQuestionText.getText().toString();
+        try {
+            testItem.setQuestion(validateQuestion(question));
+        } catch(InvalidTestQuestion ex) {
+
+        }
 
         List<Answer> answers = answerAdapter.getAnswersList();
 
@@ -109,8 +108,21 @@ public class QuizzCreatorQuestionFragment extends Fragment implements BackPressa
         }
         //TODO:- Run a validation for the answers
         testItem.setAnswers(answers);
-        mViewModel.setTestItem(position, testItem);
+        mViewModel.setTestItem(testItem);
     }
+
+    // ----- Private Methods ----
+    private String validateQuestion(String question) throws InvalidTestQuestion {
+        if (question.isEmpty()) {
+            throw new InvalidTestQuestion();
+//            mQuizzCreatorHandler.onErrorMessage("No se ingreso texto en alguna de las preguntas");
+        }
+        return question;
+    }
+
+}
+
+class InvalidTestQuestion extends Exception {
 
 }
 

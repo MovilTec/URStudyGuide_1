@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -24,13 +25,11 @@ public class QuizzCreatorAnswerAdapter extends ArrayAdapter<Answer> {
 
     private List<Answer> answers = new ArrayList();
     private final Context context;
-    private ViewHolder holder;
 
-    public QuizzCreatorAnswerAdapter(Context context) {
+    public QuizzCreatorAnswerAdapter(Context context, List<Answer> answers) {
         super(context, R.layout.quizzcreator_answers_item_listview);
         this.context = context;
-        answers.add(new Answer());
-        answers.add(new Answer());
+        this.answers = answers;
     }
 
     @Override
@@ -48,40 +47,31 @@ public class QuizzCreatorAnswerAdapter extends ArrayAdapter<Answer> {
         return i;
     }
 
-    static class ViewHolder {
-        protected CheckBox checkbox;
-        protected EditText answerText;
+    @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
-        System.out.println("getView(position=" + position + ", convertView=" + convertView + ", parent=" + viewGroup + ")" );
+
 
         View view;
-        if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-             view =    inflater.inflate(R.layout.quizzcreator_answers_item_listview, null);  //inflater.inflate(R.layout.quizzcreator_answers_item_listview, viewGroup, false);
+             view =    inflater.inflate(R.layout.quizzcreator_answers_item_listview, null);
 
-            holder = new ViewHolder();
-            holder.answerText = view.findViewById(R.id.quizzcreator_answer_text);
 
-            view.setTag(holder);
-
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-            view = convertView;
             EditText answerText = view.findViewById(R.id.quizzcreator_answer_text);
-            answerText.setText(answers.get(position).getText());
-            System.out.println("the answer text that is going to be sett: " + answers.get(position).getText());
-        }
-            holder.answerText.setText(answers.get(position).getText());
-            holder.answerText.addTextChangedListener(new TextWatcher() {
+            CheckBox checkbox = view.findViewById(R.id.quizzcreator_answer_radioButton);
+
+            answerText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
 
                 @Override
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                     if(!charSequence.toString().isEmpty()) {
+                        System.out.println("setting answer text for position: "+ position +  " , " + charSequence);
                         answers.get(position).setText(charSequence.toString());
                     }
                 }
@@ -89,6 +79,17 @@ public class QuizzCreatorAnswerAdapter extends ArrayAdapter<Answer> {
                 @Override
                 public void afterTextChanged(Editable editable) { }
             });
+
+            checkbox.setOnCheckedChangeListener(
+                    (compoundButton, b) -> {
+                        answers.get(position).setCorrect(b);
+                    }
+
+            );
+
+        answerText.setText(answers.get(position).getText());
+        checkbox.setChecked(answers.get(position).isCorrect());
+
         return view;
     }
 
