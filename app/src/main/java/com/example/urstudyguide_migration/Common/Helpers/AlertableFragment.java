@@ -71,11 +71,9 @@ public abstract class AlertableFragment extends Fragment implements Alertable {
 
     public void displayErrorMessage(String error) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setMessage("Error")
-                .setTitle(error);
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-//        Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
+        builder.setMessage(error)
+                .setTitle("Error")
+                .create()
+                .show();
     }
 }

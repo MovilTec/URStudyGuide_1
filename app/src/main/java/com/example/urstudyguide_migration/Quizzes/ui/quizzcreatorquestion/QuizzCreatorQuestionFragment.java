@@ -38,6 +38,7 @@ public class QuizzCreatorQuestionFragment extends AlertableFragment implements B
     private TestItem testItem = new TestItem();
     private QuizzCreatorAnswerAdapter answerAdapter;
     private int position;
+    private String mExceptions = "";
 
     public static QuizzCreatorQuestionFragment newInstance() {
         return new QuizzCreatorQuestionFragment();
@@ -91,7 +92,7 @@ public class QuizzCreatorQuestionFragment extends AlertableFragment implements B
         try {
             testItem.setQuestion(validateQuestion(question));
             List<Answer> answers = answerAdapter.getAnswersList();
-
+            boolean hasCorrectAnswer = false;
             for(int i=0;i<answers.size(); i++) {
                 View view = answerAdapter.getViewByPosition(i, listView);
                 EditText editText = view.findViewById(R.id.quizzcreator_answer_text);
@@ -101,16 +102,29 @@ public class QuizzCreatorQuestionFragment extends AlertableFragment implements B
                 answers.get(i).setText(validateAnswer(awnserText));
                 // Setting the correct answer flag
                 boolean isCorrect = checkBox.isChecked();
+                if (isCorrect)
+                    hasCorrectAnswer = true;
                 answers.get(i).setCorrect(isCorrect);
             }
+            if(!hasCorrectAnswer)
+                throw new NonCorrectAnswerSelectedException();
             //TODO:- Run a validation for the answers
             testItem.setAnswers(answers);
             mViewModel.setTestItem(testItem);
 
             QuizzCreator a = (QuizzCreator) getActivity();
             a.callBack();
-        } catch(InvalidAnswerQuestion | InvalidTestQuestion ex) {
-            displayErrorMessage(ex.getLocalizedMessage());
+        } catch(InvalidAnswerQuestion ex) {
+            mExceptions += ex.getLocalizedMessage() + "\n";
+        } catch( InvalidTestQuestion ex) {
+            mExceptions += ex.getLocalizedMessage() + "\n" ;
+        } catch(NonCorrectAnswerSelectedException ex) {
+            mExceptions += ex.getLocalizedMessage() ;
+        } finally {
+            if(!mExceptions.isEmpty()) {
+                displayErrorMessage(mExceptions);
+            }
+            mExceptions = "";
         }
     }
 
@@ -140,6 +154,12 @@ class InvalidTestQuestion extends Exception {
 class InvalidAnswerQuestion extends Exception {
     public InvalidAnswerQuestion() {
         super("No se ingreso el texto de la respuesta!");
+    }
+}
+
+class NonCorrectAnswerSelectedException extends Exception {
+    public NonCorrectAnswerSelectedException() {
+        super("No se selecciono ninguna respuesta correcta!");
     }
 }
 
