@@ -3,11 +3,14 @@ package com.example.urstudyguide_migration.Common.Helpers;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.example.urstudyguide_migration.R;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -73,7 +76,16 @@ public abstract class AlertableFragment extends Fragment implements Alertable {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setMessage(error)
                 .setTitle("Error")
+                .setPositiveButton("OK", (dialogInterface, i) -> {
+                    //NOTE:- Do nothing!
+                })
+                .setNegativeButton("SALIR", (dialogInterface, i) -> {
+                    //TODO:- Create a way to go out!
+                    callTowayOut();
+                })
                 .create()
                 .show();
     }
+
+    public abstract void callTowayOut();
 }

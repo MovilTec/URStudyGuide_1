@@ -125,6 +125,11 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
         mViewModel.addQuestions();
     }
 
+    @Override
+    public void callTowayOut() {
+
+    }
+
     private void setupToolBar() {
         ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Quizz Creator");

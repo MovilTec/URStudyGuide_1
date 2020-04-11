@@ -67,6 +67,11 @@ public class QuizzCreatorQuestionFragment extends AlertableFragment implements B
         setupListView();
     }
 
+    @Override
+    public void callTowayOut() {
+        QuizzCreator a = (QuizzCreator) getActivity();
+        a.callBack();
+    }
 
 
     private void setupView(View view) {
