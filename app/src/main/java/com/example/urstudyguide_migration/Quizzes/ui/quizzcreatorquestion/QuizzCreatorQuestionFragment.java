@@ -16,9 +16,11 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.example.urstudyguide_migration.Common.Helpers.AlertableFragment;
 import com.example.urstudyguide_migration.Common.Helpers.BackPressable;
 import com.example.urstudyguide_migration.Common.Models.Answer;
 import com.example.urstudyguide_migration.Common.Models.TestItem;
+import com.example.urstudyguide_migration.Quizzes.QuizzCreator;
 import com.example.urstudyguide_migration.Quizzes.ui.quizzcreator.CustomNumberPicker;
 import com.example.urstudyguide_migration.Quizzes.ui.quizzcreator.QuizzCreatorAnswer.QuizzCreatorAnswerAdapter;
 import com.example.urstudyguide_migration.Quizzes.ui.quizzcreator.QuizzCreatorViewModel;
@@ -27,7 +29,7 @@ import com.travijuu.numberpicker.library.NumberPicker;
 
 import java.util.List;
 
-public class QuizzCreatorQuestionFragment extends Fragment implements BackPressable {
+public class QuizzCreatorQuestionFragment extends AlertableFragment implements BackPressable {
 
     private QuizzCreatorViewModel mViewModel;
     private ListView listView;
@@ -43,9 +45,8 @@ public class QuizzCreatorQuestionFragment extends Fragment implements BackPressa
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.quizz_creator_question_fragment, container, false);
+    public View provideYourFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.quizz_creator_question_fragment, parent, false);
         Intent intent = getActivity().getIntent();
         position = intent.getIntExtra("position", -1);
         setupView(view);
@@ -89,40 +90,55 @@ public class QuizzCreatorQuestionFragment extends Fragment implements BackPressa
         String question = mQuestionText.getText().toString();
         try {
             testItem.setQuestion(validateQuestion(question));
-        } catch(InvalidTestQuestion ex) {
+            List<Answer> answers = answerAdapter.getAnswersList();
 
+            for(int i=0;i<answers.size(); i++) {
+                View view = answerAdapter.getViewByPosition(i, listView);
+                EditText editText = view.findViewById(R.id.quizzcreator_answer_text);
+                CheckBox checkBox = view.findViewById(R.id.quizzcreator_answer_radioButton);
+                // Setting the answer text
+                String awnserText = editText.getText().toString();
+                answers.get(i).setText(validateAnswer(awnserText));
+                // Setting the correct answer flag
+                boolean isCorrect = checkBox.isChecked();
+                answers.get(i).setCorrect(isCorrect);
+            }
+            //TODO:- Run a validation for the answers
+            testItem.setAnswers(answers);
+            mViewModel.setTestItem(testItem);
+            QuizzCreator a = (QuizzCreator) getActivity();
+            a.callBack();
+        } catch(InvalidAnswerQuestion | InvalidTestQuestion ex) {
+            displayErrorMessage(ex.getLocalizedMessage());
         }
-
-        List<Answer> answers = answerAdapter.getAnswersList();
-
-        for(int i=0;i<answers.size(); i++) {
-            View view = answerAdapter.getViewByPosition(i, listView);
-            EditText editText = view.findViewById(R.id.quizzcreator_answer_text);
-            CheckBox checkBox = view.findViewById(R.id.quizzcreator_answer_radioButton);
-            // Setting the answer text
-            String awnserText = editText.getText().toString();
-            answers.get(i).setText(awnserText);
-            // Setting the correct answer flag
-            boolean isCorrect = checkBox.isChecked();
-            answers.get(i).setCorrect(isCorrect);
-        }
-        //TODO:- Run a validation for the answers
-        testItem.setAnswers(answers);
-        mViewModel.setTestItem(testItem);
     }
 
     // ----- Private Methods ----
     private String validateQuestion(String question) throws InvalidTestQuestion {
         if (question.isEmpty()) {
             throw new InvalidTestQuestion();
-//            mQuizzCreatorHandler.onErrorMessage("No se ingreso texto en alguna de las preguntas");
         }
         return question;
+    }
+
+    private String validateAnswer(String answer) throws InvalidAnswerQuestion {
+        if (answer.isEmpty()) {
+            throw new InvalidAnswerQuestion();
+        }
+        return answer;
     }
 
 }
 
 class InvalidTestQuestion extends Exception {
+    public InvalidTestQuestion() {
+        super("No se ingreso la pregunta!");
+    }
+}
 
+class InvalidAnswerQuestion extends Exception {
+    public InvalidAnswerQuestion() {
+        super("No se ingreso el texto de la respuesta!");
+    }
 }
 

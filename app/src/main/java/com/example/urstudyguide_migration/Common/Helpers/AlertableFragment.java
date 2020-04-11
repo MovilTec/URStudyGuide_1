@@ -1,5 +1,6 @@
 package com.example.urstudyguide_migration.Common.Helpers;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +43,12 @@ public abstract class AlertableFragment extends Fragment implements Alertable {
     }
 
     public void displayErrorMessage(String error) {
-        Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Error")
+                .setTitle(error);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+//        Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
     }
 }

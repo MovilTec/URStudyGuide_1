@@ -35,6 +35,11 @@ public class QuizzCreator extends AppCompatActivity {
             if(f != null && f instanceof QuizzCreatorQuestionFragment)
                 ((QuizzCreatorQuestionFragment)f).onBackPressed();
         }
+//        super.onBackPressed();
+    }
+
+    public void callBack() {
         super.onBackPressed();
+
     }
 }
