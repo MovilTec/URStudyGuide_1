@@ -12,5 +12,5 @@
         android:id="@+id/requests_RecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="160dp" />
+        android:layout_marginTop="120dp" />
 </FrameLayout>
