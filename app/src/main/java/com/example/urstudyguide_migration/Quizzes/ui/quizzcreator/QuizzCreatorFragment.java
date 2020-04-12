@@ -76,6 +76,7 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
 
         Intent intent = getActivity().getIntent();
         Quizz quizz = (Quizz) intent.getSerializableExtra("Quizz");
+        mViewModel.setQuizzId(intent.getStringExtra("quizzId"));
         setupQuizzFromEdit(quizz);
 
         return view;
@@ -171,6 +172,12 @@ public class QuizzCreatorFragment extends AlertableFragment implements QuizzCrea
         startActivity(intent);
     }
 
+    @Override
+    public void onSavedQuizz() {
+        //Returnnig to the detail quizz
+        //TODO:- make and update on the saved quizz!!
+        getActivity().onBackPressed();
+    }
 
     public void onError(String error) {
         displayErrorMessage(error);

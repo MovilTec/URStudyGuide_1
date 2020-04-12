@@ -43,6 +43,7 @@ public class QuizzDetailFragment extends Fragment {
     private View.OnClickListener editButtonAction = ( v -> {
         Intent intent = new Intent(getContext(), QuizzCreator.class);
         intent.putExtra("Quizz", mQuizz);
+        intent.putExtra("quizzId", quizzId);
         startActivity(intent);
     });
 

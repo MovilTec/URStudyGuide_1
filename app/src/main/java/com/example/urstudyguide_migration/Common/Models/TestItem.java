@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestItem implements Serializable {
+public class TestItem extends Object implements Serializable {
 
     private String question;
     private List<Answer> answers = new ArrayList();
