@@ -27,7 +27,7 @@ public class Quizz implements Serializable {
 
     private String name;
     private String description;
-    static private String author;
+    private String author;
     private List<String> members;
     private List<TestItem> testItems;
 
@@ -92,7 +92,7 @@ public class Quizz implements Serializable {
                     if (data.getKey().equals(author)) {
                         for(DataSnapshot authorData : data.getChildren()) {
                             if(authorData.getKey().equals("name")) {
-                                textView.setText("by" + authorData.getValue().toString());
+                                textView.setText("by " + authorData.getValue().toString());
                                 break;
                             }
                         }

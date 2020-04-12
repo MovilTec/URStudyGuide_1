@@ -52,8 +52,9 @@ public class QuizzAdapter extends RecyclerView.Adapter<QuizzAdapter.mViewHolder>
     public void onBindViewHolder(mViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.quizzName.setText(mQuizzesList.get(position).getName());
-        mQuizzesList.get(position).getAuthorName(holder.quizzAuthor);
+        Quizz quizz = mQuizzesList.get(position);
+        holder.quizzName.setText(quizz.getName());
+        quizz.getAuthorName(holder.quizzAuthor);
         mViews.add(holder.cardView);
     }
 
