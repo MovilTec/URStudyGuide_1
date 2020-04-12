@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import com.example.urstudyguide_migration.Messages.MessagesFragment;
 import com.example.urstudyguide_migration.Quizzes.ui.quizzes.QuizzesFragment;
 import com.example.urstudyguide_migration.Social.FriendsFragment;
+import com.example.urstudyguide_migration.Social.RequestFragment;
 
 class SectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -24,10 +25,10 @@ class SectionsPagerAdapter extends FragmentPagerAdapter {
             case 1:
                 MessagesFragment messagesFragment= new MessagesFragment();
                 return messagesFragment;
-//            case 2:
-//                RequestFragment requestFragment = new RequestFragment();
-//                return requestFragment;
             case 2:
+                RequestFragment requestFragment = new RequestFragment();
+                return requestFragment;
+            case 3:
                 QuizzesFragment quizzFragment = new QuizzesFragment();
                 return quizzFragment;
             default:
@@ -37,7 +38,7 @@ class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 4;
     }
 
     @Override
@@ -47,9 +48,9 @@ class SectionsPagerAdapter extends FragmentPagerAdapter {
                 return "Questioners";
             case 1:
                 return "Messages";
-//            case 2:
-//                return "Requests";
             case 2:
+                return "Requests";
+            case 3:
                 return "Quizzes";
             default:
                 return null;
