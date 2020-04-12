@@ -88,8 +88,10 @@ public class QuizzCreatorViewModel extends ViewModel {
     }
 
     public void setQuizzId(String quizzId) {
-        if (!quizzId.isEmpty()){
-            this.mQuizzId = quizzId;
+        if(quizzId != null) {
+            if (!quizzId.isEmpty()){
+                this.mQuizzId = quizzId;
+            }
         }
     }
 
