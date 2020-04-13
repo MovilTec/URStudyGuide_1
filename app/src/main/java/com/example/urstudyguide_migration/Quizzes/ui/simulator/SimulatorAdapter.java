@@ -115,6 +115,28 @@ public class SimulatorAdapter extends RecyclerView.Adapter<SimulatorAdapter.mVie
         return (10.0 * rawGrade) / mQuestions.size();
     }
 
+    public void showRightAnswers() {
+        for(int i = 0; i < mQuestions.size(); i++) {
+            List<Answer> reactiveAnswers = mQuestions.get(i).getAnswers();
+            for(int j=0;j<reactiveAnswers.size();j++) {
+                Answer respuesta =  mQuestions.get(i).getAnswers().get(j);
+                // Getting each a
+                View view = answersAdapters.get(i).getViewByPosition(j, mAnswersLists.get(i));
+                final CheckBox checkBox = view.findViewById(R.id.simulator_answer_list_item_checkBox);
+                final boolean isCorrectAnswer = respuesta.isCorrect();
+                final boolean isChoosenAnswer = checkBox.isChecked();
+                if (checkBox != null) {
+                    //Sí esta seleccionada la respuesta, pero no es la respuesta correcta se le resta puntos
+                    if(isCorrectAnswer)
+                        checkBox.setBackgroundColor(Color.GREEN);
+                    if (isChoosenAnswer && !isCorrectAnswer) {
+                        checkBox.setBackgroundColor(Color.RED);
+                    }
+                }
+            }
+        }
+    }
+
     // -------  Private Methods ---------
 
     private void setupListView(ListView listView, SimulatorAnswersAdapter adapter, List<Answer> answers) {

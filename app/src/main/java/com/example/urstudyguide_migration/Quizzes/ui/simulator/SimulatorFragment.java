@@ -94,7 +94,11 @@ public class SimulatorFragment extends Fragment implements SimulatorNavigator {
         alert.setTitle("Calificación!")
                 .setMessage(grade);
         alert.setOnCancelListener(dialogInterface -> {
-            getActivity().finish();
+            mSubmitButton.setAlpha(0);
+            mSubmitButton.setEnabled(false);
+            //TODO:- Instead show wrong answer!
+            mAdapter.showRightAnswers();
+//            getActivity().finish();
         });
         alert.create();
         alert.show();
