@@ -20,10 +20,12 @@ public class SimulatorViewModel extends ViewModel {
         attempt.put("user", User.getInstance().getUserId());
         attempt.put("grade", grade);
 
-        FirebaseDatabase.getInstance().getReference("Quizzes").child(quizzId).child("Attempts").push()
+        FirebaseDatabase.getInstance().getReference("Quizzes")
+                .child(quizzId).child("Attempts")
+                .push()
                 .setValue(attempt)
                 .addOnSuccessListener(aVoid -> {
-                    navigator.onSucces();
+                    navigator.onSucces(String.valueOf(grade));
                 }
                 ).addOnFailureListener(e -> {
                     navigator.onError("No ha sido posible registrar intento. Error: \n" + e.getMessage());

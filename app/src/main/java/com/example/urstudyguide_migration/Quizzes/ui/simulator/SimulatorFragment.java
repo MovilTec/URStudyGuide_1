@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -80,22 +81,23 @@ public class SimulatorFragment extends Fragment implements SimulatorNavigator {
 
     private void setupView() {
         mSubmitButton.setOnClickListener(v -> {
-            //TODO:- Set the attempt by the user!
             double grade = mAdapter.getGrade();
             mViewModel.setAttempt(quizzId, grade);
-            AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-            alert.setTitle("Calificación!")
-                    .setMessage(String.valueOf(grade));
-            alert.create();
-            alert.show();
-            //TODO:- Erase Quizz!!
+            //TODO:- Show spinner!!
         });
     }
 
     // ------- Navigator Implementation ---------
     @Override
-    public void onSucces() {
-        System.out.println("Éxito al registrar intento!!");
+    public void onSucces(String grade) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        alert.setTitle("Calificación!")
+                .setMessage(grade);
+        alert.setOnCancelListener(dialogInterface -> {
+            getActivity().finish();
+        });
+        alert.create();
+        alert.show();
     }
 
     @Override
