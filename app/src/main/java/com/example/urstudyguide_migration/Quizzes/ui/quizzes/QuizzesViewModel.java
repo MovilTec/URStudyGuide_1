@@ -24,11 +24,13 @@ public class QuizzesViewModel extends ViewModel {
     public QuizzNavigator navigator;
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
+    //TODO:- Move this to allowed quizzes!
     DatabaseReference quizzesRef = database.getReference("Quizzes");
 
     void getAvilableQuizzes() {
         final Map<String, Quizz> quizz = new HashMap();
-        quizzesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        quizzesRef.addValueEventListener(
+                new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot postData : dataSnapshot.getChildren()) {
