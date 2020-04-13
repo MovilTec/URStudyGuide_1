@@ -18,10 +18,13 @@ public class QuizzAttemptsViewModel extends ViewModel {
 
     public AttemptsNavigator navigator;
     public void getAttempts(String quizzId) {
-        final List<QuizzAttempt> quizzAttempts = new ArrayList();
-        FirebaseDatabase.getInstance().getReference("Quizzes").child(quizzId).child("Attempts").addListenerForSingleValueEvent(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference("Quizzes")
+                .child(quizzId)
+                .child("Attempts")
+                .addValueEventListener( new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            List<QuizzAttempt> quizzAttempts = new ArrayList();
                 for(DataSnapshot postData : dataSnapshot.getChildren()) {
                     QuizzAttempt quizzAttempt = postData.getValue(QuizzAttempt.class);
                     quizzAttempts.add(quizzAttempt);
