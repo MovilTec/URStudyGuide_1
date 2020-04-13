@@ -1,5 +1,7 @@
 package com.example.urstudyguide_migration.Common.Services;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.media.RingtoneManager;
@@ -8,6 +10,7 @@ import android.net.Uri;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.example.urstudyguide_migration.MainActivity;
 import com.example.urstudyguide_migration.R;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -17,10 +20,14 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-        String notificationTitle = remoteMessage.getData().get("title");//.getNotification().getTitle();
-        String notificationBody = remoteMessage.getData().get("body");//getNotification().getBody();
+//        String notificationTitle = remoteMessage.getData().get("title");
+        String notificationTitle = remoteMessage.getNotification().getTitle();
+//        String notificationBody = remoteMessage.getData().get("body");
+        String notificationBody = remoteMessage.getNotification().getBody();
 
         String click_action = remoteMessage.getData().get("click_action");//getNotification().getClickAction();
+
+
 
         String from_user_id = remoteMessage.getData().get("from_user_id");
 
@@ -31,8 +38,19 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                 .setSmallIcon(R.drawable.default_user_image_1)
                 .setContentTitle(notificationTitle)
                 .setContentText(notificationBody)
-                .setSound(alarmSound)
+//                .setSound(alarmSound)
+//                .defaults |= alarmSound;
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        //New Implementation?
+        Notification.Builder notification = new Notification.Builder(this);
+                notification.setSmallIcon(R.drawable.default_user_image_1);
+                notification.setContentTitle(notificationTitle);
+                notification.setContentText(notificationBody);
+                notification.setSound(alarmSound);
+
+
 
         Intent resultIntent = new Intent(click_action);
         resultIntent.putExtra("user_id", from_user_id);
@@ -50,7 +68,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         int notificationId = (int) System.currentTimeMillis();
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(notificationId, mBuilder.build());
+        notificationManager.notify(notificationId, notification.build());
 
 
 
