@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,7 +11,8 @@
         android:id="@+id/message_app_bar"
         layout="@layout/app_bar_layout" />
 
-    <android.support.v4.widget.SwipeRefreshLayout
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/message_swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,7 +20,7 @@
         android:layout_above="@+id/message_LinearLayout"
         android:layout_below="@+id/message_app_bar">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/message_RecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -26,9 +28,9 @@
             android:layout_above="@+id/message_LinearLayout"
             android:layout_below="@+id/message_app_bar">
 
-        </android.support.v7.widget.RecyclerView>
+        </androidx.recyclerview.widget.RecyclerView>
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:id="@+id/message_LinearLayout"
