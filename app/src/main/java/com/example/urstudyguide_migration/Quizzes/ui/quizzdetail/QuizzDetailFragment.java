@@ -16,11 +16,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.urstudyguide_migration.Common.Models.Quizz;
-import com.example.urstudyguide_migration.Common.Models.QuizzAttempt;
 import com.example.urstudyguide_migration.Common.Models.Users;
 import com.example.urstudyguide_migration.Common.User;
 import com.example.urstudyguide_migration.Quizzes.QuizzAttempts;
-import com.example.urstudyguide_migration.Quizzes.QuizzCreator;
+import com.example.urstudyguide_migration.Quizzes.ui.quizzcreator.QuizzCreator;
 import com.example.urstudyguide_migration.Quizzes.Simulator;
 import com.example.urstudyguide_migration.R;
 

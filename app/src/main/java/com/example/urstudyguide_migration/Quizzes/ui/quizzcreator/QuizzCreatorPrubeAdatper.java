@@ -1,18 +1,12 @@
 package com.example.urstudyguide_migration.Quizzes.ui.quizzcreator;
 
-import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.example.urstudyguide_migration.Common.Models.TestItem;
-import com.example.urstudyguide_migration.Quizzes.QuizzCreatorQuestion;
 import com.example.urstudyguide_migration.R;
-import com.example.urstudyguide_migration.StartActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +80,7 @@ public class QuizzCreatorPrubeAdatper extends RecyclerView.Adapter<QuizzCreatorP
     public int addQuestions() {
         TestItem testItem = new TestItem();
         int questionNo = testItems.size() + 1;
-        testItem.setQuestion("Question No. " + questionNo);
+//        testItem.setQuestion("Question No. " + questionNo);
         testItems.add(testItem);
         return testItems.size() - 1;
     }

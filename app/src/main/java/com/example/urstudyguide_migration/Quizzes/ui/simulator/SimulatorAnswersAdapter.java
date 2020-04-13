@@ -21,16 +21,13 @@ public class SimulatorAnswersAdapter extends BaseAdapter {
     private List<Answer> mAnswers = new ArrayList();
     private CheckBox checkBox;
 
-    private CompoundButton.OnCheckedChangeListener checkListener = new CompoundButton.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-            //TODO:-
-            Answer answer = mAnswers.get(compoundButton.getId());
-            if(answer.isCorrect()) {
-                compoundButton.setBackgroundColor(Color.GREEN);
-            } else {
-                compoundButton.setBackgroundColor(Color.RED);
-            }
+    private CompoundButton.OnCheckedChangeListener checkListener = (compoundButton, b) -> {
+        //TODO:-
+        Answer answer = mAnswers.get(compoundButton.getId());
+        if(answer.isCorrect()) {
+            compoundButton.setBackgroundColor(Color.GREEN);
+        } else {
+            compoundButton.setBackgroundColor(Color.RED);
         }
     };
 

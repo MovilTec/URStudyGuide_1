@@ -35,7 +35,12 @@ public class QuizzCreatorViewModel extends ViewModel {
         String author = FirebaseAuth.getInstance().getUid();
         List<String> members = new ArrayList();
         Quizz quizz = new Quizz(quizzName, quizzDescription, author, members, testItems);
-        firebaseRequests.write(RequestType.QUIZZ, quizz, onSuccess, onFailure);
+        FirebaseDatabase.getInstance().getReference().child("Quizzes")
+                .push()
+                .setValue(quizz)
+                .addOnSuccessListener(o -> {navigator.onCreatedQuizz(quizz); })
+                .addOnFailureListener(e -> { navigator.onError(e.getLocalizedMessage()); });
+
     }
 
     void saveQuizz(String quizzName, String quizzDescription) {
@@ -44,7 +49,8 @@ public class QuizzCreatorViewModel extends ViewModel {
 
         Map<String, Object> editedTest = new HashMap();
         editedTest.put("testItems", testItems);
-        FirebaseDatabase.getInstance().getReference().child("Quizzes").child(mQuizzId).updateChildren(editedTest, (databaseError, databaseReference) -> {
+        FirebaseDatabase.getInstance().getReference().child("Quizzes").child(mQuizzId)
+                .updateChildren(editedTest, (databaseError, databaseReference) -> {
             //TODO:- Something on success
             if (databaseError != null) {
                 navigator.onError(databaseError.getMessage());
@@ -53,21 +59,6 @@ public class QuizzCreatorViewModel extends ViewModel {
             navigator.onSavedQuizz();
         });
     }
-
-    private OnSuccessListener onSuccess = new OnSuccessListener() {
-        @Override
-        public void onSuccess(Object o) {
-            navigator.onCreatedQuizz();
-        }
-    };
-
-    private OnFailureListener onFailure = new OnFailureListener() {
-        @Override
-        public
-        void onFailure(@NonNull Exception e) {
-            navigator.onError(e.getLocalizedMessage());
-        }
-    };
 
     public void addQuestions() {
         TestItem testItem = new TestItem();

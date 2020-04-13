@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Quizzes.QuizzCreatorQuestion"></activity>
+        <activity android:name=".Quizzes.ui.quizzcreatorquestion.QuizzCreatorQuestion"></activity>
         <activity android:name=".Quizzes.QuizzAttempts" />
         <activity android:name=".Quizzes.Simulator" />
         <activity android:name=".MainActivity">
@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Quizzes.QuizzDetail" />
-        <activity android:name=".Quizzes.QuizzCreator" />
+        <activity android:name=".Quizzes.ui.quizzcreator.QuizzCreator" />
         <activity android:name=".Quizzes.Quizzes" />
 
         <service android:name=".Common.Services.FirebaseMessagingService">

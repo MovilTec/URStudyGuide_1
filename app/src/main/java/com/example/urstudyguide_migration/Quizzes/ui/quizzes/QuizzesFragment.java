@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.urstudyguide_migration.Common.Models.Quizz;
-import com.example.urstudyguide_migration.Quizzes.QuizzCreator;
+import com.example.urstudyguide_migration.Quizzes.ui.quizzcreator.QuizzCreator;
 import com.example.urstudyguide_migration.Quizzes.QuizzDetail;
 import com.example.urstudyguide_migration.Quizzes.navigators.QuizzNavigator;
 import com.example.urstudyguide_migration.R;

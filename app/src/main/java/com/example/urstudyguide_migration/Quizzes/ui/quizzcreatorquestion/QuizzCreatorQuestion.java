@@ -1,35 +1,29 @@
 package com.example.urstudyguide_migration.Quizzes.ui.quizzcreatorquestion;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.example.urstudyguide_migration.Common.Helpers.AlertableFragment;
-import com.example.urstudyguide_migration.Common.Helpers.BackPressable;
+import com.example.urstudyguide_migration.Common.Exceptions.InvalidAnswerQuestion;
+import com.example.urstudyguide_migration.Common.Exceptions.NonCorrectAnswerSelectedException;
 import com.example.urstudyguide_migration.Common.Models.Answer;
 import com.example.urstudyguide_migration.Common.Models.TestItem;
-import com.example.urstudyguide_migration.Quizzes.QuizzCreator;
 import com.example.urstudyguide_migration.Quizzes.ui.quizzcreator.CustomNumberPicker;
 import com.example.urstudyguide_migration.Quizzes.ui.quizzcreator.QuizzCreatorAnswer.QuizzCreatorAnswerAdapter;
 import com.example.urstudyguide_migration.Quizzes.ui.quizzcreator.QuizzCreatorViewModel;
+import com.example.urstudyguide_migration.Common.Exceptions.InvalidTestQuestion;
 import com.example.urstudyguide_migration.R;
 import com.travijuu.numberpicker.library.NumberPicker;
 
 import java.util.List;
 
-public class QuizzCreatorQuestionFragment extends AlertableFragment implements BackPressable {
+public class QuizzCreatorQuestion extends AppCompatActivity {
 
     private QuizzCreatorViewModel mViewModel;
     private ListView listView;
@@ -39,55 +33,46 @@ public class QuizzCreatorQuestionFragment extends AlertableFragment implements B
     private QuizzCreatorAnswerAdapter answerAdapter;
     private String mExceptions = "";
 
-    public static QuizzCreatorQuestionFragment newInstance() {
-        return new QuizzCreatorQuestionFragment();
-    }
-
-    @Nullable
     @Override
-    public View provideYourFragmentView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.quizz_creator_question_fragment, parent, false);
-        setupView(view);
-        return view;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewModel = ViewModelProviders.of(getActivity()).get(QuizzCreatorViewModel.class);
-        testItem = mViewModel.getTestItem();
-    }
+//        setContentView(R.layout.quizz_creator_question_activity);
+        setContentView(R.layout.quizz_creator_question_fragment);
+//        mViewModel = ViewModelProviders.of(this).get(QuizzCreatorViewModel.class);
+        Intent intent = getIntent();
+        TestItem testitem = (TestItem) intent.getSerializableExtra("testItem");
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+        testItem = testitem;
+
+        setupView();
         setupListView();
+
+
+//        if (savedInstanceState == null) {
+//            getSupportFragmentManager().beginTransaction()
+//                    .replace(R.id.container, QuizzCreatorQuestionFragment.newInstance())
+//                    .commitNow();
+//        }
     }
 
-    @Override
-    public void callTowayOut() {
-        QuizzCreator a = (QuizzCreator) getActivity();
-        a.callBack();
-    }
-
-
-    private void setupView(View view) {
-        listView = view.findViewById(R.id.quizzquestioncreator_listView);
-        mQuestionText = view.findViewById(R.id.quizzquestioncreator_question);
-        numberPicker = view.findViewById(R.id.quizzquestioncreator_number_picker);
+    private void setupView() {
+        listView = findViewById(R.id.quizzquestioncreator_listView);
+        mQuestionText = findViewById(R.id.quizzquestioncreator_question);
+        numberPicker = findViewById(R.id.quizzquestioncreator_number_picker);
 
         mQuestionText.setText(testItem.getQuestion());
         numberPicker.setValue(testItem.getAnswers().size());
     }
 
     private void setupListView() {
-        answerAdapter = new QuizzCreatorAnswerAdapter(getContext(), testItem.getAnswers());
+        answerAdapter = new QuizzCreatorAnswerAdapter(this, testItem.getAnswers());
         listView.setAdapter(answerAdapter);
 
         CustomNumberPicker customNumberPicker = new CustomNumberPicker();
         customNumberPicker.setup(answerAdapter, listView, numberPicker);
     }
 
+    @Override
     public void onBackPressed() {
 
         String question = mQuestionText.getText().toString();
@@ -112,10 +97,14 @@ public class QuizzCreatorQuestionFragment extends AlertableFragment implements B
                 throw new NonCorrectAnswerSelectedException();
             //TODO:- Run a validation for the answers
             testItem.setAnswers(answers);
-            mViewModel.setTestItem(testItem);
 
-            QuizzCreator a = (QuizzCreator) getActivity();
-            a.callBack();
+            Intent intent = new Intent();
+            intent.putExtra("testItem", testItem);
+            setResult(RESULT_OK, intent);
+
+            super.onBackPressed();
+//            QuizzCreator a = (QuizzCreator) getActivity();
+//            a.callBack();
         } catch(InvalidAnswerQuestion ex) {
             mExceptions += ex.getLocalizedMessage() + "\n";
         } catch( InvalidTestQuestion ex) {
@@ -128,6 +117,28 @@ public class QuizzCreatorQuestionFragment extends AlertableFragment implements B
             }
             mExceptions = "";
         }
+
+//        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+//        for(Fragment f : fragments){
+//            if(f != null && f instanceof QuizzCreatorQuestionFragment)
+//                ((QuizzCreatorQuestionFragment)f).onBackPressed();
+//        }
+//        super.onBackPressed();
+    }
+
+    private void displayErrorMessage(String error) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(error)
+                .setTitle("Error")
+                .setPositiveButton("OK", (dialogInterface, i) -> {
+                    //NOTE:- Do nothing!
+                })
+                .setNegativeButton("SALIR", (dialogInterface, i) -> {
+                    //TODO:- Create a way to go out!
+                    super.onBackPressed();
+                })
+                .create()
+                .show();
     }
 
     // ----- Private Methods ----
@@ -145,23 +156,5 @@ public class QuizzCreatorQuestionFragment extends AlertableFragment implements B
         return answer;
     }
 
-}
 
-class InvalidTestQuestion extends Exception {
-    public InvalidTestQuestion() {
-        super("No se ingreso la pregunta!");
-    }
 }
-
-class InvalidAnswerQuestion extends Exception {
-    public InvalidAnswerQuestion() {
-        super("No se ingreso el texto de la respuesta!");
-    }
-}
-
-class NonCorrectAnswerSelectedException extends Exception {
-    public NonCorrectAnswerSelectedException() {
-        super("No se selecciono ninguna respuesta correcta!");
-    }
-}
-
