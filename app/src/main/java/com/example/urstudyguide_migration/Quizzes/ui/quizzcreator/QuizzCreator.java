@@ -113,10 +113,6 @@ public class QuizzCreator extends AppCompatActivity implements QuizzCreatorNavig
         }
     }
 
-    public void callBack() {
-        super.onBackPressed();
-    }
-
     private void setupView() {
         mNumberPicker = findViewById(R.id.number_picker);
         mRecyclerView = findViewById(R.id.quizzcreator_recyclerView);
