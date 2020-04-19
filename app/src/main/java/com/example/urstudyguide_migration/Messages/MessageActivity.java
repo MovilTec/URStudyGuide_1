@@ -1,6 +1,7 @@
 package com.example.urstudyguide_migration.Messages;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -19,9 +20,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.urstudyguide_migration.Common.Helpers.FirebaseManager;
 import com.example.urstudyguide_migration.Common.Models.Messages;
 import com.example.urstudyguide_migration.Common.Models.Users;
+import com.example.urstudyguide_migration.Common.Services.FirebasePushNotificationService;
 import com.example.urstudyguide_migration.Common.Timer;
+import com.example.urstudyguide_migration.Common.User;
 import com.example.urstudyguide_migration.R;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -35,10 +42,13 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -339,10 +349,57 @@ public class MessageActivity extends AppCompatActivity {
                         Exception e = databaseError.toException();
                         Log.d("Message Log", "En error has ocurred!. ERROR CODE:" + e);
 //                        messageText.setText("");
+                    } else{
+                        sendNotification(Message, mChatUser);
                     }
-//                    else{
-//                        messageText.setText("");
-//                    }
+                }
+            });
+        }
+    }
+
+    private void sendNotification(String message, String recieverId) {
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+
+            FirebaseManager firebaseManager = new FirebaseManager(FirebaseDatabase.getInstance());
+            String receiver_path = "Users/" + recieverId + "/device_token";
+            String path = "Users/" + users.getUserID() + "/name";
+            CompletableFuture<DataSnapshot> completableFuture = firebaseManager.read(path);
+
+            completableFuture.thenCombine(firebaseManager.read(receiver_path), (sender_dataSnapshot, receiver_dataSnapshot) -> {
+                // getting the data from both requests
+                String device_token = (String) receiver_dataSnapshot.getValue();
+                String sender_name = (String) sender_dataSnapshot.getValue();
+                try {
+                    final String finalMessage = "Tienes un nuevo mensaje de " + sender_name + ": " + message;
+                    JsonObjectRequest request = FirebasePushNotificationService.getInstance().sendNotification(finalMessage, device_token);
+                    queue.add(request);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            });
+        } else {
+
+            FirebaseDatabase.getInstance().getReference().child("Users").child(recieverId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    final String device_token = (String) dataSnapshot.child("device_token").getValue();
+                    //TODO:- Get sender names
+//                final String senderName = Users.getInstance();
+                    try {
+                        final String finalMessage = "Tienes un nuevo mensaje: " + message;
+                        JsonObjectRequest request = FirebasePushNotificationService.getInstance().sendNotification(message, device_token);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
                 }
             });
         }
