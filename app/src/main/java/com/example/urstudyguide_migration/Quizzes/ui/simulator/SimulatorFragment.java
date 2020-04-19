@@ -96,9 +96,8 @@ public class SimulatorFragment extends Fragment implements SimulatorNavigator {
         alert.setOnCancelListener(dialogInterface -> {
             mSubmitButton.setAlpha(0);
             mSubmitButton.setEnabled(false);
-            //TODO:- Instead show wrong answer!
             mAdapter.showRightAnswers();
-//            getActivity().finish();
+            //TODO:- Block the user from taking screen shot!
         });
         alert.create();
         alert.show();

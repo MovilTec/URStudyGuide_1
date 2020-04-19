@@ -22,6 +22,7 @@ import com.example.urstudyguide_migration.Quizzes.navigators.AttemptsNavigator;
 import com.example.urstudyguide_migration.R;
 
 import java.util.List;
+import java.util.Map;
 
 public class QuizzAttemptsFragment extends Fragment implements AttemptsNavigator {
 
@@ -69,7 +70,7 @@ public class QuizzAttemptsFragment extends Fragment implements AttemptsNavigator
     }
 
     @Override
-    public void onAttemtpsRetrivalSuccess(List<QuizzAttempt> items) {
+    public void onAttemtpsRetrivalSuccess(Map<String, List<QuizzAttempt>> items) {
         mRecyclerView.setAdapter(new QuizzAttemptsAdapter(items));
     }
 

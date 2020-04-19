@@ -32,4 +32,8 @@
 
     <!--  Simulator   -->
     <string name="simulator_item_question">Question</string>
+
+    <!--  Quizz Attempts Item  -->
+    <string name="quizz_attempts_item_student_name">Student Name</string>
+    <string name="quizz_attempts_item_grade_average">Grade Average</string>
 </resources>
