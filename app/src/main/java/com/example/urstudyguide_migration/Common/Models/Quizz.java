@@ -19,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
@@ -28,14 +29,14 @@ public class Quizz implements Serializable {
     private String name;
     private String description;
     private String author;
-    private List<String> allowed_users;
+    private HashMap<String, Object> allowed_users;
     private List<TestItem> testItems;
 
     static private String authorName;
 
     public Quizz() { }
 
-    public Quizz(String name, String description, String author, List<String> allowed_users, List<TestItem> testItems) {
+    public Quizz(String name, String description, String author, HashMap<String, Object> allowed_users, List<TestItem> testItems) {
         this.name = name;
         this.description = description;
         this.author = author;
@@ -67,11 +68,11 @@ public class Quizz implements Serializable {
         this.author = author;
     }
 
-    public List<String> getAllowed_users() {
+    public HashMap<String, Object> getAllowed_users() {
         return allowed_users;
     }
 
-    public void setAllowed_users(List<String> allowed_users) {
+    public void setAllowed_users(HashMap<String, Object> allowed_users) {
         this.allowed_users = allowed_users;
     }
 

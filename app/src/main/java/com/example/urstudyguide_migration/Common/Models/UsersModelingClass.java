@@ -2,16 +2,18 @@ package com.example.urstudyguide_migration.Common.Models;
 
 public class UsersModelingClass {
 
-    public String name;
-    public String status;
-    public String image;
-    public String thumb_image;
+    private String id;
+    private String name;
+    private String status;
+    private String image;
+    private String thumb_image;
 
     public UsersModelingClass(){
 
     }
 
-    public UsersModelingClass(String name, String status, String image, String thumb_image) {
+    public UsersModelingClass(String id, String name, String status, String image, String thumb_image) {
+        this.id = id;
         this.name = name;
         this.status = status;
         this.image = image;
@@ -48,5 +50,13 @@ public class UsersModelingClass {
 
     public void setThumb_image(String thumb_image) {
         this.thumb_image = thumb_image;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

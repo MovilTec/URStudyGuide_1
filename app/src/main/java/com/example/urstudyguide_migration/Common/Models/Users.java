@@ -53,6 +53,7 @@ public class Users {
 
         HashMap<String, String> userMap = new HashMap();
         userMap.put("name", user_name);
+        userMap.put("id", userID);
         userMap.put("status", "Hi there!, I'm using URStudyGuide App.");
         userMap.put("image", "default");
         userMap.put("thumb_image", "default");

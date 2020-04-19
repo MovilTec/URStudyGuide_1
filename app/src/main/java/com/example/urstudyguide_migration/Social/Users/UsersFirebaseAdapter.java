@@ -97,9 +97,9 @@ public class UsersFirebaseAdapter extends FirebaseRecyclerAdapter<UsersModelingC
 
     @Override
     protected void onBindViewHolder(UsersViewHolder holder, int i, UsersModelingClass model) {
-            holder.setName(model.name);
-            holder.getStatus(model.status);
-            holder.getUserImage(model.thumb_image);
+            holder.setName(model.getName());
+            holder.getStatus(model.getStatus());
+            holder.getUserImage(model.getThumb_image());
 
             final String user_id = getRef(i).getKey();
 

@@ -180,18 +180,20 @@ public class FriendsFragment extends Fragment {
         public void setThumb_image(final String Thumb_image){
             final CircleImageView userThumb_image = mView.findViewById(R.id.friendContainer_CircleImageView);
             if(!Thumb_image.equals("default")) {
-                Picasso.get().load(Thumb_image).
-                    networkPolicy(NetworkPolicy.OFFLINE)
-                    .into(userThumb_image, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                        }
+                Picasso.get()
+                        .load(Thumb_image)
+                        .placeholder(R.drawable.default_user_image_1)
+                        .networkPolicy(NetworkPolicy.OFFLINE)
+                        .into(userThumb_image, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                            }
 
-                        @Override
-                        public void onError(Exception e) {
-                            Picasso.get().load(Thumb_image).into(userThumb_image);
-                        }
-                    });
+                            @Override
+                            public void onError(Exception e) {
+                                Picasso.get().load(Thumb_image).into(userThumb_image);
+                            }
+                        });
             }
         }
 

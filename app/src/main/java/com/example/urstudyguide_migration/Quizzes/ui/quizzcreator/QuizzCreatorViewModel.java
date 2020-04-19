@@ -3,6 +3,7 @@ package com.example.urstudyguide_migration.Quizzes.ui.quizzcreator;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModel;
 
+import com.example.urstudyguide_migration.Common.Models.AllowedUser;
 import com.example.urstudyguide_migration.Common.Models.Quizz;
 import com.example.urstudyguide_migration.Common.Models.TestItem;
 import com.example.urstudyguide_migration.Common.Services.FirebaseRequests;
@@ -33,7 +34,7 @@ public class QuizzCreatorViewModel extends ViewModel {
 
     void createQuizz(String quizzName, String quizzDescription) {
         String author = FirebaseAuth.getInstance().getUid();
-        List<String> members = new ArrayList();
+        HashMap<String, Object> members = new HashMap();
         Quizz quizz = new Quizz(quizzName, quizzDescription, author, members, testItems);
         FirebaseDatabase.getInstance().getReference().child("Quizzes")
                 .push()
@@ -41,6 +42,12 @@ public class QuizzCreatorViewModel extends ViewModel {
                 .addOnSuccessListener(o -> {navigator.onCreatedQuizz(quizz); })
                 .addOnFailureListener(e -> { navigator.onError(e.getLocalizedMessage()); });
 
+    }
+
+    public Quizz createQuizzFrom(String quizzName, String quizzDescription) {
+        String author = FirebaseAuth.getInstance().getUid();
+        HashMap<String, Object> members = new HashMap();
+        return new Quizz(quizzName, quizzDescription, author, members, testItems);
     }
 
     void saveQuizz(String quizzName, String quizzDescription) {

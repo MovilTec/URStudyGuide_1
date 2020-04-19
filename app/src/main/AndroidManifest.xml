@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.urstudyguide_migration">
 
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -11,7 +11,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Quizzes.ui.quizzcreatorquestion.QuizzCreatorQuestion"></activity>
+        <activity
+            android:name=".Quizzes.ui.quizzcreator.allowedUsers.AllowedUserSelection"
+            android:label="@string/title_activity_allowed_user_selection"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".Quizzes.ui.quizzcreatorquestion.QuizzCreatorQuestion" />
         <activity android:name=".Quizzes.QuizzAttempts" />
         <activity android:name=".Quizzes.Simulator" />
         <activity android:name=".MainActivity">
