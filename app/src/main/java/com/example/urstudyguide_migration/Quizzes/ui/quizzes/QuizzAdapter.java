@@ -1,23 +1,40 @@
 package com.example.urstudyguide_migration.Quizzes.ui.quizzes;
 
 import android.content.ClipData;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.urstudyguide_migration.Common.Helpers.FirebaseManager;
 import com.example.urstudyguide_migration.Common.Helpers.FirebaseRealtimeDatabaseReponse;
 import com.example.urstudyguide_migration.Common.Models.Quizz;
 import com.example.urstudyguide_migration.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
+import java.util.function.Supplier;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
@@ -54,7 +71,23 @@ public class QuizzAdapter extends RecyclerView.Adapter<QuizzAdapter.mViewHolder>
         // - replace the contents of the view with that element
         Quizz quizz = mQuizzesList.get(position);
         holder.quizzName.setText(quizz.getName());
-        quizz.getAuthorName(holder.quizzAuthor);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+
+            FirebaseManager firebaseManager = new FirebaseManager(FirebaseDatabase.getInstance());
+            String path = "Users/" + quizz.getAuthor() + "/name";
+            CompletableFuture<DataSnapshot> completableFuture = firebaseManager.read(path);
+
+                // Concurrency load
+                completableFuture.handle((dataSnapshot, throwable) -> {
+                    // This is called!
+                    String Name = (String) dataSnapshot.getValue();
+                    holder.quizzAuthor.setText(Name);
+                    return throwable;
+                });
+
+        } else {
+            quizz.getAuthorName(holder.quizzAuthor);
+        }
         mViews.add(holder.cardView);
     }
 
