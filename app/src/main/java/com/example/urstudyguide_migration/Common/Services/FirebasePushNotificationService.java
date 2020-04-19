@@ -16,7 +16,7 @@ public class FirebasePushNotificationService {
 
     private static FirebasePushNotificationService shared = null;
     private final static String FCM_API = "https://fcm.googleapis.com/fcm/send";
-    private final static String serverKey = "key=" + "AAAAbeyvZpg:APA91bEue9sJL7xOk-3PgXlD2R6SYwRVS_9XTVaRomeiMZCtXN3BEzpZ4EVDWt6NcAgQSMs5lh18R7XJs2FIksSss6zp8L773MKA2nmCwCXdJWvyf9BnGZgCEwl1Wde-EdAneBqTSviP";
+    private final static String serverKey =  "key=" + "AAAAbeyvZpg:APA91bEue9sJL7xOk-3PgXlD2R6SYwRVS_9XTVaRomeiMZCtXN3BEzpZ4EVDWt6NcAgQSMs5lh18R7XJs2FIksSss6zp8L773MKA2nmCwCXdJWvyf9BnGZgCEwl1Wde-EdAneBqTSviP";
     private final static String contentType = "application/json";
 
     public static FirebasePushNotificationService getInstance() {
@@ -31,8 +31,6 @@ public class FirebasePushNotificationService {
     }
 
     public JsonObjectRequest sendNotification(String body, String user_device_token) throws JSONException {
-
-        //TODO:- get the user device_token!!
 
         JSONObject notification = new JSONObject();
         JSONObject notifcationBody = new JSONObject();
@@ -49,16 +47,18 @@ public class FirebasePushNotificationService {
         return new JsonObjectRequest(Request.Method.POST, FCM_API, notification, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-
+                System.out.println("network response: " + response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 // TODO:- Do something when error happened!
+                System.out.println("network error: "+ error.getLocalizedMessage());
             }
-        }) {
+        })
+        {
             @Override
-            protected Map<String, String> getParams() {
+            public Map<String, String> getHeaders() {
                 Map<String, String>  params = new HashMap();
                 params.put("Authorization", serverKey);
                 params.put("Content-Type", contentType);
