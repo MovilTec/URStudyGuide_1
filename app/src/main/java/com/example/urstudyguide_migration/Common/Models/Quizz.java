@@ -28,18 +28,18 @@ public class Quizz implements Serializable {
     private String name;
     private String description;
     private String author;
-    private List<String> members;
+    private List<String> allowed_users;
     private List<TestItem> testItems;
 
     static private String authorName;
 
     public Quizz() { }
 
-    public Quizz(String name, String description, String author, List<String> members, List<TestItem> testItems) {
+    public Quizz(String name, String description, String author, List<String> allowed_users, List<TestItem> testItems) {
         this.name = name;
         this.description = description;
         this.author = author;
-        this.members = members;
+        this.allowed_users = allowed_users;
         this.testItems = testItems;
     }
 
@@ -67,12 +67,12 @@ public class Quizz implements Serializable {
         this.author = author;
     }
 
-    public List<String> getMembers() {
-        return members;
+    public List<String> getAllowed_users() {
+        return allowed_users;
     }
 
-    public void setMembers(List<String> members) {
-        this.members = members;
+    public void setAllowed_users(List<String> allowed_users) {
+        this.allowed_users = allowed_users;
     }
 
     public List<TestItem> getTestItems() {
