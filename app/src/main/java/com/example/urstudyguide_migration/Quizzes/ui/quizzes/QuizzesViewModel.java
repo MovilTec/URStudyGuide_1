@@ -58,9 +58,4 @@ public class QuizzesViewModel extends ViewModel {
         });
     }
 
-    void createQuizz(String name) {
-//        quizzesRef.setValue("Hello, World!");
-
-    }
-
 }

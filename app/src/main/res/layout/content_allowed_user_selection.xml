@@ -11,7 +11,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"
         android:text="Aquí podrás agregar a todos los usarios que deseas que vean tu guía"
         android:textAlignment="center"

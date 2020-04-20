@@ -1,8 +1,10 @@
 package com.example.urstudyguide_migration.Quizzes.ui.quizzcreator.allowedUsers;
 
 import com.example.urstudyguide_migration.Common.Helpers.FirebaseManager;
+import com.example.urstudyguide_migration.Common.Models.Quizz;
 import com.example.urstudyguide_migration.Common.Models.UsersModelingClass;
 import com.example.urstudyguide_migration.Common.User;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -20,6 +22,11 @@ public class AllowedUsersViewModel extends ViewModel {
     AllowedUsersNavigator navigator;
     private List<UsersModelingClass> users = new ArrayList();
     private ArrayList<String> usersNames = new ArrayList();
+    private Quizz mQuizz;
+
+    public void setQuizz(Quizz quizz) {
+        mQuizz = quizz;
+    }
 
     public void getUsers() {
         FirebaseDatabase.getInstance().getReference("Users")
@@ -29,7 +36,7 @@ public class AllowedUsersViewModel extends ViewModel {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot dataUser: dataSnapshot.getChildren()) {
                     UsersModelingClass user = dataUser.getValue(UsersModelingClass.class);
-                    if (!user.getName().equals(User.getInstance().getUserId())) {
+                    if (!user.getId().equals(User.getInstance().getUserId())) {
                         users.add(user);
                         usersNames.add(user.getName());
                     }
@@ -56,6 +63,17 @@ public class AllowedUsersViewModel extends ViewModel {
     }
 
     public void createQuizzWith(HashMap<String, Object> allowedUsers) {
+        mQuizz.setAllowed_users(allowedUsers);
+        FirebaseDatabase.getInstance().getReference().child("Quizzes")
+                .push()
+                .setValue(mQuizz)
+                .addOnSuccessListener(o -> {
+                    navigator.onCreatedQuizz(mQuizz);
+                })
+                .addOnFailureListener(e -> {
+                    navigator.onError(e.getLocalizedMessage());
+                });
+
 
     }
 

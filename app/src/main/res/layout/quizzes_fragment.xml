@@ -27,7 +27,7 @@
             android:clickable="true"
             android:focusable="true"
             android:paddingBottom="26dp"
-            android:src="@drawable/ic_add_black_24dp" />
+            android:src="@drawable/ic_add_color_primary_24dp" />
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

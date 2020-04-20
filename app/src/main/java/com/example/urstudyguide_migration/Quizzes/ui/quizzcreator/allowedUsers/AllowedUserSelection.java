@@ -15,6 +15,7 @@ import in.galaxyofandroid.spinerdialog.OnSpinerItemClick;
 import in.galaxyofandroid.spinerdialog.SpinnerDialog;
 
 import com.example.urstudyguide_migration.Common.Models.UsersModelingClass;
+import com.example.urstudyguide_migration.Quizzes.QuizzDetail;
 import com.example.urstudyguide_migration.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -46,7 +47,7 @@ public class AllowedUserSelection extends AppCompatActivity implements AllowedUs
         setupToolbar();
 
         Intent intent = getIntent();
-        mQuizz = (Quizz) intent.getSerializableExtra("quizz");
+        mViewModel.setQuizz((Quizz) intent.getSerializableExtra("quizz"));
 
         mViewModel.getUsers();
 
@@ -57,6 +58,7 @@ public class AllowedUserSelection extends AppCompatActivity implements AllowedUs
     private void setupToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     private void setupView() {
@@ -77,6 +79,8 @@ public class AllowedUserSelection extends AppCompatActivity implements AllowedUs
         mRecyclerView.setAdapter(mAdapter);
     }
 
+    // ----- Navigator implementation
+
     @Override
     public void onRetrieved(ArrayList<String> users) {
         spinnerDialog = new SpinnerDialog(this, users, "Selecciona los usuarios con los que que deseas compartir tu cuestionario ");
@@ -86,6 +90,14 @@ public class AllowedUserSelection extends AppCompatActivity implements AllowedUs
     @Override
     public void appendUserToRecyclerView(UsersModelingClass user) {
         mAdapter.appendUser(user);
+    }
+
+    @Override
+    public void onCreatedQuizz(Quizz quizz) {
+        Intent intent = new Intent(this, QuizzDetail.class);
+        intent.putExtra("Quizz", quizz);
+        startActivity(intent);
+        finish();
     }
 
     @Override

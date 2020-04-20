@@ -50,7 +50,7 @@
 
             android:backgroundTint="?android:attr/colorBackground"
             android:tint="@color/colorAccent"
-            app:srcCompat="@drawable/ic_add_black_24dp" />
+            app:srcCompat="@drawable/ic_add_color_primary_24dp" />
 
         <EditText
             android:id="@+id/message_editText"

@@ -32,18 +32,6 @@ public class QuizzCreatorViewModel extends ViewModel {
     private int tposition;
     private String mQuizzId;
 
-    void createQuizz(String quizzName, String quizzDescription) {
-        String author = FirebaseAuth.getInstance().getUid();
-        HashMap<String, Object> members = new HashMap();
-        Quizz quizz = new Quizz(quizzName, quizzDescription, author, members, testItems);
-        FirebaseDatabase.getInstance().getReference().child("Quizzes")
-                .push()
-                .setValue(quizz)
-                .addOnSuccessListener(o -> {navigator.onCreatedQuizz(quizz); })
-                .addOnFailureListener(e -> { navigator.onError(e.getLocalizedMessage()); });
-
-    }
-
     public Quizz createQuizzFrom(String quizzName, String quizzDescription) {
         String author = FirebaseAuth.getInstance().getUid();
         HashMap<String, Object> members = new HashMap();

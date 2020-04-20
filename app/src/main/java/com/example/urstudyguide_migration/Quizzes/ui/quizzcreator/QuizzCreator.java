@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.urstudyguide_migration.Common.Exceptions.EmptyQuizzException;
 import com.example.urstudyguide_migration.Common.Exceptions.InvalidQuizzName;
 import com.example.urstudyguide_migration.Common.Models.Quizz;
 import com.example.urstudyguide_migration.Common.Models.TestItem;
@@ -48,12 +49,13 @@ public class QuizzCreator extends AppCompatActivity implements QuizzCreatorNavig
                 String quizzDescription = mQuizzDescription.getText().toString();
 
                 Quizz quizz = mViewModel.createQuizzFrom(quizzName, quizzDescription);
+                validateQuizz(quizz);
 
                 Intent intent = new Intent(getApplicationContext(), AllowedUserSelection.class);
                 intent.putExtra("quizz", quizz);
                 startActivity(intent);
-            } catch (InvalidQuizzName ex) {
-//                displayErrorMessage(ex.getLocalizedMessage());
+            } catch (InvalidQuizzName | EmptyQuizzException ex ) {
+                displayErrorMessage(ex.getLocalizedMessage());
             }
         }
     };
@@ -66,7 +68,7 @@ public class QuizzCreator extends AppCompatActivity implements QuizzCreatorNavig
 
             mViewModel.saveQuizz(quizzName, quizzDescription);
         } catch (InvalidQuizzName ex) {
-//            displayErrorMessage(ex.getLocalizedMessage());
+            displayErrorMessage(ex.getLocalizedMessage());
         }
     });
 
@@ -90,11 +92,6 @@ public class QuizzCreator extends AppCompatActivity implements QuizzCreatorNavig
         mViewModel.setQuizzId(intent.getStringExtra("quizzId"));
         setupQuizzFromEdit(quizz);
 
-//        if (savedInstanceState == null) {
-//            getSupportFragmentManager().beginTransaction()
-//                    .replace(R.id.container, QuizzCreatorFragment.newInstance())
-//                    .commitNow();
-//        }
     }
 
     @Override
@@ -179,6 +176,13 @@ public class QuizzCreator extends AppCompatActivity implements QuizzCreatorNavig
         return quizzName;
     }
 
+    private void validateQuizz(Quizz quizz) throws EmptyQuizzException {
+        List<TestItem> testItems = quizz.getTestItems();
+        if (testItems.size() == 1 && testItems.get(0).getQuestion() == null) {
+            throw new EmptyQuizzException();
+        }
+    }
+
     // ----- QuestionCreatable Implementation
     @Override
     public void onQuestionSelected(int position) {
@@ -190,15 +194,6 @@ public class QuizzCreator extends AppCompatActivity implements QuizzCreatorNavig
     }
 
     // --------- Navigator Implementation!
-    @Override
-    public void onCreatedQuizz(Quizz quizz) {
-        Intent intent = new Intent(this, QuizzDetail.class);
-        //TODO:- Send the Quizz to the detailed View!!!
-        intent.putExtra("Quizz", quizz);
-        startActivity(intent);
-        finish();
-    }
-
     @Override
     public void onError(String errorMessage) {
         displayErrorMessage(errorMessage);

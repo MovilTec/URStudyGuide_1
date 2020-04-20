@@ -96,7 +96,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="@string/quizzcreator_adapter_create_button" />
+                    android:text="@string/quizzcreator_next_button" />
 
             </LinearLayout>
                         </ScrollView>
