@@ -4,11 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +25,14 @@ import com.example.urstudyguide_migration.Common.User;
 import com.example.urstudyguide_migration.Quizzes.QuizzAttempts;
 import com.example.urstudyguide_migration.Quizzes.ui.quizzcreator.QuizzCreator;
 import com.example.urstudyguide_migration.Quizzes.Simulator;
+import com.example.urstudyguide_migration.Quizzes.ui.quizzcreator.allowedUsers.AllowedUserSelection;
 import com.example.urstudyguide_migration.R;
 
-public class QuizzDetailFragment extends Fragment {
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+public class QuizzDetailFragment extends Fragment implements QuizzDetailUsersRecyclerAdapter.UserResponder {
 
     private QuizzDetailViewModel mViewModel;
     private Toolbar mToolbar;
@@ -31,6 +40,7 @@ public class QuizzDetailFragment extends Fragment {
     private TextView mTextView, mAuthor;
     private Button mStartButton, mEditButton, mAttemptsButton;
     private String quizzId;
+    private RecyclerView mRecyclerView;
 
     private View.OnClickListener startButtonAction = (v -> {
         Intent intent = new Intent(getContext(), Simulator.class);
@@ -67,6 +77,7 @@ public class QuizzDetailFragment extends Fragment {
         quizzId = (String) intent.getSerializableExtra("quizzId");
         setupNavBar(view, mQuizz.getName());
         setupView(view);
+        setupRecyclerView(view);
         return view;
     }
 
@@ -100,6 +111,22 @@ public class QuizzDetailFragment extends Fragment {
         validateOptions();
     }
 
+    private void setupRecyclerView(View view) {
+        mRecyclerView = view.findViewById(R.id.quizzdetail_users_recyclerView);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
+        mRecyclerView.setLayoutManager(layoutManager);
+
+        List<String> allowedUsers = new ArrayList();
+        for (Object object : mQuizz.getAllowed_users().values()) {
+            String allowedUser = (String) object;
+            allowedUsers.add(allowedUser);
+        }
+        Drawable drawablr = getResources().getDrawable(R.drawable.ic_add_user_vector_32);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.addItemDecoration(new QuizzDetailUsersDecorator());
+        mRecyclerView.setAdapter(new QuizzDetailUsersRecyclerAdapter(allowedUsers, this, drawablr));
+    }
+
     private void validateOptions() {
         String userID = User.getInstance().getUserID(getContext());
         if(userID == null) {
@@ -117,5 +144,12 @@ public class QuizzDetailFragment extends Fragment {
                 mAttemptsButton.setEnabled(false);
             }
         }
+    }
+
+    @Override
+    public void onUserAddAction() {
+        Intent intent = new Intent(getContext(), AllowedUserSelection.class);
+        intent.putExtra("quizz", mQuizz);
+        getActivity().startActivityForResult(intent, 111);
     }
 }

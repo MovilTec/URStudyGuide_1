@@ -1,28 +1,18 @@
 package com.example.urstudyguide_migration.Quizzes.ui.quizzcreator;
 
-import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModel;
 
-import com.example.urstudyguide_migration.Common.Models.AllowedUser;
 import com.example.urstudyguide_migration.Common.Models.Quizz;
 import com.example.urstudyguide_migration.Common.Models.TestItem;
 import com.example.urstudyguide_migration.Common.Services.FirebaseRequests;
-import com.example.urstudyguide_migration.Common.Services.RequestType;
-import com.example.urstudyguide_migration.Common.User;
 import com.example.urstudyguide_migration.Quizzes.navigators.QuizzCreatorNavigator;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import io.reactivex.annotations.NonNull;
 
 public class QuizzCreatorViewModel extends ViewModel {
 
