@@ -121,7 +121,7 @@ public class QuizzDetailFragment extends Fragment implements QuizzDetailUsersRec
             String allowedUser = (String) object;
             allowedUsers.add(allowedUser);
         }
-        Drawable drawablr = getResources().getDrawable(R.drawable.ic_add_user_vector_32);
+        Drawable drawablr = getResources().getDrawable(R.drawable.ic_add_user_vector);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.addItemDecoration(new QuizzDetailUsersDecorator());
         mRecyclerView.setAdapter(new QuizzDetailUsersRecyclerAdapter(allowedUsers, this, drawablr));
