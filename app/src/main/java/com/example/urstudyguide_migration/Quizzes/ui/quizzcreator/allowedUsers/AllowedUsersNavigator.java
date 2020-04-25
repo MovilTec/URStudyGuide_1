@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 public interface AllowedUsersNavigator {
     void onRetrieved(ArrayList<String> users);
+    void changeSaveQuizzButton();
     void appendUserToRecyclerView(UsersModelingClass user);
     void onCreatedQuizz(Quizz quizz);
     void onError(String errorMessage);

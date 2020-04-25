@@ -88,6 +88,11 @@ public class AllowedUserSelection extends AppCompatActivity implements AllowedUs
     }
 
     @Override
+    public void changeSaveQuizzButton() {
+        createButton.setText("SAVE QUIZZ");
+    }
+
+    @Override
     public void appendUserToRecyclerView(UsersModelingClass user) {
         mAdapter.appendUser(user);
     }
