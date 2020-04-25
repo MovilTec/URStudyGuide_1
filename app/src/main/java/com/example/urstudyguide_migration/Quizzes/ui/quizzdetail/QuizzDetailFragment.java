@@ -1,6 +1,7 @@
 package com.example.urstudyguide_migration.Quizzes.ui.quizzdetail;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -37,7 +38,7 @@ public class QuizzDetailFragment extends Fragment implements QuizzDetailUsersRec
     private QuizzDetailViewModel mViewModel;
     private Toolbar mToolbar;
     private Quizz mQuizz;
-    private TextView mTextView, mAuthor;
+    private TextView mTextView;
     private Button mStartButton, mEditButton, mAttemptsButton;
     private String quizzId;
     private RecyclerView mRecyclerView;
@@ -78,6 +79,8 @@ public class QuizzDetailFragment extends Fragment implements QuizzDetailUsersRec
         setupNavBar(view, mQuizz.getName());
         setupView(view);
         setupRecyclerView(view);
+
+        validateOptions();
         return view;
     }
 
@@ -93,11 +96,14 @@ public class QuizzDetailFragment extends Fragment implements QuizzDetailUsersRec
         ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(quizzName);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+//       Setting the menu icon
+        Drawable settings_icon = ContextCompat.getDrawable(getContext(),R.drawable.ic_settings);
+        mToolbar.setOverflowIcon(settings_icon);
     }
 
     private void setupView(View view) {
         mTextView = view.findViewById(R.id.quizzdetail_textView);
-        mAuthor = view.findViewById(R.id.quizzdetail_author_textView);
         mEditButton = view.findViewById(R.id.quizzdetail_edit_button);
         mEditButton.setOnClickListener(editButtonAction);
 
@@ -108,7 +114,6 @@ public class QuizzDetailFragment extends Fragment implements QuizzDetailUsersRec
         mStartButton.setOnClickListener(startButtonAction);
 
         mTextView.setText(mQuizz.getDescription());
-        validateOptions();
     }
 
     private void setupRecyclerView(View view) {
@@ -142,6 +147,9 @@ public class QuizzDetailFragment extends Fragment implements QuizzDetailUsersRec
 
                 mAttemptsButton.setAlpha(0);
                 mAttemptsButton.setEnabled(false);
+
+                mRecyclerView.setAlpha(0);
+                mRecyclerView.setEnabled(false);
             }
         }
     }
@@ -151,5 +159,7 @@ public class QuizzDetailFragment extends Fragment implements QuizzDetailUsersRec
         Intent intent = new Intent(getContext(), AllowedUserSelection.class);
         intent.putExtra("quizz", mQuizz);
         getActivity().startActivityForResult(intent, 111);
+
+
     }
 }

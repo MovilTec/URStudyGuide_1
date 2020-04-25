@@ -10,8 +10,8 @@
     <de.hdodenhof.circleimageview.CircleImageView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/quizz_detail_profile_image"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:src="@drawable/default_user_image_1"
         app:civ_border_color="#FFFFFF"
         app:civ_border_width="3dp" />
@@ -26,8 +26,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/quizz_detail_imageCircleImageView"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
             android:src="#919191"
             app:civ_border_color="#FF000000"
             app:civ_border_width="2dp"  />
