@@ -12,7 +12,6 @@ import com.example.urstudyguide_migration.Common.Helpers.FirebaseManager;
 import com.example.urstudyguide_migration.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.collection.LLRBNode;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
@@ -64,7 +63,6 @@ public class QuizzDetailUsersRecyclerAdapter extends RecyclerView.Adapter<QuizzD
             holder.imageView.setImageDrawable(drawable);
             holder.imageView.setCircleBackgroundColor(Color.parseColor("#303f9f"));
             holder.imageView.setOnClickListener(v -> {
-                System.out.println("");
                 userResponder.onUserAddAction();
             });
             return;
