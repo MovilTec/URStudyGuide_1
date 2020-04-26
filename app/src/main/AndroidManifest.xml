@@ -11,10 +11,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Quizzes.QuizzAdvanceSettings"></activity>
         <activity
             android:name=".Quizzes.ui.quizzcreator.allowedUsers.AllowedUserSelection"
             android:label="@string/title_activity_allowed_user_selection"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Quizzes.ui.quizzcreatorquestion.QuizzCreatorQuestion" />
         <activity android:name=".Quizzes.QuizzAttempts" />
         <activity android:name=".Quizzes.Simulator" />

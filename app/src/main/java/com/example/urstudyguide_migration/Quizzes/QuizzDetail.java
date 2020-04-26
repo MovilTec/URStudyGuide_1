@@ -32,8 +32,8 @@ public class QuizzDetail extends AppCompatActivity {
                 super.onBackPressed();
                 return true;
             case R.id.advance_setting:
-//                Intent intent = new Intent(this, );
-//                startActivityForResult(intent, 111);
+                Intent intent = new Intent(this, QuizzAdvanceSettings.class);
+                startActivityForResult(intent, 111);
                 return true;
         }
         return super.onOptionsItemSelected(item);

@@ -6,7 +6,7 @@
     android:id="@+id/quizzdetail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.quizzdetail.QuizzDetailFragment">
+    tools:context="Quizzes.ui.quizzdetail.QuizzDetailFragment">
 
     <include
         android:id="@+id/quizzdetail_toolbar"
