@@ -35,7 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        android:background="@color/colorAccent"
+        android:background="@drawable/button_yellow"
         android:text="@string/quizzdetail_attempts_button"
         app:layout_constraintBottom_toTopOf="@+id/quizzdetail_edit_button"
         app:layout_constraintEnd_toEndOf="parent"
