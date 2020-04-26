@@ -21,6 +21,7 @@ import com.example.urstudyguide_migration.Common.Models.QuizzAttempt;
 import com.example.urstudyguide_migration.Quizzes.navigators.AttemptsNavigator;
 import com.example.urstudyguide_migration.R;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -71,7 +72,13 @@ public class QuizzAttemptsFragment extends Fragment implements AttemptsNavigator
 
     @Override
     public void onAttemtpsRetrivalSuccess(Map<String, List<QuizzAttempt>> items) {
-        mRecyclerView.setAdapter(new QuizzAttemptsAdapter(items));
+        List<Student> students = new ArrayList();
+        items.forEach( (student_code, attemps) -> {
+            Student student = new Student(student_code, attemps);
+            students.add(student);
+        });
+//        mRecyclerView.setAdapter(new QuizzAttemptsAdapter(items));
+        mRecyclerView.setAdapter(new QuizzAttemptsExpandableAdapter(students));
     }
 
     @Override

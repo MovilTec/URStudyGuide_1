@@ -12,6 +12,10 @@ import com.example.urstudyguide_migration.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter;
+import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
+import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
+import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -28,9 +32,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class QuizzAttemptsAdapter extends RecyclerView.Adapter<QuizzAttemptsAdapter.mViewHolder> {
 
-//    private List<QuizzAttempt> attempts = new ArrayList();
     private Map<String, List<QuizzAttempt>> attempts;
     private ArrayList<String> students_id;
+    private ArrayList<Student> students;
 
     public QuizzAttemptsAdapter(Map<String, List<QuizzAttempt>> attempts) {
         this.attempts = attempts;

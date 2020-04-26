@@ -1,11 +1,14 @@
 package com.example.urstudyguide_migration.Common.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -15,13 +18,14 @@ import java.util.Date;
 
 import androidx.annotation.NonNull;
 
-public class QuizzAttempt implements Serializable {
+public class QuizzAttempt implements Serializable, Parcelable {
 
     private String user;
     private double grade;
     private long timestamp;
 
     public QuizzAttempt(String user, double grade, long timestamp) {
+        super();
         this.user = user;
         this.grade = grade;
         this.timestamp = timestamp;
@@ -29,6 +33,24 @@ public class QuizzAttempt implements Serializable {
 
     public QuizzAttempt() {
     }
+
+    protected QuizzAttempt(Parcel in) {
+        user = in.readString();
+        grade = in.readDouble();
+        timestamp = in.readLong();
+    }
+
+    public static final Creator<QuizzAttempt> CREATOR = new Creator<QuizzAttempt>() {
+        @Override
+        public QuizzAttempt createFromParcel(Parcel in) {
+            return new QuizzAttempt(in);
+        }
+
+        @Override
+        public QuizzAttempt[] newArray(int size) {
+            return new QuizzAttempt[size];
+        }
+    };
 
     public String getUser() {
         return user;
@@ -79,5 +101,15 @@ public class QuizzAttempt implements Serializable {
 
             }
         });
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.user);
     }
 }
