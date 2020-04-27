@@ -1,6 +1,5 @@
 package com.example.urstudyguide_migration.Quizzes.ui.quizzcreator;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,8 +19,7 @@ import com.example.urstudyguide_migration.Common.Exceptions.EmptyQuizzException;
 import com.example.urstudyguide_migration.Common.Exceptions.InvalidQuizzName;
 import com.example.urstudyguide_migration.Common.Models.Quizz;
 import com.example.urstudyguide_migration.Common.Models.TestItem;
-import com.example.urstudyguide_migration.Quizzes.QuizzDetail;
-import com.example.urstudyguide_migration.Quizzes.ui.quizzcreator.allowedUsers.AllowedUserSelection;
+import com.example.urstudyguide_migration.Quizzes.ui.allowedUsers.AllowedUserSelection;
 import com.example.urstudyguide_migration.Quizzes.ui.quizzcreatorquestion.QuizzCreatorQuestion;
 import com.example.urstudyguide_migration.Quizzes.navigators.QuizzCreatorNavigator;
 import com.example.urstudyguide_migration.R;

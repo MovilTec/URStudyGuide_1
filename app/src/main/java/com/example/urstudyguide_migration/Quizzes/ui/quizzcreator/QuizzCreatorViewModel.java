@@ -36,7 +36,6 @@ public class QuizzCreatorViewModel extends ViewModel {
         editedTest.put("testItems", testItems);
         FirebaseDatabase.getInstance().getReference().child("Quizzes").child(mQuizzId)
                 .updateChildren(editedTest, (databaseError, databaseReference) -> {
-            //TODO:- Something on success
             if (databaseError != null) {
                 navigator.onError(databaseError.getMessage());
                 return;

@@ -96,4 +96,9 @@ public class QuizzDetailUsersRecyclerAdapter extends RecyclerView.Adapter<QuizzD
         void onUserAddAction();
     }
 
+    public void updateAllowedUsers(List<String> allowedUsers) {
+        this.allowedUsers = allowedUsers;
+        allowedUsers.add("add_more");
+        notifyDataSetChanged();
+    }
 }

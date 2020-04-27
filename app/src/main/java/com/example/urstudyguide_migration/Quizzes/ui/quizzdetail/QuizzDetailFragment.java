@@ -24,16 +24,19 @@ import com.example.urstudyguide_migration.Common.Models.Quizz;
 import com.example.urstudyguide_migration.Common.Models.Users;
 import com.example.urstudyguide_migration.Common.User;
 import com.example.urstudyguide_migration.Quizzes.QuizzAttempts;
+import com.example.urstudyguide_migration.Quizzes.navigators.QuizzDetailNavigator;
 import com.example.urstudyguide_migration.Quizzes.ui.quizzcreator.QuizzCreator;
 import com.example.urstudyguide_migration.Quizzes.Simulator;
-import com.example.urstudyguide_migration.Quizzes.ui.quizzcreator.allowedUsers.AllowedUserSelection;
+import com.example.urstudyguide_migration.Quizzes.ui.allowedUsers.AllowedUserSelection;
 import com.example.urstudyguide_migration.R;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
-public class QuizzDetailFragment extends Fragment implements QuizzDetailUsersRecyclerAdapter.UserResponder {
+import static android.app.Activity.RESULT_OK;
+
+public class QuizzDetailFragment extends Fragment implements QuizzDetailNavigator, QuizzDetailUsersRecyclerAdapter.UserResponder {
 
     private QuizzDetailViewModel mViewModel;
     private Toolbar mToolbar;
@@ -42,6 +45,7 @@ public class QuizzDetailFragment extends Fragment implements QuizzDetailUsersRec
     private Button mStartButton, mEditButton, mAttemptsButton;
     private String quizzId;
     private RecyclerView mRecyclerView;
+    private QuizzDetailUsersRecyclerAdapter mAdapter;
 
     private View.OnClickListener startButtonAction = (v -> {
         Intent intent = new Intent(getContext(), Simulator.class);
@@ -88,7 +92,7 @@ public class QuizzDetailFragment extends Fragment implements QuizzDetailUsersRec
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(QuizzDetailViewModel.class);
-        // TODO: Use the ViewModel
+        mViewModel.navigator = this;
     }
 
     private void setupNavBar(View view, String quizzName) {
@@ -127,9 +131,10 @@ public class QuizzDetailFragment extends Fragment implements QuizzDetailUsersRec
             allowedUsers.add(allowedUser);
         }
         Drawable drawablr = getResources().getDrawable(R.drawable.ic_add_user_vector);
+        mAdapter = new QuizzDetailUsersRecyclerAdapter(allowedUsers, this, drawablr);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.addItemDecoration(new QuizzDetailUsersDecorator());
-        mRecyclerView.setAdapter(new QuizzDetailUsersRecyclerAdapter(allowedUsers, this, drawablr));
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     private void validateOptions() {
@@ -158,8 +163,13 @@ public class QuizzDetailFragment extends Fragment implements QuizzDetailUsersRec
     public void onUserAddAction() {
         Intent intent = new Intent(getContext(), AllowedUserSelection.class);
         intent.putExtra("quizz", mQuizz);
+        intent.putExtra("quizzId", quizzId);
         getActivity().startActivityForResult(intent, 111);
+    }
 
-
+    @Override
+    public void updateRecyclerViewWith(HashMap<String, Object> allowedUsers) {
+        List<String> allowed_users = new ArrayList( allowedUsers.values());
+        mAdapter.updateAllowedUsers(allowed_users);
     }
 }

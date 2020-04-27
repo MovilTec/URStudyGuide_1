@@ -1,6 +1,5 @@
-package com.example.urstudyguide_migration.Quizzes.ui.quizzcreator.allowedUsers;
+package com.example.urstudyguide_migration.Quizzes.ui.allowedUsers;
 
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

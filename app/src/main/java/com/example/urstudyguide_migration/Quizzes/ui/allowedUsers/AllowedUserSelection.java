@@ -1,4 +1,4 @@
-package com.example.urstudyguide_migration.Quizzes.ui.quizzcreator.allowedUsers;
+package com.example.urstudyguide_migration.Quizzes.ui.allowedUsers;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,11 +11,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import in.galaxyofandroid.spinerdialog.OnSpinerItemClick;
 import in.galaxyofandroid.spinerdialog.SpinnerDialog;
 
 import com.example.urstudyguide_migration.Common.Models.UsersModelingClass;
 import com.example.urstudyguide_migration.Quizzes.QuizzDetail;
+import com.example.urstudyguide_migration.Quizzes.navigators.AllowedUsersNavigator;
 import com.example.urstudyguide_migration.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -30,11 +30,16 @@ public class AllowedUserSelection extends AppCompatActivity implements AllowedUs
     private RecyclerView mRecyclerView;
     private AllowedUsersAdapter mAdapter;
     private Button createButton;
+    private String quizzId;
 
     private View.OnClickListener onClickListener = view -> {
-
         HashMap<String, Object> allowedUsers =  mAdapter.getAllowedUsers();
         mViewModel.createQuizzWith(allowedUsers);
+    };
+
+    private View.OnClickListener saveEditedAllowedUsers = view -> {
+        HashMap<String, Object> allowedUsers = mAdapter.getAllowedUsers();
+        mViewModel.saveEditedQuizz(allowedUsers, quizzId);
     };
 
     @Override
@@ -48,6 +53,7 @@ public class AllowedUserSelection extends AppCompatActivity implements AllowedUs
 
         Intent intent = getIntent();
         mViewModel.setQuizz((Quizz) intent.getSerializableExtra("quizz"));
+        quizzId = intent.getStringExtra("quizzId");
 
         mViewModel.getUsers();
 
@@ -90,6 +96,9 @@ public class AllowedUserSelection extends AppCompatActivity implements AllowedUs
     @Override
     public void changeSaveQuizzButton() {
         createButton.setText("SAVE QUIZZ");
+
+        // Setting the save edited action instead of creating a new Quizz!!
+        createButton.setOnClickListener(saveEditedAllowedUsers);
     }
 
     @Override
@@ -102,6 +111,14 @@ public class AllowedUserSelection extends AppCompatActivity implements AllowedUs
         Intent intent = new Intent(this, QuizzDetail.class);
         intent.putExtra("Quizz", quizz);
         startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onSavedQuizz(HashMap<String, Object> savedAllowedUsers) {
+        Intent intent = new Intent();
+        intent.putExtra("allowed_users", savedAllowedUsers);
+        setResult(RESULT_OK, intent);
         finish();
     }
 
