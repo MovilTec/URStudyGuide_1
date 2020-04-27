@@ -78,17 +78,17 @@ public class QuizzCreator extends AppCompatActivity implements QuizzCreatorNavig
         mViewModel.navigator = this;
         mViewModel.addQuestions();
 
-        setupView();
-
-        setupNumberPicker();
-        setupRecyclerView();
-        setupToolBar();
-
         Intent intent = getIntent();
         Quizz quizz = (Quizz) intent.getSerializableExtra("Quizz");
         mViewModel.setQuizzId(intent.getStringExtra("quizzId"));
-        setupQuizzFromEdit(quizz);
 
+        setupView();
+
+        setupNumberPicker();
+//        setupRecyclerView();
+        setupToolBar();
+
+        setupQuizzFromEdit(quizz);
     }
 
     @Override
@@ -151,6 +151,14 @@ public class QuizzCreator extends AppCompatActivity implements QuizzCreatorNavig
         mRecyclerView.setAdapter(mAdapter);
     }
 
+    private void setupRecyclerViewWith(Quizz quizz) {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(layoutManager);
+        // Passing the data from the viewModel
+        mAdapter = new QuizzCreatorPrubeAdatper(this::onQuestionSelected, quizz.getTestItems());
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
     private void setupQuizzFromEdit(Quizz quizz) {
         if(quizz != null) {
             mViewModel.setQuizz(quizz);
@@ -163,6 +171,10 @@ public class QuizzCreator extends AppCompatActivity implements QuizzCreatorNavig
 
             //Setting the number picker base on the quizz questions
             mNumberPicker.setValue(quizz.getTestItems().size());
+
+            setupRecyclerViewWith(quizz);
+        } else {
+            setupRecyclerView();
         }
     }
 

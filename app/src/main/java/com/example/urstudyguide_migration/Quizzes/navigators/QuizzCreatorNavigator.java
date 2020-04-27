@@ -8,4 +8,5 @@ public interface QuizzCreatorNavigator extends Navigator {
     void onError(String errorMessage);
     void updateRecyclerView(int position, TestItem testItem);
     void onSavedQuizz(Quizz quizz);
+
 }
