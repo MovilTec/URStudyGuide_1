@@ -59,7 +59,6 @@ public class QuizzCreator extends AppCompatActivity implements QuizzCreatorNavig
     };
 
     private Button.OnClickListener editQuizzAction = (v -> {
-        //TODO:- Save the edited test
         try {
             String quizzName = validateQuizzName(mQuizzName.getText().toString());
             String quizzDescription = mQuizzDescription.getText().toString();
@@ -204,8 +203,11 @@ public class QuizzCreator extends AppCompatActivity implements QuizzCreatorNavig
     }
 
     @Override
-    public void onSavedQuizz() {
-
+    public void onSavedQuizz(Quizz quizz) {
+        Intent intent = new Intent();
+        intent.putExtra("quizz", quizz);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     private void displayErrorMessage(String error) {

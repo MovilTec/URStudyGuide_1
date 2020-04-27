@@ -58,7 +58,7 @@ public class QuizzDetailFragment extends Fragment implements QuizzDetailNavigato
         Intent intent = new Intent(getContext(), QuizzCreator.class);
         intent.putExtra("Quizz", mQuizz);
         intent.putExtra("quizzId", quizzId);
-        startActivity(intent);
+        getActivity().startActivityForResult(intent, 112);
     });
 
     private View.OnClickListener attemptsButtonAction = ( v -> {
@@ -80,9 +80,11 @@ public class QuizzDetailFragment extends Fragment implements QuizzDetailNavigato
         Intent intent = getActivity().getIntent();
         mQuizz = (Quizz) intent.getSerializableExtra("Quizz");
         quizzId = (String) intent.getSerializableExtra("quizzId");
-        setupNavBar(view, mQuizz.getName());
+        setupNavBar(view);
         setupView(view);
         setupRecyclerView(view);
+
+        setupContent();
 
         validateOptions();
         return view;
@@ -95,10 +97,9 @@ public class QuizzDetailFragment extends Fragment implements QuizzDetailNavigato
         mViewModel.navigator = this;
     }
 
-    private void setupNavBar(View view, String quizzName) {
+    private void setupNavBar(View view) {
         mToolbar = view.findViewById(R.id.quizzdetail_toolbar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(quizzName);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 //       Setting the menu icon
@@ -116,7 +117,10 @@ public class QuizzDetailFragment extends Fragment implements QuizzDetailNavigato
 
         mStartButton = view.findViewById(R.id.quizzdetail_start_button);
         mStartButton.setOnClickListener(startButtonAction);
+    }
 
+    private void setupContent() {
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(mQuizz.getName());
         mTextView.setText(mQuizz.getDescription());
     }
 
@@ -171,5 +175,10 @@ public class QuizzDetailFragment extends Fragment implements QuizzDetailNavigato
     public void updateRecyclerViewWith(HashMap<String, Object> allowedUsers) {
         List<String> allowed_users = new ArrayList( allowedUsers.values());
         mAdapter.updateAllowedUsers(allowed_users);
+    }
+
+    public void updatedEditedQuizz(Quizz quizz) {
+        mQuizz = quizz;
+        setupContent();
     }
 }

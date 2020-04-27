@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.urstudyguide_migration.Common.Models.Quizz;
 import com.example.urstudyguide_migration.Quizzes.navigators.QuizzDetailNavigator;
 import com.example.urstudyguide_migration.Quizzes.ui.quizzdetail.QuizzDetailFragment;
 import com.example.urstudyguide_migration.Quizzes.ui.quizzdetail.QuizzDetailViewModel;
@@ -45,16 +46,29 @@ public class QuizzDetail extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 111) {
-            if(resultCode == RESULT_OK) {
-                HashMap<String, Object> allowed_users = (HashMap<String, Object>) data.getSerializableExtra("allowed_users");
-                for(Fragment fragment: getSupportFragmentManager().getFragments()) {
-                    if (fragment instanceof QuizzDetailNavigator){
-                        QuizzDetailNavigator navigator = (QuizzDetailNavigator) fragment;
-                        navigator.updateRecyclerViewWith(allowed_users);
+            if(requestCode == 111) {
+                if (resultCode == RESULT_OK) {
+                    HashMap<String, Object> allowed_users = (HashMap<String, Object>) data.getSerializableExtra("allowed_users");
+                    for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                        if (fragment instanceof QuizzDetailNavigator) {
+                            QuizzDetailNavigator navigator = (QuizzDetailNavigator) fragment;
+                            navigator.updateRecyclerViewWith(allowed_users);
+                            break;
+                        }
                     }
                 }
             }
-        }
+            if(requestCode == 112) {
+                if (resultCode == RESULT_OK) {
+                    for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                        if (fragment instanceof QuizzDetailNavigator) {
+                            QuizzDetailNavigator navigator = (QuizzDetailNavigator) fragment;
+                            Quizz quizz = (Quizz) data.getSerializableExtra("quizz");
+                            navigator.updatedEditedQuizz(quizz);
+                            break;
+                        }
+                    }
+                }
+            }
     }
 }

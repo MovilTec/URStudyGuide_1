@@ -2,21 +2,23 @@ package com.example.urstudyguide_migration.Quizzes.ui.quizzcreator;
 
 import androidx.lifecycle.ViewModel;
 
+import com.example.urstudyguide_migration.Common.Helpers.FirebaseManager;
 import com.example.urstudyguide_migration.Common.Models.Quizz;
 import com.example.urstudyguide_migration.Common.Models.TestItem;
 import com.example.urstudyguide_migration.Common.Services.FirebaseRequests;
 import com.example.urstudyguide_migration.Quizzes.navigators.QuizzCreatorNavigator;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class QuizzCreatorViewModel extends ViewModel {
 
-    private FirebaseRequests firebaseRequests = FirebaseRequests.getInstance();
     QuizzCreatorNavigator navigator;
     private List<TestItem> testItems = new ArrayList();
     private int tposition;
@@ -29,18 +31,25 @@ public class QuizzCreatorViewModel extends ViewModel {
     }
 
     void saveQuizz(String quizzName, String quizzDescription) {
-        //TODO:- Recieve the route to save the edited Test
-        //TODO:- Do someting on quizz name change or description!
-
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
         Map<String, Object> editedTest = new HashMap();
+        editedTest.put("name", quizzName);
+        editedTest.put("description", quizzDescription);
         editedTest.put("testItems", testItems);
-        FirebaseDatabase.getInstance().getReference().child("Quizzes").child(mQuizzId)
+
+        final String path = "Quizzes/" + mQuizzId;
+        database.getReference(path)
                 .updateChildren(editedTest, (databaseError, databaseReference) -> {
             if (databaseError != null) {
                 navigator.onError(databaseError.getMessage());
                 return;
             }
-            navigator.onSavedQuizz();
+            FirebaseManager firebaseManager = new FirebaseManager(database);
+            CompletableFuture<DataSnapshot> quizzPromise = firebaseManager.read(path);
+            quizzPromise.thenAccept(dataSnapshot -> {
+                Quizz quizz = dataSnapshot.getValue(Quizz.class);
+                navigator.onSavedQuizz(quizz);
+            });
         });
     }
 
