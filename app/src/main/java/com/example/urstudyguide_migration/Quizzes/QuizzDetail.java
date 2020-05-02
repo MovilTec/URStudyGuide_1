@@ -2,6 +2,8 @@ package com.example.urstudyguide_migration.Quizzes;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +29,13 @@ public class QuizzDetail extends AppCompatActivity {
                     .replace(R.id.container, QuizzDetailFragment.newInstance())
                     .commitNow();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.settings_menu, menu);
+        return true;
     }
 
     @Override
