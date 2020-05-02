@@ -100,7 +100,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Messages.MessageActivity"
+            android:name=".Messages.MessageChatActivity"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".Questioners.QuestionairesActivity" />
     </application>

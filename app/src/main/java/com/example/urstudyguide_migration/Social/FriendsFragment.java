@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.urstudyguide_migration.Common.Models.Users;
-import com.example.urstudyguide_migration.Messages.MessageActivity;
+import com.example.urstudyguide_migration.Messages.MessageChatActivity;
 import com.example.urstudyguide_migration.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -113,7 +113,7 @@ public class FriendsFragment extends Fragment {
                                         startActivity(profileIntent);
                                         break;
                                     case 1:
-                                        Intent chatIntent = new Intent(getActivity(), MessageActivity.class);
+                                        Intent chatIntent = new Intent(getActivity(), MessageChatActivity.class);
                                         chatIntent.putExtra("user_id", user_id);
                                         chatIntent.putExtra("user_name", userName);
                                         chatIntent.putExtra("user_thumb_image", userThumb_image);

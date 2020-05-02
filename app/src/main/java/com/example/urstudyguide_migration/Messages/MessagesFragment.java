@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.example.urstudyguide_migration.Common.Models.MessageModelingClass;
 import com.example.urstudyguide_migration.Common.Models.Users;
 import com.example.urstudyguide_migration.Common.Timer;
+import com.example.urstudyguide_migration.Common.User;
 import com.example.urstudyguide_migration.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -52,7 +53,7 @@ public class MessagesFragment extends Fragment {
                              Bundle savedInstanceState) {
         mMainView = inflater.inflate(R.layout.fragment_messages, container, false);
 
-        mMessageDatabase = FirebaseDatabase.getInstance().getReference().child("Messages").child(users.getUserID());
+        mMessageDatabase = FirebaseDatabase.getInstance().getReference("Messages/" + users.getUserID());
         mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
         mUsersDatabase.keepSynced(true);
 
@@ -89,9 +90,10 @@ public class MessagesFragment extends Fragment {
             @Override
             protected void onBindViewHolder(@NonNull final MessagesFragment.MessagesViewHolder holder, int position, @NonNull MessageModelingClass model) {
                 //Obteniendo el ID del usuario solicitador
-                final String list_user_id = getRef(position).getKey();
-
-                Query lastMessageQuery = mMessageDatabase.child(list_user_id).limitToLast(1);
+                final String sender_user_id = getRef(position).getKey();
+                
+                //"Messages/" + users.getUserID()
+                Query lastMessageQuery = mMessageDatabase.child(sender_user_id).limitToLast(1);
 
                 lastMessageQuery.addChildEventListener(new ChildEventListener() {
                     @Override
@@ -100,8 +102,13 @@ public class MessagesFragment extends Fragment {
                         String data = dataSnapshot.child("message").getValue().toString();
                         String from = dataSnapshot.child("from").getValue().toString();
                         String time = dataSnapshot.child("time").getValue().toString();
+                        boolean seen = (boolean) dataSnapshot.child("seen").getValue();
+
                         holder.setMessage(data, from);
                         holder.setTime(time);
+                        if(!from.equals(User.getInstance().getUserId())) {
+                            holder.setSeen(seen);
+                        }
                     }
 
                     @Override
@@ -125,7 +132,7 @@ public class MessagesFragment extends Fragment {
                     }
                 });
 
-                mUsersDatabase.child(list_user_id).addValueEventListener(new ValueEventListener() {
+                mUsersDatabase.child(sender_user_id).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -136,14 +143,11 @@ public class MessagesFragment extends Fragment {
                         holder.setName(userName);
                         holder.setUserImage(userThumb_image);
 
-                        holder.mView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent messageIntent = new Intent(getActivity(), MessageActivity.class);
-                                messageIntent.putExtra("user_id", list_user_id);
-                                messageIntent.putExtra("user_name", userName);
-                                startActivity(messageIntent);
-                            }
+                        holder.mView.setOnClickListener(v -> {
+                            Intent messageIntent = new Intent(getActivity(), MessageChatActivity.class);
+                            messageIntent.putExtra("user_id", sender_user_id);
+                            messageIntent.putExtra("user_name", userName);
+                            startActivity(messageIntent);
                         });
                     }
 
@@ -171,10 +175,10 @@ public class MessagesFragment extends Fragment {
     public static class MessagesViewHolder extends RecyclerView.ViewHolder{
         private DatabaseReference mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
         View mView;
-
+        private TextView seenTextView;
         public MessagesViewHolder(View itemView){
             super(itemView);
-
+            seenTextView = itemView.findViewById(R.id.message_seen_textView);
             mView = itemView;
         }
 
@@ -211,6 +215,12 @@ public class MessagesFragment extends Fragment {
             userNameView.setText(name);
         }
 
+        public void setSeen(boolean seen) {
+            if (!seen) {
+                seenTextView.setAlpha(1);
+            }
+        }
+
         //Aquí es donde se cambia la imagen
         public void setUserImage(String Thumb_image){
             CircleImageView usersImageView = mView.findViewById(R.id.message_userImage);
@@ -218,7 +228,6 @@ public class MessagesFragment extends Fragment {
                 Picasso.get().load(Thumb_image).into(usersImageView);
             }
         }
-
     }
 
 }

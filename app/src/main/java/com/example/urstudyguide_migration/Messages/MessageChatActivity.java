@@ -52,7 +52,7 @@ import java.util.concurrent.CompletableFuture;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MessageActivity extends AppCompatActivity {
+public class MessageChatActivity extends AppCompatActivity {
 
     private String mChatUser_name, mChatUser_image, mCharUser_thumb_image, mChatUser;
     private Toolbar mToolbar;
@@ -145,7 +145,7 @@ public class MessageActivity extends AppCompatActivity {
                     mLastSeen.setText("offline");
                 }
                 final String thumb_image = dataSnapshot.child("thumb_image").getValue().toString();
-                String image = dataSnapshot.child("image").getValue().toString();
+
                 if(!thumb_image.equals("default")) {
                     Picasso.get().load(thumb_image).
                             networkPolicy(NetworkPolicy.OFFLINE)
@@ -201,9 +201,7 @@ public class MessageActivity extends AppCompatActivity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 sendMessage();
-
             }
         });
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -218,6 +216,44 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        switchSeenMessageState();
+    }
+
+    private void switchSeenMessageState() {
+        String path = "Messages/" + users.getUserID() + "/" + mChatUser;
+        HashMap<String, Object> messageMap = new HashMap();
+        messageMap.put("seen", true);
+        FirebaseDatabase.getInstance().getReference(path)
+                .orderByChild("from")
+                .equalTo(mChatUser)
+                .limitToLast(1)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for(DataSnapshot childDataSnapshot: dataSnapshot.getChildren()) {
+                            String lastMessage = childDataSnapshot.getKey();
+
+                            String lastMessagePath = path + "/" + lastMessage;
+                            FirebaseDatabase.getInstance().getReference(lastMessagePath)
+                                    .updateChildren(messageMap, (databaseError, databaseReference) -> {
+                                        if(databaseError != null) {
+                                            // TODO:-
+                                            System.out.println(databaseError);
+                                        }
+                                    });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     private void loadMessages() {
