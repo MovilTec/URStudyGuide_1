@@ -231,6 +231,7 @@ public class QuizzCreator extends AppCompatActivity implements QuizzCreatorNavig
     }
 
     private void updateRecyclerViewWith(List<TestItem> testItems) {
+        mNumberPicker.setValue(testItems.size());
         mViewModel.setTestItems(testItems);
         mAdapter.updateRecyclerView(testItems);
         mAdapter.notifyDataSetChanged();
