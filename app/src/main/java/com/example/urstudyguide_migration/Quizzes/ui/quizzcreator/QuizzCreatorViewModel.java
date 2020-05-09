@@ -87,6 +87,10 @@ public class QuizzCreatorViewModel extends ViewModel {
         return this.testItems;
     }
 
+    public void setTestItems(List<TestItem> testItems) {
+        this.testItems = testItems;
+    }
+
     public void setQuizz(Quizz quizz) {
         this.testItems = quizz.getTestItems();
     }

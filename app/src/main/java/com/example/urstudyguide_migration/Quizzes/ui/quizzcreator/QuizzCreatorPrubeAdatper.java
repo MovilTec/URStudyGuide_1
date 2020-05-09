@@ -94,6 +94,11 @@ public class QuizzCreatorPrubeAdatper extends RecyclerView.Adapter<QuizzCreatorP
         testItems.set(position, testItem);
     }
 
+    public void updateRecyclerView(List<TestItem> testItems) {
+        this.testItems = testItems;
+        notifyDataSetChanged();
+    }
+
     public interface QuestionCreatable {
         void onQuestionSelected(int position);
     }
