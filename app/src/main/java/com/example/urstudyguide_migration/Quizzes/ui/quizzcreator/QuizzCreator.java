@@ -129,23 +129,23 @@ public class QuizzCreator extends AppCompatActivity implements QuizzCreatorNavig
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            if(resultCode == RESULT_OK) {
-                TestItem testItem = (TestItem) data.getSerializableExtra("testItem");
-                mViewModel.setTestItem(testItem);
-                return;
-            }
-        }
-
-        if (requestCode == READ_REQUEST_CODE && resultCode == RESULT_OK) {
-            if (data != null) {
-                Uri uri = data.getData();
-                try {
-                    createTestItemsFromUri(uri);
+        if(resultCode == RESULT_OK) {
+            switch(requestCode) {
+                case 1:
+                    TestItem testItem = (TestItem) data.getSerializableExtra("testItem");
+                    mViewModel.setTestItem(testItem);
                     return;
-                } catch(IOException ex) {
-                    onError(ex.getLocalizedMessage());
-                }
+                case READ_REQUEST_CODE:
+                    if (data != null) {
+                        Uri uri = data.getData();
+                        try {
+                            createTestItemsFromUri(uri);
+                            return;
+                        } catch(IOException ex) {
+                            onError(ex.getLocalizedMessage());
+                        }
+                    }
+                    return;
             }
         }
     }
