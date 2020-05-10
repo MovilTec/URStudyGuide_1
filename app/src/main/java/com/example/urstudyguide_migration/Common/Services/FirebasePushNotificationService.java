@@ -5,6 +5,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.urstudyguide_migration.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,35 +27,30 @@ public class FirebasePushNotificationService {
         return shared;
     }
 
-    private FirebasePushNotificationService() {
+    private FirebasePushNotificationService() {  }
 
-    }
-
-    public JsonObjectRequest sendNotification(String body, String user_device_token) throws JSONException {
+    public JsonObjectRequest sendNotification(String body, JSONObject data, String user_device_token) throws JSONException {
 
         JSONObject notification = new JSONObject();
         JSONObject notifcationBody = new JSONObject();
 
         notification.put("to", user_device_token);
         notification.put("notification", notifcationBody);
+        notification.put("data", data);
 
         // Adding aditional data?
         notifcationBody.put("title", "URStudyGuide");
         notifcationBody.put("body", body);
         notifcationBody.put("sound", "content://settings/system/notification_sound");
-        notifcationBody.put("clickAction", "");
+        notifcationBody.put("clickAction", R.string.MESSAGE_ACTIVITY_ACTION);
 
-        return new JsonObjectRequest(Request.Method.POST, FCM_API, notification, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                System.out.println("network response: " + response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // TODO:- Do something when error happened!
-                System.out.println("network error: "+ error.getLocalizedMessage());
-            }
+        return new JsonObjectRequest(Request.Method.POST,
+                FCM_API,
+                notification,
+                response -> System.out.println("network response: " + response),
+                error -> {
+            // TODO:- Do something when error happened!
+            System.out.println("network error: "+ error.getLocalizedMessage());
         })
         {
             @Override

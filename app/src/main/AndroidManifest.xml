@@ -27,7 +27,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".Quizzes.QuizzDetail" />
-        <activity android:name=".Quizzes.ui.quizzcreator.QuizzCreator" />
+        <activity android:name=".Quizzes.ui.quizzcreator.QuizzCreator" >
+            <intent-filter>
+                <action android:name="QUIZZ_CREATOR_OPEN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity android:name=".Quizzes.Quizzes" />
 
         <service android:name=".Common.Services.FirebaseMessagingService">
@@ -94,14 +99,19 @@
             android:name=".Social.ProfileActivity"
             android:parentActivityName=".Social.Users.UsersActivity">
             <intent-filter>
-                <action android:name="com.example.bbvacontrol.urstudyguide_TARGET_NOTIFICATION" />
+                <action android:name="TARGET_NOTIFICATION" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
             android:name=".Messages.MessageChatActivity"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity" >
+            <intent-filter>
+                <action android:name="MESSAGE_ACTIVITY_OPEN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity android:name=".Questioners.QuestionairesActivity" />
     </application>
 

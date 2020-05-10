@@ -1,6 +1,7 @@
 package com.example.urstudyguide_migration.Messages;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -43,6 +44,7 @@ import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,7 +56,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessageChatActivity extends AppCompatActivity {
 
-    private String mChatUser_name, mChatUser_image, mCharUser_thumb_image, mChatUser;
+    private String mChatUser_name, mChatUser;
     private Toolbar mToolbar;
     private ActionBar mActionBar;
     private RecyclerView mRecyclerView;
@@ -72,7 +74,12 @@ public class MessageChatActivity extends AppCompatActivity {
     private int itemPos = 0;
     private String mLastKey, mPrevKey = "";
 
-    Users users = new Users();
+    private static final String userID = User.getInstance().getUserId();
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,14 +88,12 @@ public class MessageChatActivity extends AppCompatActivity {
 
         mChatUser = getIntent().getStringExtra("user_id");
         mChatUser_name = getIntent().getStringExtra("user_name");
-        mChatUser_image = getIntent().getStringExtra("user_image");
-        mCharUser_thumb_image = getIntent().getStringExtra("user_thumb_image");
 
         mToolbar = findViewById(R.id.message_app_bar);
         setSupportActionBar(mToolbar);
 
         mRootRef = FirebaseDatabase.getInstance().getReference();
-        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(users.getUserID());
+        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(userID);
 
         mActionBar = getSupportActionBar();
 
@@ -168,7 +173,7 @@ public class MessageChatActivity extends AppCompatActivity {
             }
         });
 
-        mRootRef.child("Users_converations").child(users.getUserID()).addValueEventListener(new ValueEventListener() {
+        mRootRef.child("Users_converations").child(userID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(!dataSnapshot.hasChild(mChatUser)){
@@ -177,8 +182,8 @@ public class MessageChatActivity extends AppCompatActivity {
                     messageAddMap.put("timestamp", ServerValue.TIMESTAMP);
 
                     Map messageUserMap = new HashMap();
-                    messageUserMap.put("Users_conversations/" + users.getUserID() + "/" + mChatUser, messageAddMap);
-                    messageUserMap.put("Users_conversations/" + mChatUser + "/" + users.getUserID(), messageAddMap);
+                    messageUserMap.put("Users_conversations/" + userID + "/" + mChatUser, messageAddMap);
+                    messageUserMap.put("Users_conversations/" + mChatUser + "/" + userID, messageAddMap);
 
                     mRootRef.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
                         @Override
@@ -225,7 +230,7 @@ public class MessageChatActivity extends AppCompatActivity {
     }
 
     private void switchSeenMessageState() {
-        String path = "Messages/" + users.getUserID() + "/" + mChatUser;
+        String path = "Messages/" + userID + "/" + mChatUser;
         HashMap<String, Object> messageMap = new HashMap();
         messageMap.put("seen", true);
         FirebaseDatabase.getInstance().getReference(path)
@@ -258,7 +263,7 @@ public class MessageChatActivity extends AppCompatActivity {
 
     private void loadMessages() {
 
-        DatabaseReference messageRef = mRootRef.child("Messages").child(users.getUserID()).child(mChatUser);
+        DatabaseReference messageRef = mRootRef.child("Messages").child(userID).child(mChatUser);
         Query messageQuery = messageRef.limitToLast(mCurrentPage * TOTAL_ITEMS_TO_LOAD);
 
         messageQuery.addChildEventListener(new ChildEventListener() {
@@ -306,7 +311,7 @@ public class MessageChatActivity extends AppCompatActivity {
 
     private void loadMoreMessages(){
 
-        DatabaseReference messageRef = mRootRef.child("messages").child(users.getUserID()).child(mChatUser);
+        DatabaseReference messageRef = mRootRef.child("messages").child(userID).child(mChatUser);
 
         Query messageQuery = messageRef.orderByKey().endAt(mLastKey).limitToLast(10);
 
@@ -360,11 +365,11 @@ public class MessageChatActivity extends AppCompatActivity {
         if(!TextUtils.isEmpty(Message)){
             messageText.setText("");
 
-            String current_user_ref = "Messages/" + users.getUserID() + "/" + mChatUser;
-            String chat_user_ref = "Messages/" + mChatUser + "/" + users.getUserID();
+            String current_user_ref = "Messages/" + userID + "/" + mChatUser;
+            String chat_user_ref = "Messages/" + mChatUser + "/" + userID;
 
             DatabaseReference user_message_push = mRootRef.child("Messages")
-                    .child(users.getUserID()).child(mChatUser).push();
+                    .child(userID).child(mChatUser).push();
             String push_id = user_message_push.getKey();
 
             Map messageMap = new HashMap();
@@ -372,7 +377,7 @@ public class MessageChatActivity extends AppCompatActivity {
             messageMap.put("seen", false);
             messageMap.put("type", "text");
             messageMap.put("time", ServerValue.TIMESTAMP);
-            messageMap.put("from", users.getUserID());
+            messageMap.put("from", userID);
 
             Map messageUserMap = new HashMap();
             messageUserMap.put(current_user_ref + "/" + push_id, messageMap);
@@ -394,51 +399,31 @@ public class MessageChatActivity extends AppCompatActivity {
     }
 
     private void sendNotification(String message, String recieverId) {
-
         RequestQueue queue = Volley.newRequestQueue(this);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        FirebaseManager firebaseManager = new FirebaseManager(FirebaseDatabase.getInstance());
+        String receiver_path = "Users/" + recieverId + "/device_token";
+        String path = "Users/" + userID + "/name";
+        CompletableFuture<DataSnapshot> completableFuture = firebaseManager.read(path);
 
-            FirebaseManager firebaseManager = new FirebaseManager(FirebaseDatabase.getInstance());
-            String receiver_path = "Users/" + recieverId + "/device_token";
-            String path = "Users/" + users.getUserID() + "/name";
-            CompletableFuture<DataSnapshot> completableFuture = firebaseManager.read(path);
+        completableFuture.thenCombine(firebaseManager.read(receiver_path), (sender_dataSnapshot, receiver_dataSnapshot) -> {
+            // getting the data from both requests
+            String device_token = (String) receiver_dataSnapshot.getValue();
+            String sender_name = (String) sender_dataSnapshot.getValue();
+            JSONObject data = new JSONObject();
 
-            completableFuture.thenCombine(firebaseManager.read(receiver_path), (sender_dataSnapshot, receiver_dataSnapshot) -> {
-                // getting the data from both requests
-                String device_token = (String) receiver_dataSnapshot.getValue();
-                String sender_name = (String) sender_dataSnapshot.getValue();
-                try {
-                    final String finalMessage = "Tienes un nuevo mensaje de " + sender_name + ": " + message;
-                    JsonObjectRequest request = FirebasePushNotificationService.getInstance().sendNotification(finalMessage, device_token);
-                    queue.add(request);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            });
-        } else {
+            try {
+                data.put("user_id", userID);
+                data.put("user_name", sender_name);
 
-            FirebaseDatabase.getInstance().getReference().child("Users").child(recieverId).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    final String device_token = (String) dataSnapshot.child("device_token").getValue();
-                    //TODO:- Get sender names
-//                final String senderName = Users.getInstance();
-                    try {
-                        final String finalMessage = "Tienes un nuevo mensaje: " + message;
-                        JsonObjectRequest request = FirebasePushNotificationService.getInstance().sendNotification(message, device_token);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-        }
+                final String finalMessage = "Tienes un nuevo mensaje de " + sender_name + ": " + message;
+                JsonObjectRequest request = FirebasePushNotificationService.getInstance().sendNotification(finalMessage, data, device_token);
+                queue.add(request);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        });
     }
 
     @Override
