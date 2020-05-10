@@ -74,7 +74,7 @@ public class MessageChatActivity extends AppCompatActivity {
     private int itemPos = 0;
     private String mLastKey, mPrevKey = "";
 
-    private static final String userID = User.getInstance().getUserId();
+    private String userID;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -85,6 +85,8 @@ public class MessageChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
+
+        userID = User.getInstance().getUserID(this);
 
         mChatUser = getIntent().getStringExtra("user_id");
         mChatUser_name = getIntent().getStringExtra("user_name");

@@ -42,7 +42,8 @@ public class FirebasePushNotificationService {
         notifcationBody.put("title", "URStudyGuide");
         notifcationBody.put("body", body);
         notifcationBody.put("sound", "content://settings/system/notification_sound");
-        notifcationBody.put("clickAction", R.string.MESSAGE_ACTIVITY_ACTION);
+        notifcationBody.put("click_action", "MESSAGE_ACTIVITY_OPEN");
+        notifcationBody.put("priority", "high");
 
         return new JsonObjectRequest(Request.Method.POST,
                 FCM_API,
