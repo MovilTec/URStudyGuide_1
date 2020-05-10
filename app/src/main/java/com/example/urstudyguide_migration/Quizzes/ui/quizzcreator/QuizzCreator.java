@@ -84,7 +84,6 @@ public class QuizzCreator extends AppCompatActivity implements QuizzCreatorNavig
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.quizz_creator_activity);
         setContentView(R.layout.quizz_creator_fragment);
         mViewModel = ViewModelProviders.of(this).get(QuizzCreatorViewModel.class);
         mViewModel.navigator = this;
@@ -97,7 +96,6 @@ public class QuizzCreator extends AppCompatActivity implements QuizzCreatorNavig
         setupView();
 
         setupNumberPicker();
-//        setupRecyclerView();
         setupToolBar();
 
         setupQuizzFromEdit(quizz);
@@ -181,7 +179,6 @@ public class QuizzCreator extends AppCompatActivity implements QuizzCreatorNavig
         }
         updateRecyclerViewWith(testItems);
     }
-
 
     private void setupView() {
         mNumberPicker = findViewById(R.id.number_picker);
