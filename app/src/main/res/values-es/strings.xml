@@ -2,12 +2,24 @@
 <resources>
     <string name="app_name">URStudyGuide</string>
 
+    <!-- Main -->
+    <string name="main_view_title">Bienvenido a URStudyGuide</string>
+    <string name="main_new_account_button">Crear una cuenta</string>
+    <string name="main_login_button">Entrar</string>
+
     <!--  Login  -->
-    <string name="login_forgot_password">Olvidate tu contraseña?</string>
+    <string name="login_forgot_password">Restablecer contraseña</string>
     <string name="login_button_title">Acceder</string>
     <string name="useremail_editText_title">Ingresa tu email</string>
     <string name="password_editText_title">Ingresa tu contraseña</string>
-    <string name="login_view_title">Entra a tu cuentat</string>
+    <string name="login_view_title">Entra a tu cuenta</string>
+
+    <!-- Register -->
+    <string name="register_view_title">Crea una nueva cuenta</string>
+    <string name="register_textInput_username">Crea un nombre de usuario</string>
+    <string name="register_textInput_email">Ingresa tu email</string>
+    <string name="register_textInput_password">Ingresa una contraseña segura</string>
+    <string name="register_button_create_account">CREAR CUENTA</string>
 
     <!--  DATABASE CONSTANTS  -->
     <string name="database_users">Usuarios</string>
