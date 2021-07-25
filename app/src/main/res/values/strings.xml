@@ -20,6 +20,12 @@
     <string name="register_textInput_password">Enter a secure password</string>
     <string name="register_button_create_account">CREATE ACCOUNT</string>
 
+    <!-- Menu -->
+    <string name="main_menu_first">Questioners</string>
+    <string name="main_menu_second">Messages</string>
+    <string name="main_menu_third">Requests</string>
+    <string name="main_menu_forth">Quizzes</string>
+
     <!--  DATABASE CONSTANTS  -->
     <string name="database_users">Users</string>
     <string name="database_quizzes">Quizzes</string>

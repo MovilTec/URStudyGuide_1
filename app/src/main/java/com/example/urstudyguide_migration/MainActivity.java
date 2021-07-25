@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupPager() {
         mViewPager = findViewById(R.id.main_tabPager);
-        mAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), getBaseContext());
 
         // It can only handle three pages!!!
         mViewPager.setAdapter(mAdapter);

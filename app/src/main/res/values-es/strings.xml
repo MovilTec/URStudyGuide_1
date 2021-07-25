@@ -21,6 +21,12 @@
     <string name="register_textInput_password">Ingresa una contraseña segura</string>
     <string name="register_button_create_account">CREAR CUENTA</string>
 
+    <!-- Menu -->
+    <string name="main_menu_first">Usuarios</string>
+    <string name="main_menu_second">Mensajes</string>
+    <string name="main_menu_third">Peticiones</string>
+    <string name="main_menu_forth">Guias</string>
+
     <!--  DATABASE CONSTANTS  -->
     <string name="database_users">Usuarios</string>
     <string name="database_quizzes">Guías</string>
