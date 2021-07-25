@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">URStudyGuide</string>
+
+    <!--  Login  -->
+    <string name="login_forgot_password">Olvidate tu contraseña?</string>
+    <string name="login_button_title">Acceder</string>
+    <string name="useremail_editText_title">Ingresa tu email</string>
+    <string name="password_editText_title">Ingresa tu contraseña</string>
+    <string name="login_view_title">Entra a tu cuentat</string>
+
+    <!--  DATABASE CONSTANTS  -->
+    <string name="database_users">Usuarios</string>
+    <string name="database_quizzes">Guías</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">vista principal Redes</string>
+    <string name="title_activity_client_support">client_support</string>
+    <string name="ChangeStatus_dialog">Cambia tu Status</string>
+    <string name="quizz_title">Titulo de la Guía</string>
+    <!-- Quizz Creator View   -->
+    <string name="quizzcreator_quizz_name">Nombre de tu Guía</string>
+    <string name="quizzcreator_quizz_description">A breaf description of your Qiuzz (Optional)</string>
+    <string name="quizzcreator_number_questions">Number of questions</string>
+
+    <!--  Quizz Creator Adapter  -->
+    <string name="quizzcreator_adapter_question">Pregunta</string>
+    <string name="quizzcreator_adapter_numberofanswers">Número de respuestas</string>
+    <string name="quizzcreator_next_button">SIGUENTE</string>
+    <string name="quizzcreator_adapter_create_button">CREAR GUÍA</string>
+    <!--  Quizz Creator Answer ListView  -->
+    <string name="quizzcreator_answer_text">Respuesta</string>
+    <string name="quizzcreator_answer_toggle">isCorrect</string>
+
+    <!--  Quizz Detail View  -->
+    <string name="quizzdetail_edit_button">Editar</string>
+    <string name="quizzdetail_start_button">Empezar</string>
+    <string name="quizzdetail_attempts_button">Intentos</string>
+
+    <string name="quizzdetail_author_textView">Nombre del autor</string>
+    <string name="quizzdetail_quizz_description_textView">Descripción de la Guía</string>
+
+    <!--  Simulator   -->
+    <string name="simulator_item_question">Pregunta</string>
+
+    <!--  Quizz Attempts Item  -->
+    <string name="quizz_attempts_item_student_name">Student Name</string>
+    <string name="quizz_attempts_item_grade_average">Calificación promedio</string>
+    <string name="title_activity_allowed_user_selection">AllowedUserSelection</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Siguiente</string>
+    <string name="previous">Anterior</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <!--  FCM ACTIONS  -->
+    <string name="MESSAGE_ACTIVITY_ACTION">MESSAGE_ACTIVITY_OPEN</string>
+</resources>

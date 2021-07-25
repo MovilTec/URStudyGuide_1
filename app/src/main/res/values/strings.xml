@@ -1,6 +1,13 @@
 <resources>
     <string name="app_name">URStudyGuide</string>
 
+    <!--  Login  -->
+    <string name="login_forgot_password">Forgot Password</string>
+    <string name="login_button_title">Login</string>
+    <string name="useremail_editText_title">Enter your user email</string>
+    <string name="password_editText_title">Enter password</string>
+    <string name="login_view_title">Login to your Account</string>
+
     <!--  DATABASE CONSTANTS  -->
     <string name="database_users">Users</string>
     <string name="database_quizzes">Quizzes</string>
